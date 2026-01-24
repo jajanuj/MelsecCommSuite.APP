@@ -74,8 +74,16 @@ namespace MelsecHelper.APP.Services
             _logger?.Invoke("[MoveOutService] Creating CancellationTokenSource");
             _moveOutCts = new CancellationTokenSource();
             
-            _logger?.Invoke("[MoveOutService] Creating background task (direct call)");
-            _moveOutTask = Task.Run(() => MoveOutLoopAsync(_moveOutCts.Token), _moveOutCts.Token);
+            _logger?.Invoke($"[MoveOutService] Current SyncContext: {SynchronizationContext.Current?.GetType().Name ?? "null"}");
+            _logger?.Invoke($"[MoveOutService] Default TaskScheduler: {TaskScheduler.Default.GetType().Name}");
+            
+            _logger?.Invoke("[MoveOutService] Creating background task with TaskScheduler.Default");
+            _moveOutTask = Task.Factory.StartNew(
+               () => MoveOutLoopAsync(_moveOutCts.Token),
+               _moveOutCts.Token,
+               TaskCreationOptions.LongRunning,
+               TaskScheduler.Default
+            ).Unwrap();
             
             _logger?.Invoke($"[MoveOutService] Task created, ID={_moveOutTask.Id}, Status={_moveOutTask.Status}");
             
