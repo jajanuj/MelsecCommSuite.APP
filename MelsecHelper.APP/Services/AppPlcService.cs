@@ -204,6 +204,40 @@ namespace MelsecHelper.APP.Services
 
       #endregion
 
+      #region Private Methods
+
+      private void PostEvent(Action action)
+      {
+         if (action == null)
+         {
+            return;
+         }
+
+         if (_syncContext != null)
+         {
+            _syncContext.Post(_ => action(), null);
+         }
+         else
+         {
+            action();
+         }
+      }
+
+      #endregion
+
+      public void Dispose()
+      {
+         if (_disposed)
+         {
+            return;
+         }
+
+         _disposed = true;
+         StopHeartbeat();
+         StopTimeSync();
+         StopLinkDataReporting();
+      }
+
       #region Events
 
       // Common Report Events
@@ -226,7 +260,7 @@ namespace MelsecHelper.APP.Services
 
       #region Common Report Methods
 
-      public void UpdatRouteData(string ovenStatus)
+      public void UpdateRouteData(string ovenStatus)
       {
          lock (_commonReportLock)
          {
@@ -981,84 +1015,6 @@ namespace MelsecHelper.APP.Services
          }
       }
 
-      private async Task TrackingDataMaintenanceLoopAsync_Old(TimeSpan interval, CancellationToken ct)
-      {
-         while (!ct.IsCancellationRequested && !_disposed)
-         {
-            try
-            {
-               // 1. Monitor Request Flag (LB 0x0106)
-               bool requestOn = _controller.GetBit(AddrMaintenanceRequestFlag);
-
-               if (requestOn)
-               {
-                  _logger?.Invoke("[Maintenance] Request ON detected, processing...");
-
-                  // 2. Read Request Data (Tracking Data 10 words + Position 1 word)
-                  var trackWords = await _controller.ReadWordsAsync(AddrMaintenanceRequestData, TrackingDataSize, ct);
-                  var posWords = await _controller.ReadWordsAsync(AddrMaintenanceRequestPos, 1, ct);
-
-                  if (trackWords.Count == TrackingDataSize && posWords.Count == 1)
-                  {
-                     int pos = (ushort)posWords[0];
-
-                     // Validate Position
-                     if (pos >= 0 && pos < MaxPositions) // Assuming 54 positions based on 540 words
-                     {
-                        // 3. Update Device Memory (Write to LW 184A + Offset)
-                        int baseAddr = Convert.ToInt32(AddrTrackingDataBase.Substring(2), 16);
-                        int targetAddr = baseAddr + pos * TrackingDataSize;
-                        string targetAddrStr = $"LW{targetAddr:X4}";
-
-                        await _controller.WriteWordsAsync(targetAddrStr, trackWords.ToArray(), ct);
-                        _logger?.Invoke($"[Maintenance] Updated Position {pos} at {targetAddrStr}");
-
-                        // 4. Response OK (LB 0x0304)
-                        await _controller.WriteBitsAsync(AddrMaintenanceResponseOk, new[] { true }, ct);
-                        _logger?.Invoke("[Maintenance] Response OK Set");
-                     }
-                     else
-                     {
-                        _logger?.Invoke($"[Maintenance] Invalid Position: {pos}");
-                        // Response NG
-                        await _controller.WriteBitsAsync(AddrMaintenanceResponseNg, new[] { true }, ct);
-                     }
-                  }
-                  else
-                  {
-                     _logger?.Invoke("[Maintenance] Read Data Failed");
-                     // Response NG
-                     await _controller.WriteBitsAsync(AddrMaintenanceResponseNg, new[] { true }, ct);
-                  }
-
-                  // 5. Wait for Request OFF
-                  while (!ct.IsCancellationRequested)
-                  {
-                     bool stillOn = _controller.GetBit(AddrMaintenanceRequestFlag);
-                     if (!stillOn)
-                     {
-                        break;
-                     }
-
-                     await Task.Delay(100, ct);
-                  }
-
-                  // 6. Clear Response Flags
-                  await _controller.WriteBitsAsync(AddrMaintenanceResponseOk, new[] { false }, ct);
-                  await _controller.WriteBitsAsync(AddrMaintenanceResponseNg, new[] { false }, ct);
-                  _logger?.Invoke("[Maintenance] Request Cycle Completed, Responses Cleared");
-               }
-            }
-            catch (Exception ex)
-            {
-               _logger?.Invoke($"[Maintenance] Loop Exception: {ex.Message}");
-               await Task.Delay(1000, ct);
-            }
-
-            await Task.Delay(interval, ct);
-         }
-      }
-
       /// <summary>
       /// 發送追蹤資料維護請求 (LCS -> DEVICE)
       /// </summary>
@@ -1412,40 +1368,6 @@ namespace MelsecHelper.APP.Services
             ReasonCode = 0
          };
          await WriteMoveOutDataAsync(station, moveOutData, ct);
-      }
-
-      #endregion
-
-      #region Helpers
-
-      private void PostEvent(Action action)
-      {
-         if (action == null)
-         {
-            return;
-         }
-
-         if (_syncContext != null)
-         {
-            _syncContext.Post(_ => action(), null);
-         }
-         else
-         {
-            action();
-         }
-      }
-
-      public void Dispose()
-      {
-         if (_disposed)
-         {
-            return;
-         }
-
-         _disposed = true;
-         StopHeartbeat();
-         StopTimeSync();
-         StopLinkDataReporting();
       }
 
       #endregion

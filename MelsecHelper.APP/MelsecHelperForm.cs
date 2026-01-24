@@ -160,7 +160,7 @@ namespace MelsecHelper.APP
          _updateTimer = new Timer(_ =>
          {
             // 更新 Status1（機台狀態）
-            _appPlcService.UpdatRouteData(
+            _appPlcService.UpdateRouteData(
                textBox1.Text
             );
          }, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(2000));
@@ -996,17 +996,13 @@ namespace MelsecHelper.APP
          }
 
          var form = new TrackingControlForm(_appPlcService, _simulator);
-         form.Show(this);
-         // using (var form = new Forms.TrackingControlForm(_appPlcService, _simulator))
-         // {
-         //    form.Show(this);
-         // }
+         form.Show();
       }
 
       private void btnLotMixingPrevention_Click(object sender, EventArgs e)
       {
          var form = new LotMixingPreventionForm();
-         form.Show(this);
+         form.Show();
       }
 
       private void btnShowPosTrackingDataForm_Click(object sender, EventArgs e)
@@ -1019,7 +1015,7 @@ namespace MelsecHelper.APP
 
          var configPath = System.IO.Path.Combine(Application.StartupPath, "Config", "StationTracking.json");
          var form = new StationTrackingManagementForm(_appPlcService.Controller, configPath);
-         form.Show(this);
+         form.Show();
       }
 
       private void btnStartLinkReport_Click(object sender, EventArgs e)

@@ -137,10 +137,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AlarmHelper.cs" />
     <Compile Include="Services\AppPlcService.cs" />
+    <Compile Include="Services\MoveOutService.cs" />
     <Compile Include="Services\PlcSimulator.cs" />
     <Compile Include="Services\RecipeCheckClient.cs" />
     <Compile Include="Services\SliderRobotHandshakeService.cs" />
     <Compile Include="Services\TrackingDataService.cs" />
+    <EmbeddedResource Include="Forms\StationTrackingManagementForm.resx">
+      <DependentUpon>StationTrackingManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MelsecHelperForm.resx">
       <DependentUpon>MelsecHelperForm.cs</DependentUpon>
     </EmbeddedResource>
