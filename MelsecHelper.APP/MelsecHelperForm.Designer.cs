@@ -34,8 +34,6 @@
          this.grpConnectionMode = new System.Windows.Forms.GroupBox();
          this.cmbDriverType = new System.Windows.Forms.ComboBox();
          this.btnOpen = new System.Windows.Forms.Button();
-         this.btnRead = new System.Windows.Forms.Button();
-         this.btnWrite = new System.Windows.Forms.Button();
          this.btnClose = new System.Windows.Forms.Button();
          this.btnStartTimeSync = new System.Windows.Forms.Button();
          this.btnStopTimeSync = new System.Windows.Forms.Button();
@@ -56,9 +54,6 @@
          this.dtpTime = new System.Windows.Forms.DateTimePicker();
          this.btnSyncFromPc = new System.Windows.Forms.Button();
          this.btnSetTimeToPlc = new System.Windows.Forms.Button();
-         this.grpLinkReport = new System.Windows.Forms.GroupBox();
-         this.lblLinkReportTestMode = new System.Windows.Forms.Label();
-         this.cboLinkReportTestMode = new System.Windows.Forms.ComboBox();
          this.grpConnectMode = new System.Windows.Forms.GroupBox();
          this.rbtnOffline = new System.Windows.Forms.RadioButton();
          this.rbtnOnline = new System.Windows.Forms.RadioButton();
@@ -71,8 +66,6 @@
          this.btnAlarmReset = new System.Windows.Forms.Button();
          this.txtAlarmCode = new System.Windows.Forms.TextBox();
          this.btnAddAlarm = new System.Windows.Forms.Button();
-         this.panel1 = new System.Windows.Forms.Panel();
-         this.button1 = new System.Windows.Forms.Button();
          this.btnRecipeCheck = new System.Windows.Forms.Button();
          this.textBox1 = new System.Windows.Forms.TextBox();
          this.btnHandshake = new System.Windows.Forms.Button();
@@ -83,18 +76,43 @@
          this.btnShowPlcSimulatorForm = new System.Windows.Forms.Button();
          this.btnLotMixingPrevention = new System.Windows.Forms.Button();
          this.btnShowPosTrackingDataForm = new System.Windows.Forms.Button();
+         this.tabMain = new System.Windows.Forms.TabControl();
+         this.tpBasic = new System.Windows.Forms.TabPage();
+         this.tpCheckClock = new System.Windows.Forms.TabPage();
+         this.tpClockUpdate = new System.Windows.Forms.TabPage();
+         this.tpMoveOut = new System.Windows.Forms.TabPage();
+         this.tpRecipeCheck = new System.Windows.Forms.TabPage();
+         this.tpAlarm = new System.Windows.Forms.TabPage();
+         this.tpCommonReport = new System.Windows.Forms.TabPage();
+         this.tpMaintenance = new System.Windows.Forms.TabPage();
+         this.tpTrackingData = new System.Windows.Forms.TabPage();
+         this.tpPosReport = new System.Windows.Forms.TabPage();
+         this.tpLotMixingPrevention = new System.Windows.Forms.TabPage();
+         this.tpLinkReport = new System.Windows.Forms.TabPage();
+         this.tpHandshake = new System.Windows.Forms.TabPage();
          this.grpConnectionMode.SuspendLayout();
          this.grpManualTime.SuspendLayout();
-         this.grpLinkReport.SuspendLayout();
          this.grpConnectMode.SuspendLayout();
          this.grpAlarm.SuspendLayout();
-         this.panel1.SuspendLayout();
+         this.tabMain.SuspendLayout();
+         this.tpBasic.SuspendLayout();
+         this.tpCheckClock.SuspendLayout();
+         this.tpClockUpdate.SuspendLayout();
+         this.tpRecipeCheck.SuspendLayout();
+         this.tpAlarm.SuspendLayout();
+         this.tpCommonReport.SuspendLayout();
+         this.tpMaintenance.SuspendLayout();
+         this.tpTrackingData.SuspendLayout();
+         this.tpPosReport.SuspendLayout();
+         this.tpLotMixingPrevention.SuspendLayout();
+         this.tpLinkReport.SuspendLayout();
+         this.tpHandshake.SuspendLayout();
          this.SuspendLayout();
          // 
          // grpConnectionMode
          // 
          this.grpConnectionMode.Controls.Add(this.cmbDriverType);
-         this.grpConnectionMode.Location = new System.Drawing.Point(14, 19);
+         this.grpConnectionMode.Location = new System.Drawing.Point(13, 13);
          this.grpConnectionMode.Margin = new System.Windows.Forms.Padding(10);
          this.grpConnectionMode.Name = "grpConnectionMode";
          this.grpConnectionMode.Size = new System.Drawing.Size(200, 80);
@@ -108,14 +126,14 @@
          this.cmbDriverType.FormattingEnabled = true;
          this.cmbDriverType.Location = new System.Drawing.Point(15, 30);
          this.cmbDriverType.Name = "cmbDriverType";
-         this.cmbDriverType.Size = new System.Drawing.Size(170, 20);
+         this.cmbDriverType.Size = new System.Drawing.Size(170, 23);
          this.cmbDriverType.TabIndex = 0;
          this.cmbDriverType.SelectedIndexChanged += new System.EventHandler(this.cmbDriverType_SelectedIndexChanged);
          // 
          // btnOpen
          // 
          this.btnOpen.AutoSize = true;
-         this.btnOpen.Location = new System.Drawing.Point(10, 10);
+         this.btnOpen.Location = new System.Drawing.Point(28, 113);
          this.btnOpen.Margin = new System.Windows.Forms.Padding(10);
          this.btnOpen.Name = "btnOpen";
          this.btnOpen.Size = new System.Drawing.Size(75, 26);
@@ -123,33 +141,11 @@
          this.btnOpen.Text = "Open";
          this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
          // 
-         // btnRead
-         // 
-         this.btnRead.AutoSize = true;
-         this.btnRead.Location = new System.Drawing.Point(91, 10);
-         this.btnRead.Margin = new System.Windows.Forms.Padding(10);
-         this.btnRead.Name = "btnRead";
-         this.btnRead.Size = new System.Drawing.Size(75, 26);
-         this.btnRead.TabIndex = 1;
-         this.btnRead.Text = "Read";
-         this.btnRead.Click += new System.EventHandler(this.btnRead_Click);
-         // 
-         // btnWrite
-         // 
-         this.btnWrite.AutoSize = true;
-         this.btnWrite.Location = new System.Drawing.Point(175, 10);
-         this.btnWrite.Margin = new System.Windows.Forms.Padding(10);
-         this.btnWrite.Name = "btnWrite";
-         this.btnWrite.Size = new System.Drawing.Size(75, 26);
-         this.btnWrite.TabIndex = 2;
-         this.btnWrite.Text = "Write";
-         this.btnWrite.Click += new System.EventHandler(this.btnWrite_Click);
-         // 
          // btnClose
          // 
          this.btnClose.AutoSize = true;
          this.btnClose.Enabled = false;
-         this.btnClose.Location = new System.Drawing.Point(261, 10);
+         this.btnClose.Location = new System.Drawing.Point(123, 113);
          this.btnClose.Margin = new System.Windows.Forms.Padding(10);
          this.btnClose.Name = "btnClose";
          this.btnClose.Size = new System.Drawing.Size(75, 26);
@@ -160,7 +156,7 @@
          // btnStartTimeSync
          // 
          this.btnStartTimeSync.AutoSize = true;
-         this.btnStartTimeSync.Location = new System.Drawing.Point(10, 77);
+         this.btnStartTimeSync.Location = new System.Drawing.Point(17, 31);
          this.btnStartTimeSync.Margin = new System.Windows.Forms.Padding(10);
          this.btnStartTimeSync.Name = "btnStartTimeSync";
          this.btnStartTimeSync.Size = new System.Drawing.Size(115, 26);
@@ -171,7 +167,7 @@
          // btnStopTimeSync
          // 
          this.btnStopTimeSync.AutoSize = true;
-         this.btnStopTimeSync.Location = new System.Drawing.Point(154, 77);
+         this.btnStopTimeSync.Location = new System.Drawing.Point(152, 31);
          this.btnStopTimeSync.Margin = new System.Windows.Forms.Padding(10);
          this.btnStopTimeSync.Name = "btnStopTimeSync";
          this.btnStopTimeSync.Size = new System.Drawing.Size(108, 26);
@@ -181,7 +177,7 @@
          // 
          // btnForceTimeSync
          // 
-         this.btnForceTimeSync.Location = new System.Drawing.Point(282, 77);
+         this.btnForceTimeSync.Location = new System.Drawing.Point(17, 189);
          this.btnForceTimeSync.Margin = new System.Windows.Forms.Padding(10);
          this.btnForceTimeSync.Name = "btnForceTimeSync";
          this.btnForceTimeSync.Size = new System.Drawing.Size(137, 23);
@@ -191,7 +187,7 @@
          // 
          // btnStartHeartbeat
          // 
-         this.btnStartHeartbeat.Location = new System.Drawing.Point(12, 44);
+         this.btnStartHeartbeat.Location = new System.Drawing.Point(27, 27);
          this.btnStartHeartbeat.Margin = new System.Windows.Forms.Padding(10);
          this.btnStartHeartbeat.Name = "btnStartHeartbeat";
          this.btnStartHeartbeat.Size = new System.Drawing.Size(132, 26);
@@ -202,7 +198,7 @@
          // 
          // btnStopHeartbeat
          // 
-         this.btnStopHeartbeat.Location = new System.Drawing.Point(154, 44);
+         this.btnStopHeartbeat.Location = new System.Drawing.Point(188, 27);
          this.btnStopHeartbeat.Margin = new System.Windows.Forms.Padding(10);
          this.btnStopHeartbeat.Name = "btnStopHeartbeat";
          this.btnStopHeartbeat.Size = new System.Drawing.Size(132, 26);
@@ -214,7 +210,7 @@
          // btnStopSimulator
          // 
          this.btnStopSimulator.Enabled = false;
-         this.btnStopSimulator.Location = new System.Drawing.Point(319, 120);
+         this.btnStopSimulator.Location = new System.Drawing.Point(482, 173);
          this.btnStopSimulator.Margin = new System.Windows.Forms.Padding(10);
          this.btnStopSimulator.Name = "btnStopSimulator";
          this.btnStopSimulator.Size = new System.Drawing.Size(132, 26);
@@ -225,7 +221,7 @@
          // 
          // btnPlcSettings
          // 
-         this.btnPlcSettings.Location = new System.Drawing.Point(167, 120);
+         this.btnPlcSettings.Location = new System.Drawing.Point(245, 149);
          this.btnPlcSettings.Margin = new System.Windows.Forms.Padding(10);
          this.btnPlcSettings.Name = "btnPlcSettings";
          this.btnPlcSettings.Size = new System.Drawing.Size(132, 26);
@@ -236,7 +232,7 @@
          // 
          // btnScanMonitor
          // 
-         this.btnScanMonitor.Location = new System.Drawing.Point(15, 120);
+         this.btnScanMonitor.Location = new System.Drawing.Point(245, 113);
          this.btnScanMonitor.Margin = new System.Windows.Forms.Padding(10);
          this.btnScanMonitor.Name = "btnScanMonitor";
          this.btnScanMonitor.Size = new System.Drawing.Size(132, 26);
@@ -247,7 +243,7 @@
          // 
          // btnTrackingControl
          // 
-         this.btnTrackingControl.Location = new System.Drawing.Point(15, 166);
+         this.btnTrackingControl.Location = new System.Drawing.Point(218, 64);
          this.btnTrackingControl.Margin = new System.Windows.Forms.Padding(10);
          this.btnTrackingControl.Name = "btnTrackingControl";
          this.btnTrackingControl.Size = new System.Drawing.Size(181, 26);
@@ -259,7 +255,7 @@
          // btnStartCommonReporting
          // 
          this.btnStartCommonReporting.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnStartCommonReporting.Location = new System.Drawing.Point(15, 200);
+         this.btnStartCommonReporting.Location = new System.Drawing.Point(75, 100);
          this.btnStartCommonReporting.Margin = new System.Windows.Forms.Padding(10);
          this.btnStartCommonReporting.Name = "btnStartCommonReporting";
          this.btnStartCommonReporting.Size = new System.Drawing.Size(181, 26);
@@ -271,7 +267,7 @@
          // btnSetCommonReporting
          // 
          this.btnSetCommonReporting.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnSetCommonReporting.Location = new System.Drawing.Point(212, 200);
+         this.btnSetCommonReporting.Location = new System.Drawing.Point(325, 100);
          this.btnSetCommonReporting.Margin = new System.Windows.Forms.Padding(10);
          this.btnSetCommonReporting.Name = "btnSetCommonReporting";
          this.btnSetCommonReporting.Size = new System.Drawing.Size(181, 26);
@@ -283,7 +279,7 @@
          // btnStartLinkReport
          // 
          this.btnStartLinkReport.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnStartLinkReport.Location = new System.Drawing.Point(15, 235);
+         this.btnStartLinkReport.Location = new System.Drawing.Point(61, 55);
          this.btnStartLinkReport.Margin = new System.Windows.Forms.Padding(10);
          this.btnStartLinkReport.Name = "btnStartLinkReport";
          this.btnStartLinkReport.Size = new System.Drawing.Size(181, 26);
@@ -295,7 +291,7 @@
          // btnStopLinkReport
          // 
          this.btnStopLinkReport.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnStopLinkReport.Location = new System.Drawing.Point(212, 235);
+         this.btnStopLinkReport.Location = new System.Drawing.Point(286, 55);
          this.btnStopLinkReport.Margin = new System.Windows.Forms.Padding(10);
          this.btnStopLinkReport.Name = "btnStopLinkReport";
          this.btnStopLinkReport.Size = new System.Drawing.Size(181, 26);
@@ -307,7 +303,7 @@
          // btnSendLinkData
          // 
          this.btnSendLinkData.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnSendLinkData.Location = new System.Drawing.Point(413, 235);
+         this.btnSendLinkData.Location = new System.Drawing.Point(76, 101);
          this.btnSendLinkData.Margin = new System.Windows.Forms.Padding(10);
          this.btnSendLinkData.Name = "btnSendLinkData";
          this.btnSendLinkData.Size = new System.Drawing.Size(181, 26);
@@ -322,7 +318,7 @@
          this.grpManualTime.Controls.Add(this.dtpTime);
          this.grpManualTime.Controls.Add(this.btnSyncFromPc);
          this.grpManualTime.Controls.Add(this.btnSetTimeToPlc);
-         this.grpManualTime.Location = new System.Drawing.Point(19, 322);
+         this.grpManualTime.Location = new System.Drawing.Point(17, 94);
          this.grpManualTime.Margin = new System.Windows.Forms.Padding(10);
          this.grpManualTime.Name = "grpManualTime";
          this.grpManualTime.Size = new System.Drawing.Size(300, 80);
@@ -367,45 +363,11 @@
          this.btnSetTimeToPlc.UseVisualStyleBackColor = true;
          this.btnSetTimeToPlc.Click += new System.EventHandler(this.btnSetTimeToPlc_Click);
          // 
-         // grpLinkReport
-         // 
-         this.grpLinkReport.Controls.Add(this.lblLinkReportTestMode);
-         this.grpLinkReport.Controls.Add(this.cboLinkReportTestMode);
-         this.grpLinkReport.Location = new System.Drawing.Point(356, 12);
-         this.grpLinkReport.Name = "grpLinkReport";
-         this.grpLinkReport.Size = new System.Drawing.Size(200, 87);
-         this.grpLinkReport.TabIndex = 22;
-         this.grpLinkReport.TabStop = false;
-         this.grpLinkReport.Text = "連結報告";
-         // 
-         // lblLinkReportTestMode
-         // 
-         this.lblLinkReportTestMode.AutoSize = true;
-         this.lblLinkReportTestMode.Location = new System.Drawing.Point(6, 36);
-         this.lblLinkReportTestMode.Name = "lblLinkReportTestMode";
-         this.lblLinkReportTestMode.Size = new System.Drawing.Size(53, 12);
-         this.lblLinkReportTestMode.TabIndex = 1;
-         this.lblLinkReportTestMode.Text = "測試模式";
-         // 
-         // cboLinkReportTestMode
-         // 
-         this.cboLinkReportTestMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-         this.cboLinkReportTestMode.FormattingEnabled = true;
-         this.cboLinkReportTestMode.Items.AddRange(new object[] {
-            "正常流程",
-            "T1逾時",
-            "T2逾時"});
-         this.cboLinkReportTestMode.Location = new System.Drawing.Point(73, 31);
-         this.cboLinkReportTestMode.Name = "cboLinkReportTestMode";
-         this.cboLinkReportTestMode.Size = new System.Drawing.Size(121, 20);
-         this.cboLinkReportTestMode.TabIndex = 0;
-         this.cboLinkReportTestMode.SelectedIndexChanged += new System.EventHandler(this.cboLinkReportTestMode_SelectedIndexChanged);
-         // 
          // grpConnectMode
          // 
          this.grpConnectMode.Controls.Add(this.rbtnOffline);
          this.grpConnectMode.Controls.Add(this.rbtnOnline);
-         this.grpConnectMode.Location = new System.Drawing.Point(227, 12);
+         this.grpConnectMode.Location = new System.Drawing.Point(245, 13);
          this.grpConnectMode.Name = "grpConnectMode";
          this.grpConnectMode.Size = new System.Drawing.Size(112, 87);
          this.grpConnectMode.TabIndex = 23;
@@ -418,7 +380,7 @@
          this.rbtnOffline.Checked = true;
          this.rbtnOffline.Location = new System.Drawing.Point(17, 49);
          this.rbtnOffline.Name = "rbtnOffline";
-         this.rbtnOffline.Size = new System.Drawing.Size(56, 16);
+         this.rbtnOffline.Size = new System.Drawing.Size(62, 19);
          this.rbtnOffline.TabIndex = 1;
          this.rbtnOffline.TabStop = true;
          this.rbtnOffline.Text = "Offline";
@@ -430,7 +392,7 @@
          this.rbtnOnline.AutoSize = true;
          this.rbtnOnline.Location = new System.Drawing.Point(17, 25);
          this.rbtnOnline.Name = "rbtnOnline";
-         this.rbtnOnline.Size = new System.Drawing.Size(54, 16);
+         this.rbtnOnline.Size = new System.Drawing.Size(61, 19);
          this.rbtnOnline.TabIndex = 0;
          this.rbtnOnline.Text = "Online";
          this.rbtnOnline.UseVisualStyleBackColor = true;
@@ -439,7 +401,7 @@
          // btnStartMaintMonitor
          // 
          this.btnStartMaintMonitor.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnStartMaintMonitor.Location = new System.Drawing.Point(15, 266);
+         this.btnStartMaintMonitor.Location = new System.Drawing.Point(91, 54);
          this.btnStartMaintMonitor.Margin = new System.Windows.Forms.Padding(10);
          this.btnStartMaintMonitor.Name = "btnStartMaintMonitor";
          this.btnStartMaintMonitor.Size = new System.Drawing.Size(186, 26);
@@ -452,7 +414,7 @@
          // 
          this.btnStopMaintMonitor.Enabled = false;
          this.btnStopMaintMonitor.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnStopMaintMonitor.Location = new System.Drawing.Point(212, 266);
+         this.btnStopMaintMonitor.Location = new System.Drawing.Point(314, 55);
          this.btnStopMaintMonitor.Margin = new System.Windows.Forms.Padding(10);
          this.btnStopMaintMonitor.Name = "btnStopMaintMonitor";
          this.btnStopMaintMonitor.Size = new System.Drawing.Size(186, 26);
@@ -464,11 +426,12 @@
          // lstLog
          // 
          this.lstLog.Dock = System.Windows.Forms.DockStyle.Bottom;
+         this.lstLog.Font = new System.Drawing.Font("Sarasa Fixed TC", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
          this.lstLog.FormattingEnabled = true;
-         this.lstLog.ItemHeight = 12;
-         this.lstLog.Location = new System.Drawing.Point(0, 415);
+         this.lstLog.ItemHeight = 15;
+         this.lstLog.Location = new System.Drawing.Point(0, 427);
          this.lstLog.Name = "lstLog";
-         this.lstLog.Size = new System.Drawing.Size(1225, 136);
+         this.lstLog.Size = new System.Drawing.Size(786, 124);
          this.lstLog.TabIndex = 10;
          // 
          // lblStatus
@@ -477,7 +440,7 @@
          this.lblStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
          this.lblStatus.Location = new System.Drawing.Point(0, 551);
          this.lblStatus.Name = "lblStatus";
-         this.lblStatus.Size = new System.Drawing.Size(1225, 24);
+         this.lblStatus.Size = new System.Drawing.Size(786, 24);
          this.lblStatus.TabIndex = 11;
          this.lblStatus.Text = "Status";
          this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -488,7 +451,7 @@
          this.grpAlarm.Controls.Add(this.btnAlarmReset);
          this.grpAlarm.Controls.Add(this.txtAlarmCode);
          this.grpAlarm.Controls.Add(this.btnAddAlarm);
-         this.grpAlarm.Location = new System.Drawing.Point(14, 112);
+         this.grpAlarm.Location = new System.Drawing.Point(253, 18);
          this.grpAlarm.Name = "grpAlarm";
          this.grpAlarm.Size = new System.Drawing.Size(112, 172);
          this.grpAlarm.TabIndex = 26;
@@ -535,54 +498,10 @@
          this.btnAddAlarm.UseVisualStyleBackColor = true;
          this.btnAddAlarm.Click += new System.EventHandler(this.btnAddAlarm_Click);
          // 
-         // panel1
-         // 
-         this.panel1.Controls.Add(this.button1);
-         this.panel1.Controls.Add(this.btnRecipeCheck);
-         this.panel1.Controls.Add(this.textBox1);
-         this.panel1.Controls.Add(this.btnHandshake);
-         this.panel1.Controls.Add(this.btnManualRun);
-         this.panel1.Controls.Add(this.btnAutoRun);
-         this.panel1.Controls.Add(this.btnOpen);
-         this.panel1.Controls.Add(this.btnRead);
-         this.panel1.Controls.Add(this.btnWrite);
-         this.panel1.Controls.Add(this.btnClose);
-         this.panel1.Controls.Add(this.btnStartTimeSync);
-         this.panel1.Controls.Add(this.btnSendLinkData);
-         this.panel1.Controls.Add(this.btnStartHeartbeat);
-         this.panel1.Controls.Add(this.btnStopLinkReport);
-         this.panel1.Controls.Add(this.btnStopHeartbeat);
-         this.panel1.Controls.Add(this.btnStartLinkReport);
-         this.panel1.Controls.Add(this.btnStopTimeSync);
-         this.panel1.Controls.Add(this.btnSetCommonReporting);
-         this.panel1.Controls.Add(this.btnForceTimeSync);
-         this.panel1.Controls.Add(this.btnStopMaintMonitor);
-         this.panel1.Controls.Add(this.btnStopSimulator);
-         this.panel1.Controls.Add(this.btnStartMaintMonitor);
-         this.panel1.Controls.Add(this.btnPlcSettings);
-         this.panel1.Controls.Add(this.btnStartCommonReporting);
-         this.panel1.Controls.Add(this.btnScanMonitor);
-         this.panel1.Controls.Add(this.btnTrackingControl);
-         this.panel1.Location = new System.Drawing.Point(584, 12);
-         this.panel1.Name = "panel1";
-         this.panel1.Size = new System.Drawing.Size(631, 371);
-         this.panel1.TabIndex = 27;
-         // 
-         // button1
-         // 
-         this.button1.AutoSize = true;
-         this.button1.Location = new System.Drawing.Point(376, 7);
-         this.button1.Margin = new System.Windows.Forms.Padding(10);
-         this.button1.Name = "button1";
-         this.button1.Size = new System.Drawing.Size(75, 26);
-         this.button1.TabIndex = 31;
-         this.button1.Text = "Write";
-         this.button1.Click += new System.EventHandler(this.button1_Click);
-         // 
          // btnRecipeCheck
          // 
          this.btnRecipeCheck.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnRecipeCheck.Location = new System.Drawing.Point(413, 166);
+         this.btnRecipeCheck.Location = new System.Drawing.Point(15, 21);
          this.btnRecipeCheck.Margin = new System.Windows.Forms.Padding(10);
          this.btnRecipeCheck.Name = "btnRecipeCheck";
          this.btnRecipeCheck.Size = new System.Drawing.Size(142, 26);
@@ -593,7 +512,7 @@
          // 
          // textBox1
          // 
-         this.textBox1.Location = new System.Drawing.Point(15, 335);
+         this.textBox1.Location = new System.Drawing.Point(180, 179);
          this.textBox1.Name = "textBox1";
          this.textBox1.Size = new System.Drawing.Size(100, 22);
          this.textBox1.TabIndex = 29;
@@ -601,7 +520,7 @@
          // 
          // btnHandshake
          // 
-         this.btnHandshake.Location = new System.Drawing.Point(212, 166);
+         this.btnHandshake.Location = new System.Drawing.Point(77, 55);
          this.btnHandshake.Margin = new System.Windows.Forms.Padding(10);
          this.btnHandshake.Name = "btnHandshake";
          this.btnHandshake.Size = new System.Drawing.Size(181, 26);
@@ -613,7 +532,7 @@
          // btnManualRun
          // 
          this.btnManualRun.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnManualRun.Location = new System.Drawing.Point(212, 302);
+         this.btnManualRun.Location = new System.Drawing.Point(339, 197);
          this.btnManualRun.Margin = new System.Windows.Forms.Padding(10);
          this.btnManualRun.Name = "btnManualRun";
          this.btnManualRun.Size = new System.Drawing.Size(186, 26);
@@ -625,7 +544,7 @@
          // btnAutoRun
          // 
          this.btnAutoRun.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnAutoRun.Location = new System.Drawing.Point(15, 302);
+         this.btnAutoRun.Location = new System.Drawing.Point(339, 165);
          this.btnAutoRun.Margin = new System.Windows.Forms.Padding(10);
          this.btnAutoRun.Name = "btnAutoRun";
          this.btnAutoRun.Size = new System.Drawing.Size(186, 26);
@@ -639,7 +558,7 @@
          this.ltbErrorCodes.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.ltbErrorCodes.FormattingEnabled = true;
          this.ltbErrorCodes.ItemHeight = 14;
-         this.ltbErrorCodes.Location = new System.Drawing.Point(147, 112);
+         this.ltbErrorCodes.Location = new System.Drawing.Point(6, 18);
          this.ltbErrorCodes.Name = "ltbErrorCodes";
          this.ltbErrorCodes.Size = new System.Drawing.Size(194, 172);
          this.ltbErrorCodes.TabIndex = 28;
@@ -652,7 +571,7 @@
          // 
          // btnShowPlcSimulatorForm
          // 
-         this.btnShowPlcSimulatorForm.Location = new System.Drawing.Point(400, 298);
+         this.btnShowPlcSimulatorForm.Location = new System.Drawing.Point(482, 125);
          this.btnShowPlcSimulatorForm.Name = "btnShowPlcSimulatorForm";
          this.btnShowPlcSimulatorForm.Size = new System.Drawing.Size(150, 25);
          this.btnShowPlcSimulatorForm.TabIndex = 29;
@@ -663,7 +582,7 @@
          // btnLotMixingPrevention
          // 
          this.btnLotMixingPrevention.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnLotMixingPrevention.Location = new System.Drawing.Point(400, 245);
+         this.btnLotMixingPrevention.Location = new System.Drawing.Point(29, 17);
          this.btnLotMixingPrevention.Name = "btnLotMixingPrevention";
          this.btnLotMixingPrevention.Size = new System.Drawing.Size(150, 25);
          this.btnLotMixingPrevention.TabIndex = 30;
@@ -674,7 +593,7 @@
          // btnShowPosTrackingDataForm
          // 
          this.btnShowPosTrackingDataForm.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnShowPosTrackingDataForm.Location = new System.Drawing.Point(400, 207);
+         this.btnShowPosTrackingDataForm.Location = new System.Drawing.Point(282, 120);
          this.btnShowPosTrackingDataForm.Name = "btnShowPosTrackingDataForm";
          this.btnShowPosTrackingDataForm.Size = new System.Drawing.Size(150, 25);
          this.btnShowPosTrackingDataForm.TabIndex = 31;
@@ -682,35 +601,220 @@
          this.btnShowPosTrackingDataForm.UseVisualStyleBackColor = true;
          this.btnShowPosTrackingDataForm.Click += new System.EventHandler(this.btnShowPosTrackingDataForm_Click);
          // 
+         // tabMain
+         // 
+         this.tabMain.Controls.Add(this.tpBasic);
+         this.tabMain.Controls.Add(this.tpCheckClock);
+         this.tabMain.Controls.Add(this.tpClockUpdate);
+         this.tabMain.Controls.Add(this.tpMoveOut);
+         this.tabMain.Controls.Add(this.tpRecipeCheck);
+         this.tabMain.Controls.Add(this.tpAlarm);
+         this.tabMain.Controls.Add(this.tpCommonReport);
+         this.tabMain.Controls.Add(this.tpMaintenance);
+         this.tabMain.Controls.Add(this.tpTrackingData);
+         this.tabMain.Controls.Add(this.tpPosReport);
+         this.tabMain.Controls.Add(this.tpLotMixingPrevention);
+         this.tabMain.Controls.Add(this.tpLinkReport);
+         this.tabMain.Controls.Add(this.tpHandshake);
+         this.tabMain.Location = new System.Drawing.Point(0, 3);
+         this.tabMain.Multiline = true;
+         this.tabMain.Name = "tabMain";
+         this.tabMain.SelectedIndex = 0;
+         this.tabMain.Size = new System.Drawing.Size(780, 418);
+         this.tabMain.TabIndex = 32;
+         // 
+         // tpBasic
+         // 
+         this.tpBasic.Controls.Add(this.grpConnectionMode);
+         this.tpBasic.Controls.Add(this.grpConnectMode);
+         this.tpBasic.Controls.Add(this.btnShowPlcSimulatorForm);
+         this.tpBasic.Controls.Add(this.btnOpen);
+         this.tpBasic.Controls.Add(this.btnStopSimulator);
+         this.tpBasic.Controls.Add(this.btnClose);
+         this.tpBasic.Controls.Add(this.btnScanMonitor);
+         this.tpBasic.Controls.Add(this.btnPlcSettings);
+         this.tpBasic.Location = new System.Drawing.Point(4, 44);
+         this.tpBasic.Name = "tpBasic";
+         this.tpBasic.Padding = new System.Windows.Forms.Padding(3);
+         this.tpBasic.Size = new System.Drawing.Size(772, 370);
+         this.tpBasic.TabIndex = 3;
+         this.tpBasic.Text = "Basic";
+         this.tpBasic.UseVisualStyleBackColor = true;
+         // 
+         // tpCheckClock
+         // 
+         this.tpCheckClock.Controls.Add(this.btnStartHeartbeat);
+         this.tpCheckClock.Controls.Add(this.btnStopHeartbeat);
+         this.tpCheckClock.Location = new System.Drawing.Point(4, 44);
+         this.tpCheckClock.Name = "tpCheckClock";
+         this.tpCheckClock.Padding = new System.Windows.Forms.Padding(3);
+         this.tpCheckClock.Size = new System.Drawing.Size(772, 370);
+         this.tpCheckClock.TabIndex = 0;
+         this.tpCheckClock.Text = "Check Clock";
+         this.tpCheckClock.UseVisualStyleBackColor = true;
+         // 
+         // tpClockUpdate
+         // 
+         this.tpClockUpdate.Controls.Add(this.grpManualTime);
+         this.tpClockUpdate.Controls.Add(this.btnForceTimeSync);
+         this.tpClockUpdate.Controls.Add(this.btnStartTimeSync);
+         this.tpClockUpdate.Controls.Add(this.btnStopTimeSync);
+         this.tpClockUpdate.Location = new System.Drawing.Point(4, 44);
+         this.tpClockUpdate.Name = "tpClockUpdate";
+         this.tpClockUpdate.Padding = new System.Windows.Forms.Padding(3);
+         this.tpClockUpdate.Size = new System.Drawing.Size(772, 370);
+         this.tpClockUpdate.TabIndex = 1;
+         this.tpClockUpdate.Text = "Clock Update";
+         this.tpClockUpdate.UseVisualStyleBackColor = true;
+         // 
+         // tpMoveOut
+         // 
+         this.tpMoveOut.Location = new System.Drawing.Point(4, 44);
+         this.tpMoveOut.Name = "tpMoveOut";
+         this.tpMoveOut.Size = new System.Drawing.Size(772, 370);
+         this.tpMoveOut.TabIndex = 4;
+         this.tpMoveOut.Text = "Move Out";
+         this.tpMoveOut.UseVisualStyleBackColor = true;
+         // 
+         // tpRecipeCheck
+         // 
+         this.tpRecipeCheck.Controls.Add(this.btnRecipeCheck);
+         this.tpRecipeCheck.Location = new System.Drawing.Point(4, 44);
+         this.tpRecipeCheck.Name = "tpRecipeCheck";
+         this.tpRecipeCheck.Size = new System.Drawing.Size(772, 370);
+         this.tpRecipeCheck.TabIndex = 5;
+         this.tpRecipeCheck.Text = "Recipe Check";
+         this.tpRecipeCheck.UseVisualStyleBackColor = true;
+         // 
+         // tpAlarm
+         // 
+         this.tpAlarm.Controls.Add(this.ltbErrorCodes);
+         this.tpAlarm.Controls.Add(this.grpAlarm);
+         this.tpAlarm.Location = new System.Drawing.Point(4, 44);
+         this.tpAlarm.Name = "tpAlarm";
+         this.tpAlarm.Padding = new System.Windows.Forms.Padding(3);
+         this.tpAlarm.Size = new System.Drawing.Size(772, 370);
+         this.tpAlarm.TabIndex = 2;
+         this.tpAlarm.Text = "Alarm";
+         this.tpAlarm.UseVisualStyleBackColor = true;
+         // 
+         // tpCommonReport
+         // 
+         this.tpCommonReport.Controls.Add(this.btnSetCommonReporting);
+         this.tpCommonReport.Controls.Add(this.btnStartCommonReporting);
+         this.tpCommonReport.Controls.Add(this.textBox1);
+         this.tpCommonReport.Controls.Add(this.btnAutoRun);
+         this.tpCommonReport.Controls.Add(this.btnManualRun);
+         this.tpCommonReport.Location = new System.Drawing.Point(4, 44);
+         this.tpCommonReport.Name = "tpCommonReport";
+         this.tpCommonReport.Padding = new System.Windows.Forms.Padding(3);
+         this.tpCommonReport.Size = new System.Drawing.Size(772, 370);
+         this.tpCommonReport.TabIndex = 6;
+         this.tpCommonReport.Text = "Common Report";
+         this.tpCommonReport.UseVisualStyleBackColor = true;
+         // 
+         // tpMaintenance
+         // 
+         this.tpMaintenance.Controls.Add(this.btnStartMaintMonitor);
+         this.tpMaintenance.Controls.Add(this.btnStopMaintMonitor);
+         this.tpMaintenance.Location = new System.Drawing.Point(4, 44);
+         this.tpMaintenance.Name = "tpMaintenance";
+         this.tpMaintenance.Padding = new System.Windows.Forms.Padding(3);
+         this.tpMaintenance.Size = new System.Drawing.Size(772, 370);
+         this.tpMaintenance.TabIndex = 7;
+         this.tpMaintenance.Text = "Maintenance";
+         this.tpMaintenance.UseVisualStyleBackColor = true;
+         // 
+         // tpTrackingData
+         // 
+         this.tpTrackingData.Controls.Add(this.btnTrackingControl);
+         this.tpTrackingData.Location = new System.Drawing.Point(4, 44);
+         this.tpTrackingData.Name = "tpTrackingData";
+         this.tpTrackingData.Padding = new System.Windows.Forms.Padding(3);
+         this.tpTrackingData.Size = new System.Drawing.Size(772, 370);
+         this.tpTrackingData.TabIndex = 8;
+         this.tpTrackingData.Text = "Tracking Data";
+         this.tpTrackingData.UseVisualStyleBackColor = true;
+         // 
+         // tpPosReport
+         // 
+         this.tpPosReport.Controls.Add(this.btnShowPosTrackingDataForm);
+         this.tpPosReport.Location = new System.Drawing.Point(4, 44);
+         this.tpPosReport.Name = "tpPosReport";
+         this.tpPosReport.Padding = new System.Windows.Forms.Padding(3);
+         this.tpPosReport.Size = new System.Drawing.Size(772, 370);
+         this.tpPosReport.TabIndex = 9;
+         this.tpPosReport.Text = "Position Report";
+         this.tpPosReport.UseVisualStyleBackColor = true;
+         // 
+         // tpLotMixingPrevention
+         // 
+         this.tpLotMixingPrevention.Controls.Add(this.btnLotMixingPrevention);
+         this.tpLotMixingPrevention.Location = new System.Drawing.Point(4, 44);
+         this.tpLotMixingPrevention.Name = "tpLotMixingPrevention";
+         this.tpLotMixingPrevention.Padding = new System.Windows.Forms.Padding(3);
+         this.tpLotMixingPrevention.Size = new System.Drawing.Size(772, 370);
+         this.tpLotMixingPrevention.TabIndex = 10;
+         this.tpLotMixingPrevention.Text = "Lot Mixing Prevention";
+         this.tpLotMixingPrevention.UseVisualStyleBackColor = true;
+         // 
+         // tpLinkReport
+         // 
+         this.tpLinkReport.Controls.Add(this.btnStartLinkReport);
+         this.tpLinkReport.Controls.Add(this.btnStopLinkReport);
+         this.tpLinkReport.Controls.Add(this.btnSendLinkData);
+         this.tpLinkReport.Location = new System.Drawing.Point(4, 44);
+         this.tpLinkReport.Name = "tpLinkReport";
+         this.tpLinkReport.Padding = new System.Windows.Forms.Padding(3);
+         this.tpLinkReport.Size = new System.Drawing.Size(772, 370);
+         this.tpLinkReport.TabIndex = 11;
+         this.tpLinkReport.Text = "Link Report";
+         this.tpLinkReport.UseVisualStyleBackColor = true;
+         // 
+         // tpHandshake
+         // 
+         this.tpHandshake.Controls.Add(this.btnHandshake);
+         this.tpHandshake.Location = new System.Drawing.Point(4, 44);
+         this.tpHandshake.Name = "tpHandshake";
+         this.tpHandshake.Padding = new System.Windows.Forms.Padding(3);
+         this.tpHandshake.Size = new System.Drawing.Size(772, 370);
+         this.tpHandshake.TabIndex = 12;
+         this.tpHandshake.Text = "Handshake";
+         this.tpHandshake.UseVisualStyleBackColor = true;
+         // 
          // Form1
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-         this.ClientSize = new System.Drawing.Size(1225, 575);
-         this.Controls.Add(this.btnShowPosTrackingDataForm);
-         this.Controls.Add(this.btnLotMixingPrevention);
-         this.Controls.Add(this.btnShowPlcSimulatorForm);
-         this.Controls.Add(this.ltbErrorCodes);
-         this.Controls.Add(this.panel1);
-         this.Controls.Add(this.grpAlarm);
-         this.Controls.Add(this.grpConnectMode);
-         this.Controls.Add(this.grpLinkReport);
-         this.Controls.Add(this.grpManualTime);
-         this.Controls.Add(this.grpConnectionMode);
+         this.ClientSize = new System.Drawing.Size(786, 575);
+         this.Controls.Add(this.tabMain);
          this.Controls.Add(this.lstLog);
          this.Controls.Add(this.lblStatus);
+         this.Font = new System.Drawing.Font("更紗黑體 UI TC", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
          this.Name = "Form1";
          this.Text = "CC-Link Helper";
          this.grpConnectionMode.ResumeLayout(false);
          this.grpManualTime.ResumeLayout(false);
-         this.grpLinkReport.ResumeLayout(false);
-         this.grpLinkReport.PerformLayout();
          this.grpConnectMode.ResumeLayout(false);
          this.grpConnectMode.PerformLayout();
          this.grpAlarm.ResumeLayout(false);
          this.grpAlarm.PerformLayout();
-         this.panel1.ResumeLayout(false);
-         this.panel1.PerformLayout();
+         this.tabMain.ResumeLayout(false);
+         this.tpBasic.ResumeLayout(false);
+         this.tpBasic.PerformLayout();
+         this.tpCheckClock.ResumeLayout(false);
+         this.tpClockUpdate.ResumeLayout(false);
+         this.tpClockUpdate.PerformLayout();
+         this.tpRecipeCheck.ResumeLayout(false);
+         this.tpAlarm.ResumeLayout(false);
+         this.tpCommonReport.ResumeLayout(false);
+         this.tpCommonReport.PerformLayout();
+         this.tpMaintenance.ResumeLayout(false);
+         this.tpTrackingData.ResumeLayout(false);
+         this.tpPosReport.ResumeLayout(false);
+         this.tpLotMixingPrevention.ResumeLayout(false);
+         this.tpLinkReport.ResumeLayout(false);
+         this.tpHandshake.ResumeLayout(false);
          this.ResumeLayout(false);
 
       }
@@ -720,8 +824,6 @@
       private System.Windows.Forms.GroupBox grpConnectionMode;
       private System.Windows.Forms.ComboBox cmbDriverType;
       private System.Windows.Forms.Button btnOpen;
-      private System.Windows.Forms.Button btnRead;
-      private System.Windows.Forms.Button btnWrite;
       private System.Windows.Forms.Button btnClose;
       private System.Windows.Forms.Button btnStartTimeSync;
       private System.Windows.Forms.Button btnStopTimeSync;
@@ -755,9 +857,6 @@
       private System.Windows.Forms.Button btnStartLinkReport;
       private System.Windows.Forms.Button btnStopLinkReport;
       private System.Windows.Forms.Button btnSendLinkData;
-      private System.Windows.Forms.GroupBox grpLinkReport;
-      private System.Windows.Forms.ComboBox cboLinkReportTestMode;
-      private System.Windows.Forms.Label lblLinkReportTestMode;
       private System.Windows.Forms.GroupBox grpConnectMode;
       private System.Windows.Forms.RadioButton rbtnOffline;
       private System.Windows.Forms.RadioButton rbtnOnline;
@@ -766,7 +865,6 @@
       private System.Windows.Forms.GroupBox grpAlarm;
       private System.Windows.Forms.TextBox txtAlarmCode;
       private System.Windows.Forms.Button btnAddAlarm;
-      private System.Windows.Forms.Panel panel1;
       private System.Windows.Forms.ListBox ltbErrorCodes;
       private System.Windows.Forms.Timer tmrScan;
       private System.Windows.Forms.Button btnAlarmReset;
@@ -777,9 +875,22 @@
       private System.Windows.Forms.TextBox textBox1;
       private System.Windows.Forms.Button btnRecipeCheck;
       private System.Windows.Forms.Button btnShowPlcSimulatorForm;
-      private System.Windows.Forms.Button button1;
       private System.Windows.Forms.Button btnLotMixingPrevention;
       private System.Windows.Forms.Button btnShowPosTrackingDataForm;
+      private System.Windows.Forms.TabControl tabMain;
+      private System.Windows.Forms.TabPage tpBasic;
+      private System.Windows.Forms.TabPage tpCheckClock;
+      private System.Windows.Forms.TabPage tpClockUpdate;
+      private System.Windows.Forms.TabPage tpMoveOut;
+      private System.Windows.Forms.TabPage tpRecipeCheck;
+      private System.Windows.Forms.TabPage tpAlarm;
+      private System.Windows.Forms.TabPage tpCommonReport;
+      private System.Windows.Forms.TabPage tpMaintenance;
+      private System.Windows.Forms.TabPage tpTrackingData;
+      private System.Windows.Forms.TabPage tpPosReport;
+      private System.Windows.Forms.TabPage tpLotMixingPrevention;
+      private System.Windows.Forms.TabPage tpLinkReport;
+      private System.Windows.Forms.TabPage tpHandshake;
    }
 }
 

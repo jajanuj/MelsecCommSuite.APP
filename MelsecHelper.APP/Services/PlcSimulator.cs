@@ -41,6 +41,8 @@ namespace MelsecHelper.APP.Services
       private CancellationTokenSource _cts;
 
       private bool _disposed;
+      private TestMode _linkTestMode;
+      private TestMode _maintenanceTestMode;
       private Task _monitorTask;
 
       private int _pollMs = 100; // monitor interval for response
@@ -68,11 +70,6 @@ namespace MelsecHelper.APP.Services
       #endregion
 
       #region Properties
-
-      /// <summary>
-      /// 測試模式
-      /// </summary>
-      public TestMode TestMode { get; set; } = TestMode.Normal;
 
       public int MonitorIntervalMs
       {
@@ -279,7 +276,7 @@ namespace MelsecHelper.APP.Services
                            _logger?.Invoke($"[模擬 PLC] 偵測到 EQ Request ON | Detected EQ Request ON (Addr: {_requestAddr})");
 
                            // T1 測試模式：不回覆 Response
-                           if (TestMode == TestMode.T1Timeout)
+                           if (_linkTestMode == TestMode.T1Timeout)
                            {
                               _logger?.Invoke($"[模擬 PLC] T1 測試模式：不回覆 Response | T1 Test: No Response");
                               // 停留在這一步，不進入下一步，或者可以回到 0 等待下一次（視需求而定，這裡選擇等待直到 Request 消失或其他重置條件）
@@ -303,7 +300,7 @@ namespace MelsecHelper.APP.Services
 
                         case 40: // 檢查是否需要維持或清除
                            // T2 測試模式：回覆 Response ON 後不清除
-                           if (TestMode == TestMode.T2Timeout)
+                           if (_linkTestMode == TestMode.T2Timeout)
                            {
                               _logger?.Invoke($"[模擬 PLC] T2 測試模式：Response ON 將持續維持 | T2 Test: Response will stay ON");
                               step = 888; // 進入完成/凍結狀態
@@ -712,7 +709,7 @@ namespace MelsecHelper.APP.Services
                return false;
             }
 
-            if (TestMode == TestMode.T1Timeout)
+            if (_maintenanceTestMode == TestMode.T1Timeout)
             {
                _logger?.Invoke($"[模擬 LCS] 測試模式 T1Timeout 啟用 | Test Mode T1Timeout Enabled");
                SetRequest(new LinkDeviceAddress("LB", REQUEST_FLAG, 1), false);

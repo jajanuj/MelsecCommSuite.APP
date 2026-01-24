@@ -72,7 +72,6 @@ namespace MelsecHelper.APP
       public Form1()
       {
          InitializeComponent();
-         InitializeComboBox();
 
          // 1. 加載或設定連線參數 (內建自動檢查檔名與開啟 UI 邏輯)
          _settings = new AppControllerSettings("Settings");
@@ -180,9 +179,6 @@ namespace MelsecHelper.APP
          // 在 Simulator 模式下，自動啟動 Simulator 以模擬 LCS 回應
          if (_settings.DriverType == MelsecDriverType.Simulator && _simulator != null)
          {
-            // 設定測試模式 (可在執行期間動態修改 _simulator.TestMode)
-            _simulator.TestMode = (TestMode)cboLinkReportTestMode.SelectedIndex;
-
             // 啟動連結報告模擬模式：模擬 LCS 自動回應 EQ 的請求
             _simulator.StartLinkReportMode();
             Log("已啟動 Simulator 連結報告模式 (LCS 自動回應) | Simulator Link Report");
@@ -265,11 +261,6 @@ namespace MelsecHelper.APP
       #endregion
 
       #region Private Methods
-
-      private void InitializeComboBox()
-      {
-         cboLinkReportTestMode.SelectedIndex = 0;
-      }
 
       private void btnHandshake_Click(object sender, EventArgs e)
       {
@@ -609,29 +600,6 @@ namespace MelsecHelper.APP
          finally
          {
             BeginInvoke((Action)(() => { UseWaitCursor = false; }));
-         }
-      }
-
-      private async void btnRead_Click(object sender, EventArgs e)
-      {
-         try
-         {
-            UseWaitCursor = true;
-            btnRead.Enabled = false;
-            var values = await _appPlcService.Controller.ReadWordsAsync("LW100", 10, _cts.Token).ConfigureAwait(false);
-            BeginInvoke((Action)(() => Log("讀取成功 | Read success (Values: " + string.Join(", ", values) + ")")));
-         }
-         catch (Exception ex)
-         {
-            BeginInvoke((Action)(() => Log("讀取失敗 | Read failed (Error: " + ex.Message + ")")));
-         }
-         finally
-         {
-            BeginInvoke((Action)(() =>
-            {
-               UseWaitCursor = false;
-               btnRead.Enabled = true;
-            }));
          }
       }
 
@@ -1105,15 +1073,6 @@ namespace MelsecHelper.APP
          }
       }
 
-      private void cboLinkReportTestMode_SelectedIndexChanged(object sender, EventArgs e)
-      {
-         if (_simulator != null)
-         {
-            _simulator.TestMode = (TestMode)cboLinkReportTestMode.SelectedIndex;
-            Log($"已切換 Simulator 連結報告測試模式至: {_simulator.TestMode}");
-         }
-      }
-
       private void Online_CheckedChanged(object sender, EventArgs e)
       {
          if (rbtnOnline.Checked && _appPlcService != null)
@@ -1289,30 +1248,10 @@ namespace MelsecHelper.APP
          form.Show();
       }
 
-      private void btnWrite_Click(object sender, EventArgs e)
-      {
-         if (_appPlcService.Controller is MelsecController helper)
-         {
-            helper.SetBitDirect("LB", 0x0300, true);
-         }
-
-         //await _appPlcService.Controller.WriteBitsAsync("LB0300", new[] { true });
-      }
-
       private void btnShowPlcSimulatorForm_Click(object sender, EventArgs e)
       {
          var form = new PlcSimulatorForm(_simulator);
          form.Show();
-      }
-
-      private async void button1_Click(object sender, EventArgs e)
-      {
-         //if (_appPlcService.Controller is MelsecHelper helper)
-         //{
-         //   helper.SetBitDirect("LB", 0x0300, false);
-         //}
-
-         await _appPlcService.Controller.WriteBitsAsync("LB0300", new[] { false });
       }
 
       #endregion
