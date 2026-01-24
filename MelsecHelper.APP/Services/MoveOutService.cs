@@ -75,10 +75,10 @@ namespace MelsecHelper.APP.Services
             _moveOutCts = new CancellationTokenSource();
             
             _logger?.Invoke("[MoveOutService] Creating background task");
-            _moveOutTask = Task.Run(async () => 
+            _moveOutTask = Task.Run(() => 
             {
                _logger?.Invoke("[MoveOutService] Task.Run lambda executing");
-               await MoveOutLoopAsync(_moveOutCts.Token);
+               return MoveOutLoopAsync(_moveOutCts.Token);
             }, _moveOutCts.Token);
             
             _logger?.Invoke($"[MoveOutService] Task created, ID={_moveOutTask.Id}, Status={_moveOutTask.Status}");
