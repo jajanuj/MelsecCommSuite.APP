@@ -325,12 +325,17 @@ namespace MelsecHelper.APP.Forms
       }
 
       /// <summary>
-      /// 記錄訊息
+      /// 記錄訊息到 Log 控制項（執行緒安全）
       /// </summary>
       private void Log(string message)
       {
-         var text = $"{DateTime.Now:HH:mm:ss} | {message}";
-         rtbLog.AppendText(text + Environment.NewLine);
+         if (rtbLog.InvokeRequired)
+         {
+            rtbLog.Invoke(new Action<string>(Log), message);
+            return;
+         }
+
+         rtbLog.AppendText($"{DateTime.Now:HH:mm:ss} | {message}{Environment.NewLine}");
          rtbLog.ScrollToCaret();
       }
 
