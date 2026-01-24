@@ -252,6 +252,46 @@ namespace MelsecHelper.APP.Services
          return _config.GetStation(stationId);
       }
 
+      /// <summary>
+      /// 根據起始位址清除追蹤資料（寫入 0 值）
+      /// </summary>
+      /// <param name="address">PLC 起始位址（例如：LW1868）</param>
+      /// <param name="ct">取消令牌</param>
+      /// <returns>是否成功</returns>
+      public async Task<bool> ClearDataByAddressAsync(string address, CancellationToken ct = default)
+      {
+         try
+         {
+            // 驗證位址格式
+            if (string.IsNullOrWhiteSpace(address))
+            {
+               throw new ArgumentException("位址不可為空白", nameof(address));
+            }
+
+            // 正規表達式驗證：LW + 4位十六進位
+            if (!System.Text.RegularExpressions.Regex.IsMatch(address, @"^LW[0-9A-Fa-f]{4}$"))
+            {
+               throw new ArgumentException(
+                  $"位址格式錯誤: '{address}'\\n" +
+                  $"正確格式應為 LW + 4位十六進位數字（例如：LW1868）", 
+                  nameof(address));
+            }
+
+            // 建立零值資料 (10 words)
+            short[] zeroData = new short[10];
+
+            // 寫入 PLC
+            await _controller.WriteWordsAsync(address.ToUpper(), zeroData, ct);
+
+            return true;
+         }
+         catch (Exception ex)
+         {
+            ShowError($"清除位址 {address} 的資料失敗", ex);
+            return false;
+         }
+      }
+
       #endregion
 
       #region Private Methods
