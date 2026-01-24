@@ -1037,7 +1037,6 @@ namespace MelsecHelper.APP
 
          if (_simulator != null)
          {
-            _simulator.StopMoveOutFlow();
             _simulator.StartMoveOutFlow();
          }
 

@@ -120,77 +120,87 @@ namespace MelsecHelper.APP.Services
          {
             try
             {
+               _logger?.Invoke($"[MoveOutService] Loop - Step={_step}");
+               
                switch (_step)
                {
                   case 0: // Idle
                      if (_pendingData != null)
                      {
-                        _logger?.Invoke("[MoveOutService] Start MoveOut Flow");
+                        _logger?.Invoke("[MoveOutService] Pending data detected, starting flow");
                         _step = 10;
+                        _logger?.Invoke("[MoveOutService] Step: 0 -> 10");
                      }
-
                      break;
 
                   case 10: // Write Data & Set Request
                   {
+                     _logger?.Invoke("[MoveOutService] Case 10: Writing data to PLC...");
                      // 1. Write Data (11 Words)
                      short[] rawData = _pendingData.ToRawData();
                      await _controller.WriteWordsAsync(AddrMoveOutTrackingData, rawData, ct);
+                     _logger?.Invoke($"[MoveOutService] Data written to {AddrMoveOutTrackingData}");
 
                      // 2. Set Request ON
                      await _controller.WriteBitsAsync(AddrMoveOutRequestFlag, new[] { true }, ct);
-
-                     _logger?.Invoke($"[MoveOutService] Data Written & Request ON ({AddrMoveOutRequestFlag})");
+                     _logger?.Invoke($"[MoveOutService] Request ON ({AddrMoveOutRequestFlag})");
 
                      _timer.Reset();
                      _step = 20;
+                     _logger?.Invoke("[MoveOutService] Step: 10 -> 20, Timer Reset");
                   }
-
                   break;
 
                   case 20: // Wait Response ON
                   {
                      bool responseOn = _controller.GetBit(AddrMoveOutResponseFlag);
+                     _logger?.Invoke($"[MoveOutService] Case 20: Waiting for Response ON, Current={responseOn}");
+                     
                      if (responseOn)
                      {
                         _logger?.Invoke($"[MoveOutService] Response ON ({AddrMoveOutResponseFlag}) detected");
                         _step = 30;
+                        _logger?.Invoke("[MoveOutService] Step: 20 -> 30");
                      }
                      else if (_timer.On(_settings.MoveOut.T1Timeout))
                      {
+                        _logger?.Invoke($"[MoveOutService] T1 Timeout occurred ({_settings.MoveOut.T1Timeout}ms)");
                         await AlarmHelper.AddAlarmCodeAsync(_appPlcService, "C010");
                         HandleError($"T1 Timeout:{_settings.MoveOut.T1Timeout} (Wait Response ON)");
                      }
                   }
-
                   break;
 
                   case 30: // Clear Request
                   {
+                     _logger?.Invoke("[MoveOutService] Case 30: Clearing Request...");
                      await _controller.WriteBitsAsync(AddrMoveOutRequestFlag, new[] { false }, ct);
                      _logger?.Invoke($"[MoveOutService] Request OFF ({AddrMoveOutRequestFlag})");
 
                      _timer.Reset();
                      _step = 40;
+                     _logger?.Invoke("[MoveOutService] Step: 30 -> 40, Timer Reset");
                   }
-
                   break;
 
                   case 40: // Wait Response OFF
                   {
                      bool responseOn = _controller.GetBit(AddrMoveOutResponseFlag);
+                     _logger?.Invoke($"[MoveOutService] Case 40: Waiting for Response OFF, Current={responseOn}");
+                     
                      if (!responseOn)
                      {
-                        _logger?.Invoke($"[MoveOutService] Response OFF ({AddrMoveOutResponseFlag}) detected - Success");
+                        _logger?.Invoke($"[MoveOutService] Response OFF ({AddrMoveOutResponseFlag}) detected - Flow Complete!");
                         HandleSuccess();
+                        _logger?.Invoke("[MoveOutService] Step: 40 -> 0 (Success)");
                      }
                      else if (_timer.On(_settings.MoveOut.T2Timeout))
                      {
+                        _logger?.Invoke($"[MoveOutService] T2 Timeout occurred ({_settings.MoveOut.T2Timeout}ms)");
                         await AlarmHelper.AddAlarmCodeAsync(_appPlcService, "C011");
                         HandleError($"T2 Timeout:{_settings.MoveOut.T2Timeout} (Wait Response OFF)");
                      }
                   }
-
                   break;
                }
 
