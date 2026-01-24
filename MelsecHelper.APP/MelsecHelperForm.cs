@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Melsec.Helper.Adapters;
+using Melsec.Helper.Forms;
+using Melsec.Helper.Models;
+using Melsec.Helper.Services;
+using MelsecHelper.APP.Forms;
+using MelsecHelper.APP.Models;
+using MelsecHelper.APP.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Melsec.Helper.Adapters;
-using Melsec.Helper.Forms;
-using Melsec.Helper.Models;
-using MelsecHelper.APP.Forms;
-using MelsecHelper.APP.Models;
-using MelsecHelper.APP.Services;
 using Timer = System.Threading.Timer;
 
 namespace MelsecHelper.APP
@@ -336,7 +337,7 @@ namespace MelsecHelper.APP
          // Poll Timer (GetStatusAsync) is cleaner but slower update.
          // Helper event is instant.
 
-         if (_appPlcService.Controller is MelsecHelper helper)
+         if (_appPlcService.Controller is Melsec.Helper.Services.MelsecController helper)
          {
             helper.Connected += () => UpdateStatus(true);
             helper.Disconnected += () => UpdateStatus(false);
@@ -1290,7 +1291,7 @@ namespace MelsecHelper.APP
 
       private void btnWrite_Click(object sender, EventArgs e)
       {
-         if (_appPlcService.Controller is MelsecHelper helper)
+         if (_appPlcService.Controller is MelsecController helper)
          {
             helper.SetBitDirect("LB", 0x0300, true);
          }

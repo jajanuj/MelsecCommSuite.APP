@@ -1,12 +1,12 @@
+using GRT.SDK.Framework.Timer;
+using Melsec.Helper.Adapters;
+using Melsec.Helper.Interfaces;
+using MelsecHelper.APP.Models;
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using GRT.SDK.Framework.Timer;
-using Melsec.Helper.Adapters;
-using Melsec.Helper.Interfaces;
-using MelsecHelper.APP.Models;
 
 namespace MelsecHelper.APP.Services
 {
@@ -176,27 +176,29 @@ namespace MelsecHelper.APP.Services
 
       public async Task SetMachineStatus(MachineStatus status)
       {
-         ushort statusValue = status switch
+         ushort statusValue = 0;
+         switch (status)
          {
-            MachineStatus.Init => 1,
-            MachineStatus.Preparing => 2,
-            MachineStatus.Ready => 3,
-            MachineStatus.Running => 4,
-            MachineStatus.Stopped => 5,
-            _ => 0,
-         };
+            case MachineStatus.Init: statusValue = 1; break;
+            case MachineStatus.Preparing: statusValue = 2; break;
+            case MachineStatus.Ready: statusValue = 3; break;
+            case MachineStatus.Running: statusValue = 4; break;
+            case MachineStatus.Stopped: statusValue = 5; break;
+         }
+
          await _controller.WriteWordsAsync("LW1147", new short[] { (short)statusValue });
       }
 
       public async Task SetActionStatus(ActionStatus status)
       {
-         ushort statusValue = status switch
+         ushort statusValue = 0;
+         switch (status)
          {
-            ActionStatus.Homing => 1,
-            ActionStatus.Moving => 2,
-            ActionStatus.Other => 99,
-            _ => 0,
-         };
+            case ActionStatus.Homing: statusValue = 1; break;
+            case ActionStatus.Moving: statusValue = 2; break;
+            case ActionStatus.Other: statusValue = 99; break;
+         }
+
          await _controller.WriteWordsAsync("LW1148", new short[] { (short)statusValue });
       }
 
@@ -1180,7 +1182,7 @@ namespace MelsecHelper.APP.Services
                      int pos = _pendingMaintenancePos;
 
                      // Validate Position
-                     if (pos is > 0 and < MaxPositions)
+                     if (pos > 0 && pos < MaxPositions)
                      {
                         // 將 trackWords 轉換為 TrackingData 並保存
                         _receivedMaintenanceData = TrackingData.FromWords(trackWords.Select(w => (ushort)w).ToArray());

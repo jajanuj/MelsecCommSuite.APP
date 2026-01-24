@@ -177,7 +177,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Config\StationTracking.json" />
+    <None Include="Config\StationTracking.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -192,15 +194,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\HandshakeMonitorSettings.xml" />
-    <Content Include="Config\TrackingMonitorSettings.xml" />
+    <None Include="Config\HandshakeMonitorSettings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\TrackingMonitorSettings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Library\GRT.SDK.Framework.dll" />
-    <Content Include="Library\Interop.ActProgType64Lib.dll" />
-    <Content Include="Library\Interop.ActProgTypeLib.dll" />
-    <Content Include="Library\Interop.ActSupportMsg64Lib.dll" />
-    <Content Include="Library\Interop.ActSupportMsgLib.dll" />
-    <Content Include="Library\Interop.ActUtlType64Lib.dll" />
-    <Content Include="Library\Interop.ActUtlTypeLib.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MelsecCommSuite\Melsec.Helper\Melsec.Helper.csproj">
