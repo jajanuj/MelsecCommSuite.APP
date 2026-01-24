@@ -61,58 +61,26 @@ namespace MelsecHelper.APP.Services
 
       public void Start()
       {
-         _logger?.Invoke("[MoveOutService] Start() called");
-         
          if (_moveOutTask != null)
          {
-            _logger?.Invoke("[MoveOutService] Already started, skipping");
             return;
          }
 
          try
          {
-            _logger?.Invoke("[MoveOutService] Creating CancellationTokenSource");
             _moveOutCts = new CancellationTokenSource();
-            
-            _logger?.Invoke($"[MoveOutService] Current SyncContext: {SynchronizationContext.Current?.GetType().Name ?? "null"}");
-            _logger?.Invoke($"[MoveOutService] Default TaskScheduler: {TaskScheduler.Default.GetType().Name}");
-            
-            _logger?.Invoke("[MoveOutService] Creating background task with TaskScheduler.Default");
             _moveOutTask = Task.Factory.StartNew(
                () => MoveOutLoopAsync(_moveOutCts.Token),
                _moveOutCts.Token,
                TaskCreationOptions.LongRunning,
                TaskScheduler.Default
             ).Unwrap();
-            
-            _logger?.Invoke($"[MoveOutService] Task created, ID={_moveOutTask.Id}, Status={_moveOutTask.Status}");
-            
-            // 給 Task 一點時間啟動
-            Task.Delay(10).Wait();
-            _logger?.Invoke($"[MoveOutService] Task status after delay: {_moveOutTask.Status}");
-            
-            // 如果 Task 失敗，記錄異常
-            if (_moveOutTask.Status == TaskStatus.Faulted)
-            {
-               _logger?.Invoke("[MoveOutService] *** Task is FAULTED! ***");
-               if (_moveOutTask.Exception != null)
-               {
-                  foreach (var ex in _moveOutTask.Exception.InnerExceptions)
-                  {
-                     _logger?.Invoke($"[MoveOutService] Exception Type: {ex.GetType().Name}");
-                     _logger?.Invoke($"[MoveOutService] Exception Message: {ex.Message}");
-                     _logger?.Invoke($"[MoveOutService] Exception Stack: {ex.StackTrace}");
-                  }
-               }
-            }
-            
+
             _logger?.Invoke("[MoveOutService] Service Started");
          }
          catch (Exception ex)
          {
-            _logger?.Invoke($"[MoveOutService] Start() Exception: {ex.GetType().Name}");
-            _logger?.Invoke($"[MoveOutService] Message: {ex.Message}");
-            _logger?.Invoke($"[MoveOutService] Stack: {ex.StackTrace}");
+            _logger?.Invoke($"[MoveOutService] Start Exception: {ex.Message}");
          }
       }
 
@@ -147,7 +115,7 @@ namespace MelsecHelper.APP.Services
 
          if (_step != 0)
          {
-            _logger?.Invoke("[MoveOutService] Cannot start, busy (Step != 0)");
+            _logger?.Invoke("[MoveOutService] Busy (Step != 0)");
             return;
          }
 
@@ -161,126 +129,100 @@ namespace MelsecHelper.APP.Services
 
       private async Task MoveOutLoopAsync(CancellationToken ct)
       {
-         _logger?.Invoke("[MoveOutService] MoveOutLoopAsync started");
-
          try
          {
-            _logger?.Invoke("[MoveOutService] Entering main loop");
-
             while (!ct.IsCancellationRequested && !_disposed)
             {
                try
                {
-                  _logger?.Invoke($"[MoveOutService] Loop - Step={_step}");
 
                   switch (_step)
                   {
                      case 0: // Idle
                         if (_pendingData != null)
                         {
-                           _logger?.Invoke("[MoveOutService] Pending data detected, starting flow");
                            _step = 10;
-                           _logger?.Invoke("[MoveOutService] Step: 0 -> 10");
                         }
-
                         break;
 
                      case 10: // Write Data & Set Request
                      {
-                        _logger?.Invoke("[MoveOutService] Case 10: Writing data to PLC...");
-                        // 1. Write Data (11 Words)
+                        // Write Data (11 Words)
                         short[] rawData = _pendingData.ToRawData();
                         await _controller.WriteWordsAsync(AddrMoveOutTrackingData, rawData, ct);
-                        _logger?.Invoke($"[MoveOutService] Data written to {AddrMoveOutTrackingData}");
 
-                        // 2. Set Request ON
+                        // Set Request ON
                         await _controller.WriteBitsAsync(AddrMoveOutRequestFlag, new[] { true }, ct);
-                        _logger?.Invoke($"[MoveOutService] Request ON ({AddrMoveOutRequestFlag})");
+                        _logger?.Invoke($"[MoveOutService] Request ON");
 
                         _timer.Reset();
                         _step = 20;
-                        _logger?.Invoke("[MoveOutService] Step: 10 -> 20, Timer Reset");
                      }
-
                      break;
 
                      case 20: // Wait Response ON
                      {
                         bool responseOn = _controller.GetBit(AddrMoveOutResponseFlag);
-                        _logger?.Invoke($"[MoveOutService] Case 20: Waiting for Response ON, Current={responseOn}");
 
                         if (responseOn)
                         {
-                           _logger?.Invoke($"[MoveOutService] Response ON ({AddrMoveOutResponseFlag}) detected");
+                           _logger?.Invoke($"[MoveOutService] Response ON");
                            _step = 30;
-                           _logger?.Invoke("[MoveOutService] Step: 20 -> 30");
                         }
                         else if (_timer.On(_settings.MoveOut.T1Timeout))
                         {
-                           _logger?.Invoke($"[MoveOutService] T1 Timeout occurred ({_settings.MoveOut.T1Timeout}ms)");
+                           _logger?.Invoke($"[MoveOutService] T1 Timeout ({_settings.MoveOut.T1Timeout}ms)");
                            await AlarmHelper.AddAlarmCodeAsync(_appPlcService, "C010");
-                           HandleError($"T1 Timeout:{_settings.MoveOut.T1Timeout} (Wait Response ON)");
+                           HandleError($"T1 Timeout:{_settings.MoveOut.T1Timeout}");
                         }
                      }
-
                      break;
 
                      case 30: // Clear Request
                      {
-                        _logger?.Invoke("[MoveOutService] Case 30: Clearing Request...");
                         await _controller.WriteBitsAsync(AddrMoveOutRequestFlag, new[] { false }, ct);
-                        _logger?.Invoke($"[MoveOutService] Request OFF ({AddrMoveOutRequestFlag})");
+                        _logger?.Invoke($"[MoveOutService] Request OFF");
 
                         _timer.Reset();
                         _step = 40;
-                        _logger?.Invoke("[MoveOutService] Step: 30 -> 40, Timer Reset");
                      }
-
                      break;
 
                      case 40: // Wait Response OFF
                      {
                         bool responseOn = _controller.GetBit(AddrMoveOutResponseFlag);
-                        _logger?.Invoke($"[MoveOutService] Case 40: Waiting for Response OFF, Current={responseOn}");
 
                         if (!responseOn)
                         {
-                           _logger?.Invoke($"[MoveOutService] Response OFF ({AddrMoveOutResponseFlag}) detected - Flow Complete!");
+                           _logger?.Invoke($"[MoveOutService] Response OFF - Complete!");
                            HandleSuccess();
-                           _logger?.Invoke("[MoveOutService] Step: 40 -> 0 (Success)");
                         }
                         else if (_timer.On(_settings.MoveOut.T2Timeout))
                         {
-                           _logger?.Invoke($"[MoveOutService] T2 Timeout occurred ({_settings.MoveOut.T2Timeout}ms)");
+                           _logger?.Invoke($"[MoveOutService] T2 Timeout ({_settings.MoveOut.T2Timeout}ms)");
                            await AlarmHelper.AddAlarmCodeAsync(_appPlcService, "C011");
-                           HandleError($"T2 Timeout:{_settings.MoveOut.T2Timeout} (Wait Response OFF)");
+                           HandleError($"T2 Timeout:{_settings.MoveOut.T2Timeout}");
                         }
                      }
-
                      break;
                   }
 
                   await Task.Delay(50, ct);
                }
-               catch (OperationCanceledException ex)
+               catch (OperationCanceledException)
                {
-                  _logger?.Invoke($"[MoveOutService] Loop OperationCanceledException Error: {ex.Message}");
                   break;
                }
                catch (Exception ex)
                {
-                  _logger?.Invoke($"[MoveOutService] Loop Exception Error: {ex.Message}");
+                  _logger?.Invoke($"[MoveOutService] Loop Exception: {ex.Message}");
                   await Task.Delay(1000, ct);
                }
             }
          }
          catch (Exception ex)
          {
-            _logger?.Invoke($"[MoveOutService] MoveOutLoopAsync Exception Error: {ex.Message}");
-         }
-         finally
-         {
-            _logger?.Invoke("[MoveOutService] MoveOutLoopAsync ended");
+            _logger?.Invoke($"[MoveOutService] Exception: {ex.Message}");
          }
       }
 
