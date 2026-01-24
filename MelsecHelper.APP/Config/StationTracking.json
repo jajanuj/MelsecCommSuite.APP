@@ -1,0 +1,188 @@
+{
+  "Stations": [
+    {
+      "StationId": 1,
+      "StationName": "上游平台",
+      "Capacity": 1,
+      "StartAddress": "LW184A",
+      "GlobalStartIndex": 1,
+      "GlobalEndIndex": 1
+    },
+    {
+      "StationId": 2,
+      "StationName": "插框機手臂",
+      "Capacity": 1,
+      "StartAddress": "LW1854",
+      "GlobalStartIndex": 2,
+      "GlobalEndIndex": 2
+    },
+    {
+      "StationId": 3,
+      "StationName": "插框站",
+      "Capacity": 1,
+      "StartAddress": "LW185E",
+      "GlobalStartIndex": 3,
+      "GlobalEndIndex": 3
+    },
+    {
+      "StationId": 4,
+      "StationName": "插框機出料",
+      "Capacity": 30,
+      "StartAddress": "LW1868",
+      "GlobalStartIndex": 4,
+      "GlobalEndIndex": 33
+    },
+    {
+      "StationId": 5,
+      "StationName": "AGV",
+      "Capacity": 30,
+      "StartAddress": "LW1994",
+      "GlobalStartIndex": 34,
+      "GlobalEndIndex": 63
+    },
+    {
+      "StationId": 6,
+      "StationName": "烤箱1",
+      "Capacity": 30,
+      "StartAddress": "LW1AC0",
+      "GlobalStartIndex": 64,
+      "GlobalEndIndex": 93
+    },
+    {
+      "StationId": 7,
+      "StationName": "烤箱2",
+      "Capacity": 30,
+      "StartAddress": "LW1BEC",
+      "GlobalStartIndex": 94,
+      "GlobalEndIndex": 123
+    },
+    {
+      "StationId": 8,
+      "StationName": "烤箱3",
+      "Capacity": 30,
+      "StartAddress": "LW1D18",
+      "GlobalStartIndex": 124,
+      "GlobalEndIndex": 153
+    },
+    {
+      "StationId": 9,
+      "StationName": "烤箱4",
+      "Capacity": 30,
+      "StartAddress": "LW1E44",
+      "GlobalStartIndex": 154,
+      "GlobalEndIndex": 183
+    },
+    {
+      "StationId": 10,
+      "StationName": "烤箱5",
+      "Capacity": 30,
+      "StartAddress": "LW1F70",
+      "GlobalStartIndex": 184,
+      "GlobalEndIndex": 213
+    },
+    {
+      "StationId": 11,
+      "StationName": "烤箱6",
+      "Capacity": 30,
+      "StartAddress": "LW209C",
+      "GlobalStartIndex": 214,
+      "GlobalEndIndex": 243
+    },
+    {
+      "StationId": 12,
+      "StationName": "烤箱7",
+      "Capacity": 30,
+      "StartAddress": "LW21C8",
+      "GlobalStartIndex": 244,
+      "GlobalEndIndex": 273
+    },
+    {
+      "StationId": 13,
+      "StationName": "烤箱8",
+      "Capacity": 30,
+      "StartAddress": "LW22F4",
+      "GlobalStartIndex": 274,
+      "GlobalEndIndex": 303
+    },
+    {
+      "StationId": 14,
+      "StationName": "拆框機入料",
+      "Capacity": 30,
+      "StartAddress": "LW2420",
+      "GlobalStartIndex": 304,
+      "GlobalEndIndex": 333
+    },
+    {
+      "StationId": 15,
+      "StationName": "拆框機入料平台",
+      "Capacity": 30,
+      "StartAddress": "LW254C",
+      "GlobalStartIndex": 334,
+      "GlobalEndIndex": 363
+    },
+    {
+      "StationId": 16,
+      "StationName": "拆框機移載預備",
+      "Capacity": 30,
+      "StartAddress": "LW2678",
+      "GlobalStartIndex": 364,
+      "GlobalEndIndex": 393
+    },
+    {
+      "StationId": 17,
+      "StationName": "拆框機移載完成",
+      "Capacity": 30,
+      "StartAddress": "LW27A4",
+      "GlobalStartIndex": 394,
+      "GlobalEndIndex": 423
+    },
+    {
+      "StationId": 18,
+      "StationName": "拆框機出料平台",
+      "Capacity": 30,
+      "StartAddress": "LW28D0",
+      "GlobalStartIndex": 424,
+      "GlobalEndIndex": 453
+    },
+    {
+      "StationId": 19,
+      "StationName": "拆框站",
+      "Capacity": 1,
+      "StartAddress": "LW29FC",
+      "GlobalStartIndex": 454,
+      "GlobalEndIndex": 454
+    },
+    {
+      "StationId": 20,
+      "StationName": "拆框機出料",
+      "Capacity": 30,
+      "StartAddress": "LW2A06",
+      "GlobalStartIndex": 455,
+      "GlobalEndIndex": 484
+    },
+    {
+      "StationId": 21,
+      "StationName": "拆框機手臂",
+      "Capacity": 1,
+      "StartAddress": "LW2B32",
+      "GlobalStartIndex": 485,
+      "GlobalEndIndex": 485
+    },
+    {
+      "StationId": 22,
+      "StationName": "下游平台",
+      "Capacity": 1,
+      "StartAddress": "LW2B3C",
+      "GlobalStartIndex": 486,
+      "GlobalEndIndex": 486
+    },
+    {
+      "StationId": 23,
+      "StationName": "手動口",
+      "Capacity": 30,
+      "StartAddress": "LW2B46",
+      "GlobalStartIndex": 487,
+      "GlobalEndIndex": 516
+    }
+  ]
+}

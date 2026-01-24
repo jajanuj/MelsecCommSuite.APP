@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4CA5305E-8CAE-4D34-B816-EEB4567FED8B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>MelsecHelper.APP</RootNamespace>
+    <AssemblyName>MelsecHelper.APP</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GRT.SDK.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MelsecCommSuite\Library\GRT.SDK.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MelsecHelperForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MelsecHelperForm.Designer.cs">
+      <DependentUpon>MelsecHelperForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CommonReportSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CommonReportSettingsForm.Designer.cs">
+      <DependentUpon>CommonReportSettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\HandshakeControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\HandshakeControlForm.Designer.cs">
+      <DependentUpon>HandshakeControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LotMixingPreventionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LotMixingPreventionForm.Designer.cs">
+      <DependentUpon>LotMixingPreventionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MelsecBoardSettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MelsecBoardSettingForm.Designer.cs">
+      <DependentUpon>MelsecBoardSettingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MxComponentSettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MxComponentSettingForm.Designer.cs">
+      <DependentUpon>MxComponentSettingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PlcSimulatorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PlcSimulatorForm.Designer.cs">
+      <DependentUpon>PlcSimulatorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RecipeCheckForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RecipeCheckForm.Designer.cs">
+      <DependentUpon>RecipeCheckForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StationTrackingManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StationTrackingManagementForm.Designer.cs">
+      <DependentUpon>StationTrackingManagementForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TrackingControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TrackingControlForm.Designer.cs">
+      <DependentUpon>TrackingControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AppControllerSettings.cs" />
+    <Compile Include="Models\CommonReportAlarm.cs" />
+    <Compile Include="Models\CommonReportStatus1.cs" />
+    <Compile Include="Models\CommonReportStatus2.cs" />
+    <Compile Include="Models\HandshakeAddresses.cs" />
+    <Compile Include="Models\HandshakeSettings.cs" />
+    <Compile Include="Models\HandshakeState.cs" />
+    <Compile Include="Models\HeartbeatSettings.cs" />
+    <Compile Include="Models\LinkReportData.cs" />
+    <Compile Include="Models\MaintenanceSettings.cs" />
+    <Compile Include="Models\MoveOutData.cs" />
+    <Compile Include="Models\RecipeCheckMode.cs" />
+    <Compile Include="Models\RecipeCheckResponse.cs" />
+    <Compile Include="Models\RecipeCheckSettings.cs" />
+    <Compile Include="Models\RobotSignals.cs" />
+    <Compile Include="Models\SliderSignals.cs" />
+    <Compile Include="Models\StationConfig.cs" />
+    <Compile Include="Models\StationTrackingConfig.cs" />
+    <Compile Include="Models\TimeSyncSettings.cs" />
+    <Compile Include="Models\TrackingData.cs" />
+    <Compile Include="Models\TrackingSettings.cs" />
+    <Compile Include="Models\TrackingStation.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AlarmHelper.cs" />
+    <Compile Include="Services\AppPlcService.cs" />
+    <Compile Include="Services\PlcSimulator.cs" />
+    <Compile Include="Services\RecipeCheckClient.cs" />
+    <Compile Include="Services\SliderRobotHandshakeService.cs" />
+    <Compile Include="Services\TrackingDataService.cs" />
+    <EmbeddedResource Include="MelsecHelperForm.resx">
+      <DependentUpon>MelsecHelperForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CommonReportSettingsForm.resx">
+      <DependentUpon>CommonReportSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\HandshakeControlForm.resx">
+      <DependentUpon>HandshakeControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LotMixingPreventionForm.resx">
+      <DependentUpon>LotMixingPreventionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MelsecBoardSettingForm.resx">
+      <DependentUpon>MelsecBoardSettingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MxComponentSettingForm.resx">
+      <DependentUpon>MxComponentSettingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PlcSimulatorForm.resx">
+      <DependentUpon>PlcSimulatorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TrackingControlForm.ja.resx">
+      <DependentUpon>TrackingControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TrackingControlForm.resx">
+      <DependentUpon>TrackingControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Config\StationTracking.json" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Config\HandshakeMonitorSettings.xml" />
+    <Content Include="Config\TrackingMonitorSettings.xml" />
+    <Content Include="Library\GRT.SDK.Framework.dll" />
+    <Content Include="Library\Interop.ActProgType64Lib.dll" />
+    <Content Include="Library\Interop.ActProgTypeLib.dll" />
+    <Content Include="Library\Interop.ActSupportMsg64Lib.dll" />
+    <Content Include="Library\Interop.ActSupportMsgLib.dll" />
+    <Content Include="Library\Interop.ActUtlType64Lib.dll" />
+    <Content Include="Library\Interop.ActUtlTypeLib.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MelsecCommSuite\Melsec.Helper\Melsec.Helper.csproj">
+      <Project>{ebf5036b-973e-4f40-872d-d71a6cb3df4b}</Project>
+      <Name>Melsec.Helper</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

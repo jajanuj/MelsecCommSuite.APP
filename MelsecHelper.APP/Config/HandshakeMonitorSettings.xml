@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TrackingMonitorSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <HexFormat>true</HexFormat>
+  <UpdateInterval>300</UpdateInterval>
+  <Comments>
+    <!-- System I/F Flags -->
+    <AddressComment><Address>LB0000</Address><Comment>Clock Update (Request)</Comment></AddressComment>
+    <AddressComment><Address>LB0100</Address><Comment>Check Clock (Request)</Comment></AddressComment>
+    <AddressComment><Address>LB0101</Address><Comment>Move Out I/F (Request)</Comment></AddressComment>
+    <AddressComment><Address>LB0104</Address><Comment>Recipe Check #1 (OK)</Comment></AddressComment>
+    <AddressComment><Address>LB0105</Address><Comment>Recipe Check #1 (NG)</Comment></AddressComment>
+    <AddressComment><Address>LB0106</Address><Comment>Tracking Mainte Upper (Request)</Comment></AddressComment>
+    <AddressComment><Address>LB0107</Address><Comment>Tracking Mainte Device (Complete)</Comment></AddressComment>
+    <AddressComment><Address>LB0108</Address><Comment>Data Report (Response)</Comment></AddressComment>
+    <AddressComment><Address>LB0110</Address><Comment>Transfer I/F #1 (Readable)</Comment></AddressComment>
+    
+    <AddressComment><Address>LB0300</Address><Comment>Check Clock (Response)</Comment></AddressComment>
+    <AddressComment><Address>LB0301</Address><Comment>Move Out I/F (Request)</Comment></AddressComment>
+    <AddressComment><Address>LB0303</Address><Comment>Recipe Check I/F (Request)</Comment></AddressComment>
+    <AddressComment><Address>LB0304</Address><Comment>Tracking Mainte I/F (OK)</Comment></AddressComment>
+    <AddressComment><Address>LB0305</Address><Comment>Tracking Mainte I/F (NG)</Comment></AddressComment>
+    <AddressComment><Address>LB0306</Address><Comment>Tracking Mainte I/F (Request)</Comment></AddressComment>
+    <AddressComment><Address>LB0307</Address><Comment>Data Report (Request)</Comment></AddressComment>
+    <AddressComment><Address>LB030B</Address><Comment>Data Report (MP Judge)</Comment></AddressComment>
+
+    <!-- STB (滑台) -> RB (機械手臂) 裝置間搬送 I/F -->
+    <AddressComment><Address>LB0330</Address><Comment>STB_起動中 (PIN1)</Comment></AddressComment>
+    <AddressComment><Address>LB0331</Address><Comment>STB_停止中 (PIN2)</Comment></AddressComment>
+    <AddressComment><Address>LB0332</Address><Comment>STB_排出予告 (PIN3)</Comment></AddressComment>
+    <AddressComment><Address>LB0333</Address><Comment>STB_排出要求 (PIN4)</Comment></AddressComment>
+    <AddressComment><Address>LB0334</Address><Comment>STB_PIN5</Comment></AddressComment>
+    <AddressComment><Address>LW0334</Address><Comment>STB_基板受取位置(Word)</Comment></AddressComment>
+    <AddressComment><Address>LB0335</Address><Comment>STB_基板受取完了 (PIN6)</Comment></AddressComment>
+    <AddressComment><Address>LB0336</Address><Comment>STB_LastFlag (PIN7)</Comment></AddressComment>
+    <AddressComment><Address>LB0337</Address><Comment>STB_PIN8</Comment></AddressComment>
+    <AddressComment><Address>LB0338</Address><Comment>STB_PIN9</Comment></AddressComment>
+    <AddressComment><Address>LB0339</Address><Comment>STB_PIN10</Comment></AddressComment>
+    <AddressComment><Address>LB033A</Address><Comment>STB_PIN11</Comment></AddressComment>
+    <AddressComment><Address>LB033B</Address><Comment>STB_PIN12</Comment></AddressComment>
+    <AddressComment><Address>LB033C</Address><Comment>STB_PIN13</Comment></AddressComment>
+    <AddressComment><Address>LB033D</Address><Comment>STB_PIN14</Comment></AddressComment>
+    <AddressComment><Address>LB033E</Address><Comment>STB_PIN15</Comment></AddressComment>
+    <AddressComment><Address>LB033F</Address><Comment>STB_PIN16</Comment></AddressComment>
+    <AddressComment><Address>LB0340</Address><Comment>STB_PIN17</Comment></AddressComment>
+    <AddressComment><Address>LB0341</Address><Comment>STB_PIN18 (NotUsed)</Comment></AddressComment>
+    <AddressComment><Address>LB0342</Address><Comment>STB_PIN19</Comment></AddressComment>
+    <AddressComment><Address>LB0343</Address><Comment>STB_PIN20</Comment></AddressComment>
+    <AddressComment><Address>LB0344</Address><Comment>STB_PIN21</Comment></AddressComment>
+    <AddressComment><Address>LB0345</Address><Comment>STB_PIN22</Comment></AddressComment>
+    <AddressComment><Address>LB0346</Address><Comment>STB_PIN23</Comment></AddressComment>
+    <AddressComment><Address>LB0347</Address><Comment>STB_PIN24</Comment></AddressComment>
+    <AddressComment><Address>LB0348</Address><Comment>STB_PIN25</Comment></AddressComment>
+    <AddressComment><Address>LB0349</Address><Comment>STB_PIN26</Comment></AddressComment>
+    <AddressComment><Address>LB034A</Address><Comment>STB_PIN27</Comment></AddressComment>
+    <AddressComment><Address>LB034B</Address><Comment>STB_PIN28</Comment></AddressComment>
+    <AddressComment><Address>LB034C</Address><Comment>STB_PIN29</Comment></AddressComment>
+    <AddressComment><Address>LB034D</Address><Comment>STB_PIN30</Comment></AddressComment>
+    <AddressComment><Address>LB034E</Address><Comment>STB_PIN31</Comment></AddressComment>
+    <AddressComment><Address>LB034F</Address><Comment>STB_PIN32</Comment></AddressComment>
+    <AddressComment><Address>LB0350</Address><Comment>STB_PIN33</Comment></AddressComment>
+    <AddressComment><Address>LB0351</Address><Comment>STB_PIN34</Comment></AddressComment>
+    <AddressComment><Address>LB0352</Address><Comment>STB_PIN35</Comment></AddressComment>
+    <AddressComment><Address>LB0353</Address><Comment>STB_PIN36 (NotUsed)</Comment></AddressComment>
+  </Comments>
+</TrackingMonitorSettings>

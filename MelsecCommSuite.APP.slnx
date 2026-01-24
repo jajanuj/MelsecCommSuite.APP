@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../MelsecCommSuite/Melsec.Helper/Melsec.Helper.csproj" Id="ebf5036b-973e-4f40-872d-d71a6cb3df4b" />
+  <Project Path="MelsecHelper.APP/MelsecHelper.APP.csproj" Id="4ca5305e-8cae-4d34-b816-eeb4567fed8b" />
+</Solution>
