@@ -91,6 +91,21 @@ namespace MelsecHelper.APP.Services
             Task.Delay(10).Wait();
             _logger?.Invoke($"[MoveOutService] Task status after delay: {_moveOutTask.Status}");
             
+            // 如果 Task 失敗，記錄異常
+            if (_moveOutTask.Status == TaskStatus.Faulted)
+            {
+               _logger?.Invoke("[MoveOutService] *** Task is FAULTED! ***");
+               if (_moveOutTask.Exception != null)
+               {
+                  foreach (var ex in _moveOutTask.Exception.InnerExceptions)
+                  {
+                     _logger?.Invoke($"[MoveOutService] Exception Type: {ex.GetType().Name}");
+                     _logger?.Invoke($"[MoveOutService] Exception Message: {ex.Message}");
+                     _logger?.Invoke($"[MoveOutService] Exception Stack: {ex.StackTrace}");
+                  }
+               }
+            }
+            
             _logger?.Invoke("[MoveOutService] Service Started");
          }
          catch (Exception ex)
