@@ -129,6 +129,7 @@
     <Compile Include="Models\SliderSignals.cs" />
     <Compile Include="Models\StationConfig.cs" />
     <Compile Include="Models\StationTrackingConfig.cs" />
+    <Compile Include="Models\MoveOutSettings.cs" />
     <Compile Include="Models\TimeSyncSettings.cs" />
     <Compile Include="Models\TrackingData.cs" />
     <Compile Include="Models\TrackingSettings.cs" />

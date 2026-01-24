@@ -1,7 +1,7 @@
+using Melsec.Helper.Interfaces;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Melsec.Helper.Interfaces;
 
 namespace MelsecHelper.APP.Services
 {
@@ -28,7 +28,7 @@ namespace MelsecHelper.APP.Services
       #region Public Methods
 
       /// <summary>
-      /// 新增單一警報碼（舊版方法，為向後相容保留）
+      /// 新增單一警報碼
       /// </summary>
       public static Task<(int AddedCount, ushort[] IgnoredCodes)> AddAlarmCodeAsync(AppPlcService appPlcService, string code)
       {

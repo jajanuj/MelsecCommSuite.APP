@@ -45,6 +45,9 @@ namespace MelsecHelper.APP
       // 連接狀態標記
       private bool _isOpened;
       private ushort _machineStatus = 4; // 預設：生產中
+
+      // MoveOut 服務
+      private MoveOutService _moveOutService;
       private int _path = -1;
       private uint _processingCounter;
 
@@ -72,6 +75,7 @@ namespace MelsecHelper.APP
       public Form1()
       {
          InitializeComponent();
+         InitializeComboBox();
 
          // 1. 加載或設定連線參數 (內建自動檢查檔名與開啟 UI 邏輯)
          _settings = new AppControllerSettings("Settings");
@@ -181,6 +185,7 @@ namespace MelsecHelper.APP
          {
             // 啟動連結報告模擬模式：模擬 LCS 自動回應 EQ 的請求
             _simulator.StartLinkReportMode();
+            _simulator.StartMoveOutFlow(); // 啟動 MoveOut 模擬流程
             Log("已啟動 Simulator 連結報告模式 (LCS 自動回應) | Simulator Link Report");
          }
       }
@@ -255,12 +260,29 @@ namespace MelsecHelper.APP
             System.Diagnostics.Debug.WriteLine($"Error disposing Controller: {ex.Message}");
          }
 
+         // 7. 停止 MoveOutService
+         try
+         {
+            _moveOutService?.Stop();
+            _moveOutService = null;
+         }
+         catch (Exception ex)
+         {
+            System.Diagnostics.Debug.WriteLine($"Error stopping MoveOutService: {ex.Message}");
+         }
+
          base.OnClosing(e);
       }
 
       #endregion
 
       #region Private Methods
+
+      private void InitializeComboBox()
+      {
+         cboPlcMoveOutTestMode.DataSource = Enum.GetValues(typeof(TestMode));
+         cboPlcMoveOutTestMode.SelectedIndex = 0;
+      }
 
       private void btnHandshake_Click(object sender, EventArgs e)
       {
@@ -470,7 +492,7 @@ namespace MelsecHelper.APP
                grpConnectionMode.Enabled = false;
                btnClose.Enabled = true;
 
-               // Update Maint Monitor Buttons
+               // Update Maintenance Monitor Buttons
                btnStartMaintMonitor.Enabled = false;
                btnStopMaintMonitor.Enabled = true;
 
@@ -588,7 +610,7 @@ namespace MelsecHelper.APP
                btnOpen.Enabled = true;
                btnClose.Enabled = false;
 
-               // Reset Maint Monitor Buttons
+               // Reset Maintenance Monitor Buttons
                btnStartMaintMonitor.Enabled = true;
                btnStopMaintMonitor.Enabled = false;
             }));
@@ -1013,8 +1035,14 @@ namespace MelsecHelper.APP
             return;
          }
 
+         if (_simulator != null)
+         {
+            _simulator.StopMoveOutFlow();
+            _simulator.StartMoveOutFlow();
+         }
+
          var configPath = System.IO.Path.Combine(Application.StartupPath, "Config", "StationTracking.json");
-         var form = new StationTrackingManagementForm(_appPlcService.Controller, configPath);
+         var form = new StationTrackingManagementForm(_appPlcService, _settings, configPath);
          form.Show();
       }
 
@@ -1087,7 +1115,7 @@ namespace MelsecHelper.APP
          }
       }
 
-      private void btnStartMaintMonitor_Click(object sender, EventArgs e)
+      private void btnStartMaintenanceMonitor_Click(object sender, EventArgs e)
       {
          if (_appPlcService == null || !_isOpened)
          {
@@ -1101,7 +1129,7 @@ namespace MelsecHelper.APP
          Log("維護監控已手動啟動 | Maintenance Monitor started manually");
       }
 
-      private void btnStopMaintMonitor_Click(object sender, EventArgs e)
+      private void btnStopMaintenanceMonitor_Click(object sender, EventArgs e)
       {
          _appPlcService?.StopTrackingDataMaintenanceMonitor();
          btnStartMaintMonitor.Enabled = true;
@@ -1248,6 +1276,76 @@ namespace MelsecHelper.APP
       {
          var form = new PlcSimulatorForm(_simulator);
          form.Show();
+      }
+
+      /// <summary>
+      /// MoveOutService 測試範例
+      /// </summary>
+      /// <param name="moveOutData"></param>
+      private async void RunMoveOutTest(MoveOutData moveOutData)
+      {
+         try
+         {
+            if (_moveOutService == null)
+            {
+               Log("MoveOutService not initialized.");
+               return;
+            }
+
+            Log("[Test] 開始 MoveOut 測試...");
+            await _moveOutService.StartMoveOut(moveOutData);
+         }
+         catch (Exception ex)
+         {
+            Log($"[Test] MoveOut 測試失敗: {ex.Message}");
+         }
+      }
+
+      private void btnMoveOutStart_Click(object sender, EventArgs e)
+      {
+         if (_simulator != null)
+         {
+            _simulator.StopMoveOutFlow();
+            _simulator.StartMoveOutFlow();
+         }
+
+         //初始化 MoveOutService
+         _moveOutService = new MoveOutService(_appPlcService, _settings, msg => Log($"[MoveOut] {msg}"));
+         _moveOutService.Start();
+
+         var data = new MoveOutData
+         {
+            ReasonCode = 0,
+            TrackingData = new TrackingData
+            {
+               BoardId = new[]
+               {
+                  (ushort)nudBoardId1.Value,
+                  (ushort)nudBoardId2.Value,
+                  (ushort)nudBoardId3.Value
+               },
+               LayerCount = (ushort)nudLayerCount.Value,
+               LotNoChar = string.IsNullOrEmpty(txtLotChar.Text) ? (ushort)0 : txtLotChar.Text[0],
+               LotNoNum = (uint)nudLotNum.Value,
+               JudgeFlag1 = (ushort)nudJudge1.Value,
+               JudgeFlag2 = (ushort)nudJudge2.Value,
+               JudgeFlag3 = (ushort)nudJudge3.Value
+            }
+         };
+         RunMoveOutTest(data);
+      }
+
+      private void btnMoveOutStop_Click(object sender, EventArgs e)
+      {
+         _moveOutService.Stop();
+      }
+
+      private void cboPlcMoveOutTestMode_SelectedIndexChanged(object sender, EventArgs e)
+      {
+         if (_simulator != null)
+         {
+            _simulator.MoveOutTestMode = (TestMode)cboPlcMoveOutTestMode.SelectedIndex;
+         }
       }
 
       #endregion

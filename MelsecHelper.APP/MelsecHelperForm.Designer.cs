@@ -81,6 +81,28 @@
          this.tpCheckClock = new System.Windows.Forms.TabPage();
          this.tpClockUpdate = new System.Windows.Forms.TabPage();
          this.tpMoveOut = new System.Windows.Forms.TabPage();
+         this.cboPlcMoveOutTestMode = new System.Windows.Forms.ComboBox();
+         this.lblPlcTestMode = new System.Windows.Forms.Label();
+         this.tlpMoveOutData = new System.Windows.Forms.TableLayoutPanel();
+         this.label2 = new System.Windows.Forms.Label();
+         this.label1 = new System.Windows.Forms.Label();
+         this.nudJudge3 = new System.Windows.Forms.NumericUpDown();
+         this.panel1 = new System.Windows.Forms.Panel();
+         this.label8 = new System.Windows.Forms.Label();
+         this.nudBoardId1 = new System.Windows.Forms.NumericUpDown();
+         this.nudBoardId2 = new System.Windows.Forms.NumericUpDown();
+         this.nudBoardId3 = new System.Windows.Forms.NumericUpDown();
+         this.label9 = new System.Windows.Forms.Label();
+         this.nudJudge2 = new System.Windows.Forms.NumericUpDown();
+         this.nudLayerCount = new System.Windows.Forms.NumericUpDown();
+         this.label10 = new System.Windows.Forms.Label();
+         this.nudJudge1 = new System.Windows.Forms.NumericUpDown();
+         this.txtLotChar = new System.Windows.Forms.TextBox();
+         this.label12 = new System.Windows.Forms.Label();
+         this.label11 = new System.Windows.Forms.Label();
+         this.nudLotNum = new System.Windows.Forms.NumericUpDown();
+         this.btnMoveOutStop = new System.Windows.Forms.Button();
+         this.btnMoveOutStart = new System.Windows.Forms.Button();
          this.tpRecipeCheck = new System.Windows.Forms.TabPage();
          this.tpAlarm = new System.Windows.Forms.TabPage();
          this.tpCommonReport = new System.Windows.Forms.TabPage();
@@ -98,6 +120,17 @@
          this.tpBasic.SuspendLayout();
          this.tpCheckClock.SuspendLayout();
          this.tpClockUpdate.SuspendLayout();
+         this.tpMoveOut.SuspendLayout();
+         this.tlpMoveOutData.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.nudJudge3)).BeginInit();
+         this.panel1.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.nudBoardId1)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.nudBoardId2)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.nudBoardId3)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.nudJudge2)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.nudLayerCount)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.nudJudge1)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.nudLotNum)).BeginInit();
          this.tpRecipeCheck.SuspendLayout();
          this.tpAlarm.SuspendLayout();
          this.tpCommonReport.SuspendLayout();
@@ -408,7 +441,7 @@
          this.btnStartMaintMonitor.TabIndex = 24;
          this.btnStartMaintMonitor.Text = "Start Maint Monitor";
          this.btnStartMaintMonitor.UseVisualStyleBackColor = true;
-         this.btnStartMaintMonitor.Click += new System.EventHandler(this.btnStartMaintMonitor_Click);
+         this.btnStartMaintMonitor.Click += new System.EventHandler(this.btnStartMaintenanceMonitor_Click);
          // 
          // btnStopMaintMonitor
          // 
@@ -421,7 +454,7 @@
          this.btnStopMaintMonitor.TabIndex = 25;
          this.btnStopMaintMonitor.Text = "Stop Maint Monitor";
          this.btnStopMaintMonitor.UseVisualStyleBackColor = true;
-         this.btnStopMaintMonitor.Click += new System.EventHandler(this.btnStopMaintMonitor_Click);
+         this.btnStopMaintMonitor.Click += new System.EventHandler(this.btnStopMaintenanceMonitor_Click);
          // 
          // lstLog
          // 
@@ -593,7 +626,7 @@
          // btnShowPosTrackingDataForm
          // 
          this.btnShowPosTrackingDataForm.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnShowPosTrackingDataForm.Location = new System.Drawing.Point(282, 120);
+         this.btnShowPosTrackingDataForm.Location = new System.Drawing.Point(24, 24);
          this.btnShowPosTrackingDataForm.Name = "btnShowPosTrackingDataForm";
          this.btnShowPosTrackingDataForm.Size = new System.Drawing.Size(150, 25);
          this.btnShowPosTrackingDataForm.TabIndex = 31;
@@ -669,12 +702,342 @@
          // 
          // tpMoveOut
          // 
+         this.tpMoveOut.Controls.Add(this.cboPlcMoveOutTestMode);
+         this.tpMoveOut.Controls.Add(this.lblPlcTestMode);
+         this.tpMoveOut.Controls.Add(this.tlpMoveOutData);
+         this.tpMoveOut.Controls.Add(this.btnMoveOutStop);
+         this.tpMoveOut.Controls.Add(this.btnMoveOutStart);
          this.tpMoveOut.Location = new System.Drawing.Point(4, 44);
          this.tpMoveOut.Name = "tpMoveOut";
          this.tpMoveOut.Size = new System.Drawing.Size(772, 370);
          this.tpMoveOut.TabIndex = 4;
          this.tpMoveOut.Text = "Move Out";
          this.tpMoveOut.UseVisualStyleBackColor = true;
+         // 
+         // cboPlcMoveOutTestMode
+         // 
+         this.cboPlcMoveOutTestMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this.cboPlcMoveOutTestMode.FormattingEnabled = true;
+         this.cboPlcMoveOutTestMode.Location = new System.Drawing.Point(306, 180);
+         this.cboPlcMoveOutTestMode.Name = "cboPlcMoveOutTestMode";
+         this.cboPlcMoveOutTestMode.Size = new System.Drawing.Size(121, 23);
+         this.cboPlcMoveOutTestMode.TabIndex = 5;
+         this.cboPlcMoveOutTestMode.SelectedIndexChanged += new System.EventHandler(this.cboPlcMoveOutTestMode_SelectedIndexChanged);
+         // 
+         // lblPlcTestMode
+         // 
+         this.lblPlcTestMode.AutoSize = true;
+         this.lblPlcTestMode.Location = new System.Drawing.Point(207, 183);
+         this.lblPlcTestMode.Name = "lblPlcTestMode";
+         this.lblPlcTestMode.Size = new System.Drawing.Size(93, 15);
+         this.lblPlcTestMode.TabIndex = 4;
+         this.lblPlcTestMode.Text = "PLC Test Mode";
+         // 
+         // tlpMoveOutData
+         // 
+         this.tlpMoveOutData.ColumnCount = 4;
+         this.tlpMoveOutData.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+         this.tlpMoveOutData.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+         this.tlpMoveOutData.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+         this.tlpMoveOutData.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+         this.tlpMoveOutData.Controls.Add(this.label2, 2, 3);
+         this.tlpMoveOutData.Controls.Add(this.label1, 0, 3);
+         this.tlpMoveOutData.Controls.Add(this.nudJudge3, 3, 3);
+         this.tlpMoveOutData.Controls.Add(this.panel1, 0, 0);
+         this.tlpMoveOutData.Controls.Add(this.label9, 0, 1);
+         this.tlpMoveOutData.Controls.Add(this.nudJudge2, 1, 3);
+         this.tlpMoveOutData.Controls.Add(this.nudLayerCount, 1, 1);
+         this.tlpMoveOutData.Controls.Add(this.label10, 2, 1);
+         this.tlpMoveOutData.Controls.Add(this.nudJudge1, 3, 2);
+         this.tlpMoveOutData.Controls.Add(this.txtLotChar, 3, 1);
+         this.tlpMoveOutData.Controls.Add(this.label12, 2, 2);
+         this.tlpMoveOutData.Controls.Add(this.label11, 0, 2);
+         this.tlpMoveOutData.Controls.Add(this.nudLotNum, 1, 2);
+         this.tlpMoveOutData.Location = new System.Drawing.Point(207, 14);
+         this.tlpMoveOutData.Name = "tlpMoveOutData";
+         this.tlpMoveOutData.RowCount = 4;
+         this.tlpMoveOutData.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+         this.tlpMoveOutData.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+         this.tlpMoveOutData.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+         this.tlpMoveOutData.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+         this.tlpMoveOutData.Size = new System.Drawing.Size(360, 144);
+         this.tlpMoveOutData.TabIndex = 3;
+         // 
+         // label2
+         // 
+         this.label2.AutoSize = true;
+         this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.label2.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.label2.Location = new System.Drawing.Point(185, 118);
+         this.label2.Margin = new System.Windows.Forms.Padding(5, 8, 5, 5);
+         this.label2.Name = "label2";
+         this.label2.Size = new System.Drawing.Size(80, 21);
+         this.label2.TabIndex = 17;
+         this.label2.Text = "判斷旗標3:";
+         // 
+         // label1
+         // 
+         this.label1.AutoSize = true;
+         this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.label1.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.label1.Location = new System.Drawing.Point(5, 118);
+         this.label1.Margin = new System.Windows.Forms.Padding(5, 8, 5, 5);
+         this.label1.Name = "label1";
+         this.label1.Size = new System.Drawing.Size(80, 21);
+         this.label1.TabIndex = 16;
+         this.label1.Text = "判斷旗標2:";
+         // 
+         // nudJudge3
+         // 
+         this.nudJudge3.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.nudJudge3.Location = new System.Drawing.Point(275, 115);
+         this.nudJudge3.Margin = new System.Windows.Forms.Padding(5);
+         this.nudJudge3.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+         this.nudJudge3.Name = "nudJudge3";
+         this.nudJudge3.Size = new System.Drawing.Size(80, 22);
+         this.nudJudge3.TabIndex = 15;
+         this.nudJudge3.Value = new decimal(new int[] {
+            77,
+            0,
+            0,
+            0});
+         // 
+         // panel1
+         // 
+         this.tlpMoveOutData.SetColumnSpan(this.panel1, 4);
+         this.panel1.Controls.Add(this.label8);
+         this.panel1.Controls.Add(this.nudBoardId1);
+         this.panel1.Controls.Add(this.nudBoardId2);
+         this.panel1.Controls.Add(this.nudBoardId3);
+         this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.panel1.Location = new System.Drawing.Point(3, 3);
+         this.panel1.Name = "panel1";
+         this.panel1.Padding = new System.Windows.Forms.Padding(2);
+         this.panel1.Size = new System.Drawing.Size(354, 44);
+         this.panel1.TabIndex = 4;
+         // 
+         // label8
+         // 
+         this.label8.AutoSize = true;
+         this.label8.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.label8.Location = new System.Drawing.Point(10, 15);
+         this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+         this.label8.Name = "label8";
+         this.label8.Size = new System.Drawing.Size(63, 16);
+         this.label8.TabIndex = 0;
+         this.label8.Text = "基板序號:";
+         // 
+         // nudBoardId1
+         // 
+         this.nudBoardId1.Location = new System.Drawing.Point(78, 13);
+         this.nudBoardId1.Margin = new System.Windows.Forms.Padding(2);
+         this.nudBoardId1.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+         this.nudBoardId1.Name = "nudBoardId1";
+         this.nudBoardId1.Size = new System.Drawing.Size(53, 22);
+         this.nudBoardId1.TabIndex = 1;
+         this.nudBoardId1.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+         // 
+         // nudBoardId2
+         // 
+         this.nudBoardId2.Location = new System.Drawing.Point(151, 13);
+         this.nudBoardId2.Margin = new System.Windows.Forms.Padding(2);
+         this.nudBoardId2.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+         this.nudBoardId2.Name = "nudBoardId2";
+         this.nudBoardId2.Size = new System.Drawing.Size(53, 22);
+         this.nudBoardId2.TabIndex = 2;
+         this.nudBoardId2.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+         // 
+         // nudBoardId3
+         // 
+         this.nudBoardId3.Location = new System.Drawing.Point(226, 13);
+         this.nudBoardId3.Margin = new System.Windows.Forms.Padding(2);
+         this.nudBoardId3.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+         this.nudBoardId3.Name = "nudBoardId3";
+         this.nudBoardId3.Size = new System.Drawing.Size(53, 22);
+         this.nudBoardId3.TabIndex = 3;
+         this.nudBoardId3.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+         // 
+         // label9
+         // 
+         this.label9.AutoSize = true;
+         this.label9.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.label9.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+         this.label9.Location = new System.Drawing.Point(5, 58);
+         this.label9.Margin = new System.Windows.Forms.Padding(5, 8, 5, 5);
+         this.label9.Name = "label9";
+         this.label9.Size = new System.Drawing.Size(80, 17);
+         this.label9.TabIndex = 4;
+         this.label9.Text = "基板層數:";
+         // 
+         // nudJudge2
+         // 
+         this.nudJudge2.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.nudJudge2.Location = new System.Drawing.Point(95, 115);
+         this.nudJudge2.Margin = new System.Windows.Forms.Padding(5);
+         this.nudJudge2.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+         this.nudJudge2.Name = "nudJudge2";
+         this.nudJudge2.Size = new System.Drawing.Size(80, 22);
+         this.nudJudge2.TabIndex = 13;
+         this.nudJudge2.Value = new decimal(new int[] {
+            66,
+            0,
+            0,
+            0});
+         // 
+         // nudLayerCount
+         // 
+         this.nudLayerCount.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.nudLayerCount.Location = new System.Drawing.Point(95, 55);
+         this.nudLayerCount.Margin = new System.Windows.Forms.Padding(5);
+         this.nudLayerCount.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+         this.nudLayerCount.Name = "nudLayerCount";
+         this.nudLayerCount.Size = new System.Drawing.Size(80, 22);
+         this.nudLayerCount.TabIndex = 5;
+         this.nudLayerCount.Value = new decimal(new int[] {
+            44,
+            0,
+            0,
+            0});
+         // 
+         // label10
+         // 
+         this.label10.AutoSize = true;
+         this.label10.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.label10.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.label10.Location = new System.Drawing.Point(185, 58);
+         this.label10.Margin = new System.Windows.Forms.Padding(5, 8, 5, 5);
+         this.label10.Name = "label10";
+         this.label10.Size = new System.Drawing.Size(80, 17);
+         this.label10.TabIndex = 6;
+         this.label10.Text = "批號 (文字):";
+         // 
+         // nudJudge1
+         // 
+         this.nudJudge1.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.nudJudge1.Location = new System.Drawing.Point(275, 85);
+         this.nudJudge1.Margin = new System.Windows.Forms.Padding(5);
+         this.nudJudge1.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+         this.nudJudge1.Name = "nudJudge1";
+         this.nudJudge1.Size = new System.Drawing.Size(80, 22);
+         this.nudJudge1.TabIndex = 11;
+         this.nudJudge1.Value = new decimal(new int[] {
+            55,
+            0,
+            0,
+            0});
+         // 
+         // txtLotChar
+         // 
+         this.txtLotChar.Location = new System.Drawing.Point(280, 55);
+         this.txtLotChar.Margin = new System.Windows.Forms.Padding(10, 5, 2, 2);
+         this.txtLotChar.MaxLength = 1;
+         this.txtLotChar.Name = "txtLotChar";
+         this.txtLotChar.Size = new System.Drawing.Size(35, 22);
+         this.txtLotChar.TabIndex = 7;
+         this.txtLotChar.Text = "A";
+         // 
+         // label12
+         // 
+         this.label12.AutoSize = true;
+         this.label12.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.label12.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.label12.Location = new System.Drawing.Point(185, 88);
+         this.label12.Margin = new System.Windows.Forms.Padding(5, 8, 5, 5);
+         this.label12.Name = "label12";
+         this.label12.Size = new System.Drawing.Size(80, 17);
+         this.label12.TabIndex = 10;
+         this.label12.Text = "判斷旗標1:";
+         // 
+         // label11
+         // 
+         this.label11.AutoSize = true;
+         this.label11.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.label11.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.label11.Location = new System.Drawing.Point(5, 88);
+         this.label11.Margin = new System.Windows.Forms.Padding(5, 8, 5, 5);
+         this.label11.Name = "label11";
+         this.label11.Size = new System.Drawing.Size(80, 17);
+         this.label11.TabIndex = 8;
+         this.label11.Text = "批號 (數字):";
+         // 
+         // nudLotNum
+         // 
+         this.nudLotNum.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.nudLotNum.Location = new System.Drawing.Point(95, 85);
+         this.nudLotNum.Margin = new System.Windows.Forms.Padding(5);
+         this.nudLotNum.Maximum = new decimal(new int[] {
+            99999999,
+            0,
+            0,
+            0});
+         this.nudLotNum.Name = "nudLotNum";
+         this.nudLotNum.Size = new System.Drawing.Size(80, 22);
+         this.nudLotNum.TabIndex = 9;
+         this.nudLotNum.Value = new decimal(new int[] {
+            123456,
+            0,
+            0,
+            0});
+         // 
+         // btnMoveOutStop
+         // 
+         this.btnMoveOutStop.Location = new System.Drawing.Point(24, 102);
+         this.btnMoveOutStop.Name = "btnMoveOutStop";
+         this.btnMoveOutStop.Size = new System.Drawing.Size(131, 23);
+         this.btnMoveOutStop.TabIndex = 1;
+         this.btnMoveOutStop.Text = "Move Out Stop";
+         this.btnMoveOutStop.UseVisualStyleBackColor = true;
+         this.btnMoveOutStop.Click += new System.EventHandler(this.btnMoveOutStop_Click);
+         // 
+         // btnMoveOutStart
+         // 
+         this.btnMoveOutStart.Location = new System.Drawing.Point(24, 66);
+         this.btnMoveOutStart.Name = "btnMoveOutStart";
+         this.btnMoveOutStart.Size = new System.Drawing.Size(131, 23);
+         this.btnMoveOutStart.TabIndex = 0;
+         this.btnMoveOutStart.Text = "Move Out Start";
+         this.btnMoveOutStart.UseVisualStyleBackColor = true;
+         this.btnMoveOutStart.Click += new System.EventHandler(this.btnMoveOutStart_Click);
          // 
          // tpRecipeCheck
          // 
@@ -805,6 +1168,20 @@
          this.tpCheckClock.ResumeLayout(false);
          this.tpClockUpdate.ResumeLayout(false);
          this.tpClockUpdate.PerformLayout();
+         this.tpMoveOut.ResumeLayout(false);
+         this.tpMoveOut.PerformLayout();
+         this.tlpMoveOutData.ResumeLayout(false);
+         this.tlpMoveOutData.PerformLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.nudJudge3)).EndInit();
+         this.panel1.ResumeLayout(false);
+         this.panel1.PerformLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.nudBoardId1)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.nudBoardId2)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.nudBoardId3)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.nudJudge2)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.nudLayerCount)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.nudJudge1)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.nudLotNum)).EndInit();
          this.tpRecipeCheck.ResumeLayout(false);
          this.tpAlarm.ResumeLayout(false);
          this.tpCommonReport.ResumeLayout(false);
@@ -891,6 +1268,28 @@
       private System.Windows.Forms.TabPage tpLotMixingPrevention;
       private System.Windows.Forms.TabPage tpLinkReport;
       private System.Windows.Forms.TabPage tpHandshake;
+      private System.Windows.Forms.Button btnMoveOutStart;
+      private System.Windows.Forms.Button btnMoveOutStop;
+      private System.Windows.Forms.TableLayoutPanel tlpMoveOutData;
+      private System.Windows.Forms.Panel panel1;
+      private System.Windows.Forms.Label label8;
+      private System.Windows.Forms.NumericUpDown nudBoardId1;
+      private System.Windows.Forms.NumericUpDown nudBoardId2;
+      private System.Windows.Forms.NumericUpDown nudBoardId3;
+      private System.Windows.Forms.Label label9;
+      private System.Windows.Forms.NumericUpDown nudLayerCount;
+      private System.Windows.Forms.Label label10;
+      private System.Windows.Forms.TextBox txtLotChar;
+      private System.Windows.Forms.NumericUpDown nudJudge3;
+      private System.Windows.Forms.NumericUpDown nudJudge2;
+      private System.Windows.Forms.NumericUpDown nudJudge1;
+      private System.Windows.Forms.Label label12;
+      private System.Windows.Forms.NumericUpDown nudLotNum;
+      private System.Windows.Forms.Label label11;
+      private System.Windows.Forms.Label label2;
+      private System.Windows.Forms.Label label1;
+      private System.Windows.Forms.ComboBox cboPlcMoveOutTestMode;
+      private System.Windows.Forms.Label lblPlcTestMode;
    }
 }
 

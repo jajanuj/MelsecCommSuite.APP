@@ -1,4 +1,5 @@
-﻿using Melsec.Helper.Interfaces;
+﻿using GRT.SDK.Framework.Timer;
+using Melsec.Helper.Interfaces;
 using Melsec.Helper.Models;
 using MelsecHelper.APP.Models;
 using System;
@@ -70,6 +71,8 @@ namespace MelsecHelper.APP.Services
       #endregion
 
       #region Properties
+
+      public TestMode MoveOutTestMode { get; set; } = TestMode.Normal;
 
       public int MonitorIntervalMs
       {
@@ -728,6 +731,129 @@ namespace MelsecHelper.APP.Services
             SetRequest(new LinkDeviceAddress("LB", REQUEST_FLAG, 1), false);
             return false;
          }
+      }
+
+      public void StartMoveOutFlow()
+      {
+         lock (_syncLock)
+         {
+            StopMoveOutFlow(); // Ensure stopped
+
+            _cts = new CancellationTokenSource();
+            var ct = _cts.Token;
+
+            _task = Task.Run(async () =>
+            {
+               _logger?.Invoke("[Sim MoveOut] Simulation Started");
+               var timer = new CTimer();
+               int step = 0;
+               // Addresses
+               var reqAddr = new LinkDeviceAddress("LB", 0x0301, 1);
+               var respAddr = new LinkDeviceAddress("LB", 0x0101, 1);
+
+               while (!ct.IsCancellationRequested)
+               {
+                  try
+                  {
+                     switch (step)
+                     {
+                        case 0: // Idle: Wait Request ON
+                           if (GetBit(reqAddr))
+                           {
+                              _logger?.Invoke("[Sim MoveOut] Request ON detected");
+                              timer.Reset();
+                              step = 10;
+                           }
+
+                           break;
+
+                        case 10:              // Wait Delay (Processing)
+                           if (timer.On(200)) // 200ms processing delay
+                           {
+                              if (MoveOutTestMode == TestMode.T1Timeout)
+                              {
+                                 _logger?.Invoke("[Sim MoveOut] T1 Test Mode - Ignoring Request (Freezing)");
+                                 step = 999; // Freeze
+                              }
+                              else
+                              {
+                                 step = 20;
+                              }
+                           }
+
+                           break;
+
+                        case 20:                       // Set Response ON
+                           SetRequest(respAddr, true); // Simulator uses SetRequest generic method
+                           _logger?.Invoke("[Sim MoveOut] Response ON");
+                           step = 30;
+                           break;
+
+                        case 30: // Wait Request OFF
+                           if (!GetBit(reqAddr))
+                           {
+                              _logger?.Invoke("[Sim MoveOut] Request OFF detected");
+                              step = 40;
+                           }
+
+                           break;
+
+                        case 40: // Clear Response
+                           if (MoveOutTestMode == TestMode.T2Timeout)
+                           {
+                              _logger?.Invoke("[Sim MoveOut] T2 Test Mode - Keeping Response ON (Freezing)");
+                              step = 999; // Freeze
+                           }
+                           else
+                           {
+                              SetRequest(respAddr, false);
+                              _logger?.Invoke("[Sim MoveOut] Response OFF - Cycle Done");
+                              step = 0;
+                           }
+
+                           break;
+
+                        case 999: // Freeze state for testing timeouts
+                           if (!GetBit(reqAddr) && MoveOutTestMode == TestMode.T1Timeout)
+                           {
+                              // Request cancelled by service due to timeout, reset simulator
+                              _logger?.Invoke("[Sim MoveOut] Request cancelled (T1 Timeout handling by Service observed)");
+                              step = 0;
+                           }
+                           else if (!GetBit(reqAddr) && MoveOutTestMode == TestMode.T2Timeout)
+                           {
+                              // Request cancelled/finished? T2 timeout means Service gave up waiting for OFF.
+                              // If service logic finishes and resets, Request might stay OFF.
+                              // We should reset if we see Request OFF for a while?
+                              // Or just stay frozen until Stop.
+                              // Let's allow reset if Request is OFF to be safe for next run.
+                              step = 0;
+                           }
+
+                           break;
+                     }
+
+                     await Task.Delay(50, ct);
+                  }
+                  catch (OperationCanceledException)
+                  {
+                     break;
+                  }
+                  catch (Exception ex)
+                  {
+                     _logger?.Invoke($"[Sim MoveOut] Error: {ex.Message}");
+                     await Task.Delay(1000, ct);
+                  }
+               }
+
+               _logger?.Invoke("[Sim MoveOut] Simulation Stopped");
+            }, ct);
+         }
+      }
+
+      public void StopMoveOutFlow()
+      {
+         Stop();
       }
 
       #endregion

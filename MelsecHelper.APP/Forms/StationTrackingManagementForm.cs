@@ -1,11 +1,11 @@
+using Melsec.Helper.Interfaces;
+using MelsecHelper.APP.Models;
+using MelsecHelper.APP.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using Melsec.Helper.Interfaces;
-using MelsecHelper.APP.Models;
-using MelsecHelper.APP.Services;
 
 namespace MelsecHelper.APP.Forms
 {
@@ -16,9 +16,14 @@ namespace MelsecHelper.APP.Forms
    {
       #region Fields
 
+      private readonly AppPlcService _appPlcService;
+      private readonly ICCLinkController _controller;
+
       private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
       private readonly TrackingDataService _service;
+      private readonly AppControllerSettings _settings;
+      private MoveOutService _moveOutService;
 
       #endregion
 
@@ -27,12 +32,15 @@ namespace MelsecHelper.APP.Forms
       /// <summary>
       /// 建構子
       /// </summary>
-      /// <param name="controller">PLC 控制器</param>
+      /// <param name="appPlcService"></param>
       /// <param name="configPath">配置檔路徑</param>
-      public StationTrackingManagementForm(ICCLinkController controller, string configPath)
+      public StationTrackingManagementForm(AppPlcService appPlcService, AppControllerSettings settings, string configPath)
       {
          InitializeComponent();
-         _service = new TrackingDataService(controller, configPath);
+         _appPlcService = appPlcService;
+         _controller = appPlcService.Controller;
+         _settings = settings;
+         _service = new TrackingDataService(_controller, configPath);
          InitializeStationComboBoxes();
       }
 
@@ -324,6 +332,63 @@ namespace MelsecHelper.APP.Forms
          var text = $"{DateTime.Now:HH:mm:ss} | {message}";
          rtbLog.AppendText(text + Environment.NewLine);
          rtbLog.ScrollToCaret();
+      }
+
+      private async void btnMoveOut_Click(object sender, EventArgs e)
+      {
+         //if (_simulator != null)
+         //{
+         //   _simulator.StopMoveOutFlow();
+         //   _simulator.StartMoveOutFlow();
+         //}
+         try
+         {
+            //初始化 MoveOutService
+            _moveOutService = new MoveOutService(_appPlcService, _settings, msg => Log($"[MoveOut] {msg}"));
+            _moveOutService.Start();
+
+            if (!(cmbStation1.SelectedValue is int stationId))
+            {
+               return;
+            }
+
+            btnMoveOut.Enabled = false;
+
+            // 從輸入欄位建立 TrackingData
+            var data = CreateTrackingDataFromInputs();
+            RunMoveOutTest(new MoveOutData { ReasonCode = 0, TrackingData = data });
+         }
+         catch (Exception ex)
+         {
+            Log($"[情境1] 錯誤: {ex.Message}");
+         }
+         finally
+         {
+            btnMoveOut.Enabled = true;
+         }
+      }
+
+      /// <summary>
+      /// MoveOutService 測試範例
+      /// </summary>
+      /// <param name="moveOutData"></param>
+      private async void RunMoveOutTest(MoveOutData moveOutData)
+      {
+         try
+         {
+            if (_moveOutService == null)
+            {
+               Log("MoveOutService not initialized.");
+               return;
+            }
+
+            Log("[Test] 開始 MoveOut 測試...");
+            await _moveOutService.StartMoveOut(moveOutData);
+         }
+         catch (Exception ex)
+         {
+            Log($"[Test] MoveOut 測試失敗: {ex.Message}");
+         }
       }
 
       #endregion

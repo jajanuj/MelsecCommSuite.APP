@@ -33,6 +33,7 @@ namespace MelsecHelper.APP.Models
             TimeSync = loaded.TimeSync ?? new TimeSyncSettings();
             Tracking = loaded.Tracking ?? new TrackingSettings();
             Maintenance = loaded.Maintenance ?? new MaintenanceSettings();
+            MoveOut = loaded.MoveOut ?? new MoveOutSettings();
          }
          else
          {
@@ -66,6 +67,8 @@ namespace MelsecHelper.APP.Models
       public TrackingSettings Tracking { get; set; } = new TrackingSettings();
 
       public MaintenanceSettings Maintenance { get; set; } = new MaintenanceSettings();
+
+      public MoveOutSettings MoveOut { get; set; } = new MoveOutSettings();
 
       #endregion
 

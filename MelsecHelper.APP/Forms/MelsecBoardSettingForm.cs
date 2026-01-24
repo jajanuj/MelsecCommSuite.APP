@@ -1,6 +1,6 @@
-using System;
 using Melsec.Helper.Forms;
 using MelsecHelper.APP.Models;
+using System;
 
 namespace MelsecHelper.APP.Forms
 {
@@ -64,6 +64,9 @@ namespace MelsecHelper.APP.Forms
             paramAddrDeviceToPlcRequestTrackingData.TextValue = appSettings.Maintenance?.AddrDeviceToPlcRequestTrackingData ?? "LW17D1";
             paramAddrDeviceToPlcRequestPosData.TextValue = appSettings.Maintenance?.AddrDeviceToPlcRequestPosData ?? "LW17DB";
             paramAddrDeviceToPlcResponseFlag.TextValue = appSettings.Maintenance?.AddrDeviceToPlcResponseFlag ?? "LB0107";
+
+            paramMoveOutT1Timeout.Value = appSettings.Maintenance?.PlcToDeviceT1Timeout ?? 1000;
+            paramMoveOutT2Timeout.Value = appSettings.Maintenance?.PlcToDeviceT2Timeout ?? 1000;
          }
       }
 
@@ -115,6 +118,9 @@ namespace MelsecHelper.APP.Forms
             appSettings.Maintenance.AddrDeviceToPlcRequestTrackingData = paramAddrDeviceToPlcRequestTrackingData.TextValue?.Trim() ?? "LW17D1";
             appSettings.Maintenance.AddrDeviceToPlcRequestPosData = paramAddrDeviceToPlcRequestPosData.TextValue?.Trim() ?? "LW17DB";
             appSettings.Maintenance.AddrDeviceToPlcResponseFlag = paramAddrDeviceToPlcResponseFlag.TextValue?.Trim() ?? "LB0107";
+
+            appSettings.MoveOut.T1Timeout = (int)paramMoveOutT1Timeout.Value;
+            appSettings.MoveOut.T2Timeout = (int)paramMoveOutT2Timeout.Value;
          }
       }
 

@@ -77,6 +77,9 @@ namespace MelsecHelper.APP.Forms
          this.paramEqToMplcT1Timeout = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
          this.paramMplcToEqT2Timeout = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
          this.paramMplcToEqT1Timeout = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
+         this.tpMoveOut = new System.Windows.Forms.TabPage();
+         this.paramMoveOutT2Timeout = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
+         this.paramMoveOutT1Timeout = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
          this.tabControl1.SuspendLayout();
          this.tabGeneral.SuspendLayout();
          this.tabApp.SuspendLayout();
@@ -89,6 +92,7 @@ namespace MelsecHelper.APP.Forms
          ((System.ComponentModel.ISupportInitialize)(this.numRetryBackoff)).BeginInit();
          ((System.ComponentModel.ISupportInitialize)(this.numStation)).BeginInit();
          this.tpMaintenance.SuspendLayout();
+         this.tpMoveOut.SuspendLayout();
          this.SuspendLayout();
          // 
          // tabControl1
@@ -96,9 +100,11 @@ namespace MelsecHelper.APP.Forms
          this.tabControl1.Controls.Add(this.tabApp);
          this.tabControl1.Controls.Add(this.tabTracking);
          this.tabControl1.Controls.Add(this.tpMaintenance);
+         this.tabControl1.Controls.Add(this.tpMoveOut);
          this.tabControl1.Location = new System.Drawing.Point(14, 16);
          this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
          this.tabControl1.Size = new System.Drawing.Size(732, 560);
+         this.tabControl1.Controls.SetChildIndex(this.tpMoveOut, 0);
          this.tabControl1.Controls.SetChildIndex(this.tpMaintenance, 0);
          this.tabControl1.Controls.SetChildIndex(this.tabTracking, 0);
          this.tabControl1.Controls.SetChildIndex(this.tabApp, 0);
@@ -788,6 +794,51 @@ namespace MelsecHelper.APP.Forms
          this.paramMplcToEqT1Timeout.TabIndex = 13;
          this.paramMplcToEqT1Timeout.Value = 1000D;
          // 
+         // tpMoveOut
+         // 
+         this.tpMoveOut.Controls.Add(this.paramMoveOutT2Timeout);
+         this.tpMoveOut.Controls.Add(this.paramMoveOutT1Timeout);
+         this.tpMoveOut.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+         this.tpMoveOut.Location = new System.Drawing.Point(4, 25);
+         this.tpMoveOut.Name = "tpMoveOut";
+         this.tpMoveOut.Padding = new System.Windows.Forms.Padding(3);
+         this.tpMoveOut.Size = new System.Drawing.Size(724, 531);
+         this.tpMoveOut.TabIndex = 4;
+         this.tpMoveOut.Text = "Move Out";
+         this.tpMoveOut.UseVisualStyleBackColor = true;
+         // 
+         // paramT2Timeout
+         // 
+         this.paramMoveOutT2Timeout.Caption = "T2 Timeout(ms)";
+         this.paramMoveOutT2Timeout.CaptionWidth = 70F;
+         this.paramMoveOutT2Timeout.DecimalPlaces = 0;
+         this.paramMoveOutT2Timeout.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.paramMoveOutT2Timeout.Increment = 100D;
+         this.paramMoveOutT2Timeout.Location = new System.Drawing.Point(17, 70);
+         this.paramMoveOutT2Timeout.MaxNumber = 99000D;
+         this.paramMoveOutT2Timeout.MinimumSize = new System.Drawing.Size(171, 32);
+         this.paramMoveOutT2Timeout.MinNumber = 0D;
+         this.paramMoveOutT2Timeout.Name = "paramT2Timeout";
+         this.paramMoveOutT2Timeout.Size = new System.Drawing.Size(227, 32);
+         this.paramMoveOutT2Timeout.TabIndex = 16;
+         this.paramMoveOutT2Timeout.Value = 1000D;
+         // 
+         // paramT1Timeout
+         // 
+         this.paramMoveOutT1Timeout.Caption = "T1 Timeout(ms)";
+         this.paramMoveOutT1Timeout.CaptionWidth = 70F;
+         this.paramMoveOutT1Timeout.DecimalPlaces = 0;
+         this.paramMoveOutT1Timeout.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.paramMoveOutT1Timeout.Increment = 100D;
+         this.paramMoveOutT1Timeout.Location = new System.Drawing.Point(17, 32);
+         this.paramMoveOutT1Timeout.MaxNumber = 99000D;
+         this.paramMoveOutT1Timeout.MinimumSize = new System.Drawing.Size(171, 32);
+         this.paramMoveOutT1Timeout.MinNumber = 0D;
+         this.paramMoveOutT1Timeout.Name = "paramT1Timeout";
+         this.paramMoveOutT1Timeout.Size = new System.Drawing.Size(227, 32);
+         this.paramMoveOutT1Timeout.TabIndex = 15;
+         this.paramMoveOutT1Timeout.Value = 1000D;
+         // 
          // MelsecBoardSettingForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -812,6 +863,7 @@ namespace MelsecHelper.APP.Forms
          ((System.ComponentModel.ISupportInitialize)(this.numRetryBackoff)).EndInit();
          ((System.ComponentModel.ISupportInitialize)(this.numStation)).EndInit();
          this.tpMaintenance.ResumeLayout(false);
+         this.tpMoveOut.ResumeLayout(false);
          this.ResumeLayout(false);
 
       }
@@ -871,5 +923,8 @@ namespace MelsecHelper.APP.Forms
       private GRT.SDK.Framework.Component.ParamTextUserControl paramAddrDeviceToPlcRequestFlag;
       private GRT.SDK.Framework.Component.ParamTextUserControl paramAddrPlcToDeviceResponseNg;
       private GRT.SDK.Framework.Component.ParamTextUserControl paramAddrPlcToDeviceResponseOk;
+      private System.Windows.Forms.TabPage tpMoveOut;
+      private GRT.SDK.Framework.Component.ParamNumericUpDownUserControl paramMoveOutT2Timeout;
+      private GRT.SDK.Framework.Component.ParamNumericUpDownUserControl paramMoveOutT1Timeout;
    }
 }
