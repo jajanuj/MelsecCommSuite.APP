@@ -628,7 +628,6 @@ namespace MelsecHelper.APP.Forms
          this.rtbLog.Location = new System.Drawing.Point(9, 379);
          this.rtbLog.Margin = new System.Windows.Forms.Padding(2);
          this.rtbLog.Name = "rtbLog";
-         this.rtbLog.ReadOnly = true;
          this.rtbLog.Size = new System.Drawing.Size(437, 95);
          this.rtbLog.TabIndex = 2;
          this.rtbLog.Text = "";

@@ -116,13 +116,19 @@ namespace MelsecHelper.APP.Services
 
       private async Task MoveOutLoopAsync(CancellationToken ct)
       {
-         while (!ct.IsCancellationRequested && !_disposed)
+         _logger?.Invoke("[MoveOutService] MoveOutLoopAsync started");
+         
+         try
          {
-            try
+            _logger?.Invoke("[MoveOutService] Entering main loop");
+            
+            while (!ct.IsCancellationRequested && !_disposed)
             {
-               _logger?.Invoke($"[MoveOutService] Loop - Step={_step}");
-               
-               switch (_step)
+               try
+               {
+                  _logger?.Invoke($"[MoveOutService] Loop - Step={_step}");
+                  
+                  switch (_step)
                {
                   case 0: // Idle
                      if (_pendingData != null)
