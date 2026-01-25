@@ -47,6 +47,11 @@ namespace MelsecHelper.APP.Models
       #region Properties
 
       /// <summary>
+      /// 起始位址
+      /// </summary>
+      public string StartAddress { get; set; }
+
+      /// <summary>
       /// 基板序號 (Offset 0-2, 3 Words)
       /// </summary>
       public ushort[] BoardId { get; set; } = new ushort[3];

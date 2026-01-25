@@ -52,7 +52,7 @@ namespace MelsecHelper.APP.Services
 
       #region Delegates, Events
 
-      public event Action MoveOutCompleted;
+      public event Action<string> MoveOutCompleted;
       public event Action<string> MoveOutFailed;
 
       #endregion
@@ -135,7 +135,6 @@ namespace MelsecHelper.APP.Services
             {
                try
                {
-
                   switch (_step)
                   {
                      case 0: // Idle
@@ -143,6 +142,7 @@ namespace MelsecHelper.APP.Services
                         {
                            _step = 10;
                         }
+
                         break;
 
                      case 10: // Write Data & Set Request
@@ -158,6 +158,7 @@ namespace MelsecHelper.APP.Services
                         _timer.Reset();
                         _step = 20;
                      }
+
                      break;
 
                      case 20: // Wait Response ON
@@ -176,6 +177,7 @@ namespace MelsecHelper.APP.Services
                            HandleError($"T1 Timeout:{_settings.MoveOut.T1Timeout}");
                         }
                      }
+
                      break;
 
                      case 30: // Clear Request
@@ -186,6 +188,7 @@ namespace MelsecHelper.APP.Services
                         _timer.Reset();
                         _step = 40;
                      }
+
                      break;
 
                      case 40: // Wait Response OFF
@@ -195,7 +198,7 @@ namespace MelsecHelper.APP.Services
                         if (!responseOn)
                         {
                            _logger?.Invoke($"[MoveOutService] Response OFF - Complete!");
-                           HandleSuccess();
+                           HandleSuccess(_pendingData.TrackingData.StartAddress);
                         }
                         else if (_timer.On(_settings.MoveOut.T2Timeout))
                         {
@@ -204,6 +207,7 @@ namespace MelsecHelper.APP.Services
                            HandleError($"T2 Timeout:{_settings.MoveOut.T2Timeout}");
                         }
                      }
+
                      break;
                   }
 
@@ -245,11 +249,11 @@ namespace MelsecHelper.APP.Services
          }
       }
 
-      private void HandleSuccess()
+      private void HandleSuccess(string startAddress)
       {
          _pendingData = null;
          _step = 0;
-         PostEvent(() => MoveOutCompleted?.Invoke());
+         PostEvent(() => MoveOutCompleted?.Invoke(startAddress));
       }
 
       private void PostEvent(Action action)

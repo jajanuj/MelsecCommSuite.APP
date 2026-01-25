@@ -40,7 +40,11 @@ namespace MelsecHelper.APP.Forms
          _appPlcService = appPlcService;
          _controller = appPlcService.Controller;
          _settings = settings;
+
          _service = new TrackingDataService(_controller, configPath);
+         _moveOutService = new MoveOutService(_appPlcService, _settings, msg => Log($"[MoveOut] {msg}"));
+         _moveOutService.MoveOutCompleted += OnMoveOutServiceOnMoveOutCompleted;
+
          InitializeStationComboBoxes();
       }
 
@@ -58,6 +62,23 @@ namespace MelsecHelper.APP.Forms
 
       #region Private Methods
 
+      private async void OnMoveOutServiceOnMoveOutCompleted(string startAddress)
+      {
+         try
+         {
+            await _service.ClearDataByAddressAsync(startAddress);
+            Log($"[MoveOut] MoveOut Completed. Start Address: {startAddress}");
+         }
+         catch (Exception e)
+         {
+            Log($"[MoveOut] MoveOut Failed. Start Address: {startAddress}. Error: {e.Message}");
+         }
+      }
+
+      private void ClearPositionData()
+      {
+      }
+
       /// <summary>
       /// 初始化站別下拉選單
       /// </summary>
@@ -73,9 +94,9 @@ namespace MelsecHelper.APP.Forms
          }).ToList();
 
          // 情境 1: 單片更新
-         cmbStation1.DisplayMember = "Display";
-         cmbStation1.ValueMember = "Value";
-         cmbStation1.DataSource = new List<object>(displayItems);
+         cboStation1.DisplayMember = "Display";
+         cboStation1.ValueMember = "Value";
+         cboStation1.DataSource = new List<object>(displayItems);
 
          // 情境 2: 站別切換 (來源站)
          cmbFromStation.DisplayMember = "Display";
@@ -107,7 +128,7 @@ namespace MelsecHelper.APP.Forms
 
       private void cmbStation1_SelectedIndexChanged(object sender, EventArgs e)
       {
-         if (cmbStation1.SelectedValue is int stationId)
+         if (cboStation1.SelectedValue is int stationId)
          {
             var station = _service.GetStation(stationId);
             if (station != null)
@@ -121,7 +142,7 @@ namespace MelsecHelper.APP.Forms
 
       private async void btnUpdate1_Click(object sender, EventArgs e)
       {
-         if (!(cmbStation1.SelectedValue is int stationId))
+         if (!(cboStation1.SelectedValue is int stationId))
          {
             return;
          }
@@ -131,8 +152,8 @@ namespace MelsecHelper.APP.Forms
             btnUpdate1.Enabled = false;
 
             // 從輸入欄位建立 TrackingData
-            var data = CreateTrackingDataFromInputs();
             int slotIndex = (int)nudSlotIndex.Value;
+            var data = CreateTrackingDataFromInputs(stationId, slotIndex);
 
             // 更新
             bool success = await _service.UpdateSingleSlotAsync(stationId, slotIndex, data, _cts.Token);
@@ -281,11 +302,14 @@ namespace MelsecHelper.APP.Forms
       /// <summary>
       /// 從輸入欄位建立 TrackingData
       /// </summary>
-      private TrackingData CreateTrackingDataFromInputs()
+      private TrackingData CreateTrackingDataFromInputs(int stationIndex = 0, int slotIndex = 0)
       {
+         var station = _service.GetStation(stationIndex);
+         var startAddress = station.CalculateSlotAddress(slotIndex);
          return new TrackingData
          {
-            BoardId = new ushort[]
+            StartAddress = startAddress,
+            BoardId = new[]
             {
                (ushort)nudBoardId1.Value,
                (ushort)nudBoardId2.Value,
@@ -341,18 +365,11 @@ namespace MelsecHelper.APP.Forms
 
       private async void btnMoveOut_Click(object sender, EventArgs e)
       {
-         //if (_simulator != null)
-         //{
-         //   _simulator.StopMoveOutFlow();
-         //   _simulator.StartMoveOutFlow();
-         //}
          try
          {
-            //初始化 MoveOutService
-            _moveOutService = new MoveOutService(_appPlcService, _settings, msg => Log($"[MoveOut] {msg}"));
             _moveOutService.Start();
 
-            if (!(cmbStation1.SelectedValue is int stationId))
+            if (!(cboStation1.SelectedValue is int stationId))
             {
                return;
             }
@@ -360,7 +377,8 @@ namespace MelsecHelper.APP.Forms
             btnMoveOut.Enabled = false;
 
             // 從輸入欄位建立 TrackingData
-            var data = CreateTrackingDataFromInputs();
+            var slotIndex = (int)nudSlotIndex.Value;
+            var data = CreateTrackingDataFromInputs(stationId, slotIndex);
             RunMoveOutTest(new MoveOutData { ReasonCode = 0, TrackingData = data });
          }
          catch (Exception ex)

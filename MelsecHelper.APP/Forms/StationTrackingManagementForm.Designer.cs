@@ -34,7 +34,7 @@ namespace MelsecHelper.APP.Forms
          this.btnUpdate1 = new System.Windows.Forms.Button();
          this.nudSlotIndex = new System.Windows.Forms.NumericUpDown();
          this.label2 = new System.Windows.Forms.Label();
-         this.cmbStation1 = new System.Windows.Forms.ComboBox();
+         this.cboStation1 = new System.Windows.Forms.ComboBox();
          this.label1 = new System.Windows.Forms.Label();
          this.tabPage2 = new System.Windows.Forms.TabPage();
          this.btnTransfer = new System.Windows.Forms.Button();
@@ -112,7 +112,7 @@ namespace MelsecHelper.APP.Forms
          this.tabPage1.Controls.Add(this.btnUpdate1);
          this.tabPage1.Controls.Add(this.nudSlotIndex);
          this.tabPage1.Controls.Add(this.label2);
-         this.tabPage1.Controls.Add(this.cmbStation1);
+         this.tabPage1.Controls.Add(this.cboStation1);
          this.tabPage1.Controls.Add(this.label1);
          this.tabPage1.Location = new System.Drawing.Point(4, 24);
          this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
@@ -177,16 +177,16 @@ namespace MelsecHelper.APP.Forms
          this.label2.TabIndex = 2;
          this.label2.Text = "位置索引:";
          // 
-         // cmbStation1
+         // cboStation1
          // 
-         this.cmbStation1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-         this.cmbStation1.FormattingEnabled = true;
-         this.cmbStation1.Location = new System.Drawing.Point(93, 16);
-         this.cmbStation1.Margin = new System.Windows.Forms.Padding(2);
-         this.cmbStation1.Name = "cmbStation1";
-         this.cmbStation1.Size = new System.Drawing.Size(312, 23);
-         this.cmbStation1.TabIndex = 1;
-         this.cmbStation1.SelectedIndexChanged += new System.EventHandler(this.cmbStation1_SelectedIndexChanged);
+         this.cboStation1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this.cboStation1.FormattingEnabled = true;
+         this.cboStation1.Location = new System.Drawing.Point(93, 16);
+         this.cboStation1.Margin = new System.Windows.Forms.Padding(2);
+         this.cboStation1.Name = "cboStation1";
+         this.cboStation1.Size = new System.Drawing.Size(312, 23);
+         this.cboStation1.TabIndex = 1;
+         this.cboStation1.SelectedIndexChanged += new System.EventHandler(this.cmbStation1_SelectedIndexChanged);
          // 
          // label1
          // 
@@ -318,23 +318,23 @@ namespace MelsecHelper.APP.Forms
          this.tabPage4.Controls.Add(this.label7);
          this.tabPage4.Controls.Add(this.cmbQueryStation);
          this.tabPage4.Controls.Add(this.label6);
-         this.tabPage4.Location = new System.Drawing.Point(4, 22);
+         this.tabPage4.Location = new System.Drawing.Point(4, 24);
          this.tabPage4.Margin = new System.Windows.Forms.Padding(2);
          this.tabPage4.Name = "tabPage4";
-         this.tabPage4.Size = new System.Drawing.Size(427, 172);
+         this.tabPage4.Size = new System.Drawing.Size(427, 170);
          this.tabPage4.TabIndex = 3;
          this.tabPage4.Text = "查找資料";
          this.tabPage4.UseVisualStyleBackColor = true;
          // 
          // txtQueryResult
          // 
-         this.txtQueryResult.Location = new System.Drawing.Point(210, 16);
+         this.txtQueryResult.Location = new System.Drawing.Point(210, 48);
          this.txtQueryResult.Margin = new System.Windows.Forms.Padding(2);
          this.txtQueryResult.Multiline = true;
          this.txtQueryResult.Name = "txtQueryResult";
          this.txtQueryResult.ReadOnly = true;
          this.txtQueryResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-         this.txtQueryResult.Size = new System.Drawing.Size(204, 143);
+         this.txtQueryResult.Size = new System.Drawing.Size(204, 111);
          this.txtQueryResult.TabIndex = 6;
          // 
          // lblQueryCapacity
@@ -398,7 +398,7 @@ namespace MelsecHelper.APP.Forms
          this.cmbQueryStation.Location = new System.Drawing.Point(93, 16);
          this.cmbQueryStation.Margin = new System.Windows.Forms.Padding(2);
          this.cmbQueryStation.Name = "cmbQueryStation";
-         this.cmbQueryStation.Size = new System.Drawing.Size(94, 23);
+         this.cmbQueryStation.Size = new System.Drawing.Size(312, 23);
          this.cmbQueryStation.TabIndex = 1;
          this.cmbQueryStation.SelectedIndexChanged += new System.EventHandler(this.cmbQueryStation_SelectedIndexChanged);
          // 
@@ -703,8 +703,8 @@ namespace MelsecHelper.APP.Forms
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox cmbStation1;
-        private System.Windows.Forms.NumericUpDown nudSlotIndex;
+        private System.Windows.Forms.ComboBox cboStation1;
+      private System.Windows.Forms.NumericUpDown nudSlotIndex;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnUpdate1;
         private System.Windows.Forms.Label lblCapacity1;
