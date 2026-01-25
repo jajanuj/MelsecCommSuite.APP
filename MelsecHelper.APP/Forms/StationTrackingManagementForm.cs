@@ -46,6 +46,7 @@ namespace MelsecHelper.APP.Forms
          _moveOutService.MoveOutCompleted += OnMoveOutServiceOnMoveOutCompleted;
 
          InitializeStationComboBoxes();
+         InitializeJudgmentResultComboBox();
       }
 
       #endregion
@@ -77,6 +78,74 @@ namespace MelsecHelper.APP.Forms
 
       private void ClearPositionData()
       {
+      }
+
+      /// <summary>
+      /// 初始化判斷結果下拉選單
+      /// </summary>
+      private void InitializeJudgmentResultComboBox()
+      {
+         cboJudgmentResult.Items.Clear();
+         cboJudgmentResult.DisplayMember = "Text";
+         cboJudgmentResult.ValueMember = "Value";
+
+         var items = new[]
+         {
+            new { Text = "OK - 良品", Value = (int)JudgmentResult.OK },
+            new { Text = "NG - 不良品", Value = (int)JudgmentResult.NG },
+            new { Text = "PD - 待定", Value = (int)JudgmentResult.PD }
+         };
+
+         foreach (var item in items)
+         {
+            cboJudgmentResult.Items.Add(item);
+         }
+
+         cboJudgmentResult.SelectedIndex = 0;
+      }
+
+      /// <summary>
+      /// 當 OK/NG/PD 選擇改變時，自動更新 Bit 15-14
+      /// </summary>
+      private void cboJudgmentResult_SelectedIndexChanged(object sender, EventArgs e)
+      {
+         UpdateJudgeFlag2FromControls();
+      }
+
+      /// <summary>
+      /// 當 Last Flag 勾選改變時，自動更新 Bit 13
+      /// </summary>
+      private void chkLastFlag_CheckedChanged(object sender, EventArgs e)
+      {
+         UpdateJudgeFlag2FromControls();
+      }
+
+      /// <summary>
+      /// 根據控制項設定自動計算並更新 nudJudge2 的值（僅修改 Bit 13-15）
+      /// </summary>
+      private void UpdateJudgeFlag2FromControls()
+      {
+         if (cboJudgmentResult.SelectedItem == null)
+            return;
+
+         // 讀取當前值
+         ushort currentValue = (ushort)nudJudge2.Value;
+
+         // 清除 Bit 15-14，保留其他位元 (AND with 0x3FFF)
+         ushort cleared = (ushort)(currentValue & 0x3FFF);
+
+         // 設定 Bit 15-14 (OK/NG/PD)
+         int result = (int)cboJudgmentResult.SelectedValue;
+         ushort withResult = (ushort)(cleared | (result << 14));
+
+         // 設定/清除 Bit 13 (Last Flag)
+         if (chkLastFlag.Checked)
+            withResult |= (1 << 13);
+         else
+            withResult &= unchecked((ushort)~(1 << 13));
+
+         // 更新顯示
+         nudJudge2.Value = withResult;
       }
 
       /// <summary>

@@ -55,6 +55,9 @@ namespace MelsecHelper.APP.Forms
          this.cmbQueryStation = new System.Windows.Forms.ComboBox();
          this.label6 = new System.Windows.Forms.Label();
          this.groupBox1 = new System.Windows.Forms.GroupBox();
+         this.chkLastFlag = new System.Windows.Forms.CheckBox();
+         this.cboJudgmentResult = new System.Windows.Forms.ComboBox();
+         this.lblJudgmentResult = new System.Windows.Forms.Label();
          this.nudJudge3 = new System.Windows.Forms.NumericUpDown();
          this.label14 = new System.Windows.Forms.Label();
          this.nudJudge2 = new System.Windows.Forms.NumericUpDown();
@@ -414,6 +417,9 @@ namespace MelsecHelper.APP.Forms
          // 
          // groupBox1
          // 
+         this.groupBox1.Controls.Add(this.chkLastFlag);
+         this.groupBox1.Controls.Add(this.cboJudgmentResult);
+         this.groupBox1.Controls.Add(this.lblJudgmentResult);
          this.groupBox1.Controls.Add(this.nudJudge3);
          this.groupBox1.Controls.Add(this.label14);
          this.groupBox1.Controls.Add(this.nudJudge2);
@@ -434,7 +440,7 @@ namespace MelsecHelper.APP.Forms
          this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
          this.groupBox1.Name = "groupBox1";
          this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-         this.groupBox1.Size = new System.Drawing.Size(435, 142);
+         this.groupBox1.Size = new System.Drawing.Size(435, 172);
          this.groupBox1.TabIndex = 1;
          this.groupBox1.TabStop = false;
          this.groupBox1.Text = "追蹤資料輸入";
@@ -474,6 +480,39 @@ namespace MelsecHelper.APP.Forms
          this.nudJudge2.Name = "nudJudge2";
          this.nudJudge2.Size = new System.Drawing.Size(93, 22);
          this.nudJudge2.TabIndex = 13;
+         // 
+         // lblJudgmentResult
+         // 
+         this.lblJudgmentResult.AutoSize = true;
+         this.lblJudgmentResult.Location = new System.Drawing.Point(14, 142);
+         this.lblJudgmentResult.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+         this.lblJudgmentResult.Name = "lblJudgmentResult";
+         this.lblJudgmentResult.Size = new System.Drawing.Size(66, 15);
+         this.lblJudgmentResult.TabIndex = 16;
+         this.lblJudgmentResult.Text = "判斷結果:";
+         // 
+         // cboJudgmentResult
+         // 
+         this.cboJudgmentResult.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this.cboJudgmentResult.FormattingEnabled = true;
+         this.cboJudgmentResult.Location = new System.Drawing.Point(108, 139);
+         this.cboJudgmentResult.Margin = new System.Windows.Forms.Padding(2);
+         this.cboJudgmentResult.Name = "cboJudgmentResult";
+         this.cboJudgmentResult.Size = new System.Drawing.Size(93, 23);
+         this.cboJudgmentResult.TabIndex = 17;
+         this.cboJudgmentResult.SelectedIndexChanged +=  new System.EventHandler(this.cboJudgmentResult_SelectedIndexChanged);
+         // 
+         // chkLastFlag
+         // 
+         this.chkLastFlag.AutoSize = true;
+         this.chkLastFlag.Location = new System.Drawing.Point(251, 142);
+         this.chkLastFlag.Margin = new System.Windows.Forms.Padding(2);
+         this.chkLastFlag.Name = "chkLastFlag";
+         this.chkLastFlag.Size = new System.Drawing.Size(86, 19);
+         this.chkLastFlag.TabIndex = 18;
+         this.chkLastFlag.Text = "最後一片";
+         this.chkLastFlag.UseVisualStyleBackColor = true;
+         this.chkLastFlag.CheckedChanged += new System.EventHandler(this.chkLastFlag_CheckedChanged);
          // 
          // label13
          // 
@@ -741,7 +780,10 @@ namespace MelsecHelper.APP.Forms
         private System.Windows.Forms.NumericUpDown nudJudge2;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.RichTextBox rtbLog;
-        private System.Windows.Forms.Label label15;
+      private System.Windows.Forms.Label label15;
       private System.Windows.Forms.Button btnMoveOut;
+      private System.Windows.Forms.Label lblJudgmentResult;
+      private System.Windows.Forms.ComboBox cboJudgmentResult;
+      private System.Windows.Forms.CheckBox chkLastFlag;
    }
 }
