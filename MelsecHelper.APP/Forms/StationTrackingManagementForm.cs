@@ -135,7 +135,9 @@ namespace MelsecHelper.APP.Forms
          ushort cleared = (ushort)(currentValue & 0x3FFF);
 
          // 設定 Bit 15-14 (OK/NG/PD)
-         int result = (int)cboJudgmentResult.SelectedValue;
+         // 使用動態型別取得 Value 屬性
+         dynamic selectedItem = cboJudgmentResult.SelectedItem;
+         int result = (int)selectedItem.Value;
          ushort withResult = (ushort)(cleared | (result << 14));
 
          // 設定/清除 Bit 13 (Last Flag)
