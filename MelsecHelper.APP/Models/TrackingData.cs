@@ -86,6 +86,22 @@ namespace MelsecHelper.APP.Models
       /// </summary>
       public ushort JudgeFlag3 { get; set; }
 
+      /// <summary>
+      /// OK/NG/PD 判斷結果 (JudgeFlag2 Bit 15-14)
+      /// </summary>
+      public JudgmentResult Result
+      {
+         get => (JudgmentResult)((JudgeFlag2 >> 14) & 0x03);
+      }
+
+      /// <summary>
+      /// 最後一片旗標 (JudgeFlag2 Bit 13)
+      /// </summary>
+      public bool IsLastFlag
+      {
+         get => ((JudgeFlag2 >> 13) & 0x01) == 1;
+      }
+
       #endregion
 
       #region Public Methods
@@ -154,6 +170,37 @@ namespace MelsecHelper.APP.Models
             JudgeFlag2 = words[8],
             JudgeFlag3 = words[9]
          };
+      }
+
+      /// <summary>
+      /// 設定 OK/NG/PD 判斷結果（僅修改 JudgeFlag2 的 Bit 15-14，保留其他位元）
+      /// </summary>
+      /// <param name="result">判斷結果</param>
+      public void SetJudgmentResult(JudgmentResult result)
+      {
+         // 清除 Bit 15-14，保留其他位元 (AND with 0x3FFF = 0011 1111 1111 1111)
+         ushort clearedFlag = (ushort)(JudgeFlag2 & 0x3FFF);
+
+         // 設定新的 Bit 15-14
+         JudgeFlag2 = (ushort)(clearedFlag | ((int)result << 14));
+      }
+
+      /// <summary>
+      /// 設定最後一片旗標（僅修改 JudgeFlag2 的 Bit 13，保留其他位元）
+      /// </summary>
+      /// <param name="isLast">是否為最後一片</param>
+      public void SetLastFlag(bool isLast)
+      {
+         if (isLast)
+         {
+            // 設定 Bit 13 = 1 (OR with 0x2000)
+            JudgeFlag2 |= (1 << 13);
+         }
+         else
+         {
+            // 清除 Bit 13 = 0 (AND with ~0x2000)
+            JudgeFlag2 &= unchecked((ushort)~(1 << 13));
+         }
       }
 
       #endregion
