@@ -327,7 +327,8 @@ namespace MelsecHelper.APP.Services
       /// </summary>
       /// <param name="clearedAddress">被清除的位址</param>
       /// <param name="ct">取消令牌</param>
-      public async Task HandleLastFlagTransferAsync(string clearedAddress, CancellationToken ct = default)
+      /// <returns>是否應該繼續清除資料（找不到片時由用戶決定）</returns>
+      public async Task<bool> HandleLastFlagTransferAsync(string clearedAddress, CancellationToken ct = default)
       {
          try
          {
@@ -337,7 +338,7 @@ namespace MelsecHelper.APP.Services
             // 2. 檢查 Last Flag
             if (!clearedData.IsLastFlag)
             {
-               return; // 不是最後一片，無需處理
+               return true; // 不是最後一片，無需處理，繼續清除
             }
 
             // 3. 找到該位址對應的 station 和 slot
@@ -356,7 +357,7 @@ namespace MelsecHelper.APP.Services
                   // 設定同站前一片的 Last Flag
                   data.SetLastFlag(true);
                   await _controller.WriteWordsAsync(address, data.ToRawData(), ct);
-                  return;
+                  return true; // 成功傳遞，繼續清除
                }
             }
 
@@ -364,15 +365,16 @@ namespace MelsecHelper.APP.Services
             int? nextStationId = GetNextStationId(currentStationId);
             if (nextStationId == null)
             {
-               // 已是最後一站，且同站沒有其他片
-               MessageBox.Show(
+               // 已是最後一站，且同站沒有其他片 - 詢問用戶
+               var result = MessageBox.Show(
                   $"警告：清除位址 {clearedAddress} 的最後一片後，\n" +
                   $"無法找到可傳遞 Last Flag 的片。\n" +
-                  $"（已是最後一站，且同站無其他片）",
+                  $"（已是最後一站，且同站無其他片）\n\n" +
+                  $"是否仍要清除此資料？",
                   "Last Flag 傳遞警告",
-                  MessageBoxButtons.OK,
+                  MessageBoxButtons.YesNo,
                   MessageBoxIcon.Warning);
-               return;
+               return result == DialogResult.Yes;
             }
 
             // 6. 在後站找最後一片（從後往前找，最後面的是最新放入的料片）
@@ -387,22 +389,25 @@ namespace MelsecHelper.APP.Services
                   // 設定後站最後一片的 Last Flag
                   data.SetLastFlag(true);
                   await _controller.WriteWordsAsync(address, data.ToRawData(), ct);
-                  return;
+                  return true; // 成功傳遞，繼續清除
                }
             }
 
-            // 7. 後站也找不到片，顯示警告
-            MessageBox.Show(
+            // 7. 後站也找不到片 - 詢問用戶
+            var dialogResult = MessageBox.Show(
                $"警告：清除位址 {clearedAddress} 的最後一片後，\n" +
                $"無法找到可傳遞 Last Flag 的片。\n" +
-               $"（同站無其他片，後站 {nextStation.StationName} 也無片）",
+               $"（同站無其他片，後站 {nextStation.StationName} 也無片）\n\n" +
+               $"是否仍要清除此資料？",
                "Last Flag 傳遞警告",
-               MessageBoxButtons.OK,
+               MessageBoxButtons.YesNo,
                MessageBoxIcon.Warning);
+            return dialogResult == DialogResult.Yes;
          }
          catch (Exception ex)
          {
             ShowError($"處理 Last Flag 傳遞失敗 (位址: {clearedAddress})", ex);
+            return false; // 發生錯誤，不清除資料
          }
       }
 

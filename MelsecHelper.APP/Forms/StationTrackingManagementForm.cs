@@ -68,7 +68,14 @@ namespace MelsecHelper.APP.Forms
          try
          {
             // 先處理 Last Flag 傳遞（在清除之前讀取資料）
-            await _service.HandleLastFlagTransferAsync(startAddress, _cts.Token);
+            // 返回 true 表示可以繼續清除，false 表示用戶選擇不清除
+            bool shouldClear = await _service.HandleLastFlagTransferAsync(startAddress, _cts.Token);
+
+            if (!shouldClear)
+            {
+               Log($"[MoveOut] 用戶選擇不清除資料。Start Address: {startAddress}");
+               return;
+            }
 
             // 然後清除資料
             await _service.ClearDataByAddressAsync(startAddress, _cts.Token);
