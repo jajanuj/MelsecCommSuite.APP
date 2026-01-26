@@ -16,9 +16,39 @@ namespace MelsecHelper.APP.Services
    {
       #region Fields
 
+      private readonly IPlcController _controller;
       private readonly StationTrackingConfig _config;
+      private Action<string, Exception> ShowError;
 
-      private readonly ICCLinkController _controller;
+      /// <summary>
+      /// 站別流程順序對應表 (Key: 當前站別ID, Value: 前一站別ID，0表示無前站)
+      /// </summary>
+      private readonly Dictionary<int, int> _stationSequence = new Dictionary<int, int>
+      {
+         { 1, 0 },    // 上游平台 (第一站)
+         { 2, 1 },    // 插框機手臂
+         { 3, 2 },    // 插框站
+         { 4, 3 },    // 插框機出料
+         { 5, 4 },    // RGV
+         { 6, 5 },    // 烤箱1
+         { 7, 6 },    // 烤箱2
+         { 8, 7 },    // 烤箱3
+         { 9, 8 },    // 烤箱4
+         { 10, 9 },   // 烤箱5
+         { 11, 10 },  // 烤箱6
+         { 12, 11 },  // 烤箱7
+         { 13, 12 },  // 烤箱8
+         { 14, 13 },  // 拆框機入料
+         { 15, 14 },  // 拆框機入料平台
+         { 16, 15 },  // 拆框機移載預備
+         { 17, 16 },  // 拆框機移載完成
+         { 18, 17 },  // 拆框機出料平台
+         { 19, 18 },  // 拆框站
+         { 20, 19 },  // 拆框機出料
+         { 21, 20 },  // 拆框機手臂
+         { 22, 21 },  // 下游平台
+         { 23, 22 }   // 手動口
+      };
 
       #endregion
 
@@ -292,9 +322,152 @@ namespace MelsecHelper.APP.Services
          }
       }
 
+      /// <summary>
+      /// 設定最後一片旗標（僅修改 Bit 13）
+      /// </summary>
+      /// <param name="isLast">是否為最後一片</param>
+      public void SetLastFlag(bool isLast)
+      {
+         if (isLast)
+         {
+            // 設定 Bit 13 = 1 (OR with 0x2000)
+            JudgeFlag2 |= (1 << 13);
+         }
+         else
+         {
+            // 清除 Bit 13 = 0 (AND with ~0x2000)
+            JudgeFlag2 &= unchecked((ushort)~(1 << 13));
+         }
+      }
+
+      /// <summary>
+      /// 處理 MoveOut 後的 Last Flag 傳遞邏輯（支援跨站別）
+      /// </summary>
+      /// <param name="clearedAddress">被清除的位址</param>
+      /// <param name="ct">取消令牌</param>
+      public async Task HandleLastFlagTransferAsync(string clearedAddress, CancellationToken ct = default)
+      {
+         try
+         {
+            // 1. 讀取被清除位址的資料
+            var clearedData = await ReadDataByAddressAsync(clearedAddress, ct);
+
+            // 2. 檢查 Last Flag
+            if (!clearedData.IsLastFlag)
+               return;  // 不是最後一片，無需處理
+
+            // 3. 找到該位址對應的 station 和 slot
+            var (currentStationId, currentSlot) = FindStationAndSlot(clearedAddress);
+            var currentStation = _config.GetStation(currentStationId);
+
+            // 4. 檢查同站是否還有其他片（從後往前找）
+            for (int slot = currentSlot - 1; slot >= 1; slot--)
+            {
+               string address = currentStation.CalculateSlotAddress(slot);
+               var data = await ReadDataByAddressAsync(address, ct);
+
+               // 找到有資料的片（BoardId 不為空）
+               if (!IsEmptyData(data))
+               {
+                  // 設定同站前一片的 Last Flag
+                  data.SetLastFlag(true);
+                  await _controller.WriteWordsAsync(address, data.ToRawData(), ct);
+                  return;
+               }
+            }
+
+            // 5. 同站沒有其他片，找前一個站別的最後一片
+            int? previousStationId = GetPreviousStationId(currentStationId);
+            if (previousStationId == null)
+               return;  // 已是第一站，無前站
+
+            // 6. 在前一站找最後一片（從後往前找）
+            var previousStation = _config.GetStation(previousStationId.Value);
+            for (int slot = previousStation.Capacity; slot >= 1; slot--)
+            {
+               string address = previousStation.CalculateSlotAddress(slot);
+               var data = await ReadDataByAddressAsync(address, ct);
+
+               if (!IsEmptyData(data))
+               {
+                  // 設定前一站最後一片的 Last Flag
+                  data.SetLastFlag(true);
+                  await _controller.WriteWordsAsync(address, data.ToRawData(), ct);
+                  return;
+               }
+            }
+         }
+         catch (Exception ex)
+         {
+            ShowError($"處理 Last Flag 傳遞失敗 (位址: {clearedAddress})", ex);
+         }
+      }
+
       #endregion
 
       #region Private Methods
+
+      /// <summary>
+      /// 檢查追蹤資料是否為空（無板號）
+      /// </summary>
+      private bool IsEmptyData(TrackingData data)
+      {
+         return data.BoardId[0] == 0 && data.BoardId[1] == 0 && data.BoardId[2] == 0;
+      }
+
+      /// <summary>
+      /// 取得前一個站別 ID
+      /// </summary>
+      private int? GetPreviousStationId(int currentStationId)
+      {
+         if (_stationSequence.TryGetValue(currentStationId, out int previousId))
+         {
+            return previousId == 0 ? null : (int?)previousId;
+         }
+         return null;
+      }
+
+      /// <summary>
+      /// 根據位址反查 station 和 slot
+      /// </summary>
+      private (int stationId, int slotIndex) FindStationAndSlot(string address)
+      {
+         string hexPart = address.Substring(2);  // "LW1868" -> "1868"
+         int addressValue = Convert.ToInt32(hexPart, 16);
+
+         foreach (var station in _config.Stations)
+         {
+            int baseAddress = ParseAddress(station.StartAddress);
+            int maxAddress = baseAddress + station.Capacity * 10;
+
+            if (addressValue >= baseAddress && addressValue < maxAddress)
+            {
+               int offset = addressValue - baseAddress;
+               int slotIndex = (offset / 10) + 1;
+               return (station.StationId, slotIndex);
+            }
+         }
+
+         throw new InvalidOperationException($"無法找到位址 {address} 對應的站別");
+      }
+
+      /// <summary>
+      /// 解析 PLC 位址為數值
+      /// </summary>
+      private int ParseAddress(string address)
+      {
+         string hexPart = address.Substring(2);
+         return Convert.ToInt32(hexPart, 16);
+      }
+
+      /// <summary>
+      /// 根據位址讀取追蹤資料
+      /// </summary>
+      private async Task<TrackingData> ReadDataByAddressAsync(string address, CancellationToken ct)
+      {
+         short[] data = await _controller.ReadWordsAsync(address, 10, ct);
+         return TrackingData.FromRawData(data);
+      }
 
       /// <summary>
       /// 驗證站號和位置索引

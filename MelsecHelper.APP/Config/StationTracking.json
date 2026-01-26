@@ -34,7 +34,7 @@
     },
     {
       "StationId": 5,
-      "StationName": "AGV",
+      "StationName": "RGV",
       "Capacity": 30,
       "StartAddress": "LW1994",
       "GlobalStartIndex": 34,
