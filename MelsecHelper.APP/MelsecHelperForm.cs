@@ -506,8 +506,7 @@ namespace MelsecHelper.APP
                   _mockReader = new MockMxComponentReader();
                   _ovenService = new OvenDataTransferService(
                      dataSourceReader: () => Task.Run(() => _mockReader.GetAllOvenData()),
-                     dest: _appPlcService.Controller,
-                     logger: msg => Log($"[Oven] {msg}")
+                     dest: _appPlcService.Controller
                   );
                }
 

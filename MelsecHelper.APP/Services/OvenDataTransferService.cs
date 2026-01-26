@@ -23,7 +23,6 @@ namespace MelsecHelper.APP.Services
       // 資料來源委派：一個非同步方法，回傳 short[]
       private readonly Func<Task<short[]>> _dataSourceReader;
       private readonly ICCLinkController _destination;
-      private readonly Action<string> _logger;
 
       private bool _disposed = false;
 
@@ -44,17 +43,19 @@ namespace MelsecHelper.APP.Services
       /// </summary>
       /// <param name="dataSourceReader">資料讀取委派</param>
       /// <param name="dest">PLC 控制器</param>
-      /// <param name="logger">日誌委派</param>
-      public OvenDataTransferService(Func<Task<short[]>> dataSourceReader, ICCLinkController dest, Action<string> logger = null)
+      public OvenDataTransferService(Func<Task<short[]>> dataSourceReader, ICCLinkController dest)
       {
          _dataSourceReader = dataSourceReader ?? throw new ArgumentNullException(nameof(dataSourceReader));
          _destination = dest ?? throw new ArgumentNullException(nameof(dest));
-         _logger = logger ?? (msg => Console.WriteLine($"[OvenService] {DateTime.Now:HH:mm:ss}: {msg}"));
       }
 
       #endregion
 
       #region Properties
+...
+      private void Log(string msg) => Console.WriteLine($"[OvenService] {DateTime.Now:HH:mm:ss}: {msg}");
+
+      #endregion
 
       /// <summary>
       /// 上報間隔 (毫秒)
@@ -206,7 +207,7 @@ namespace MelsecHelper.APP.Services
          }
       }
 
-      private void Log(string msg) => _logger?.Invoke(msg);
+      private void Log(string msg) => Console.WriteLine($"[OvenService] {DateTime.Now:HH:mm:ss}: {msg}");
 
       #endregion
 
