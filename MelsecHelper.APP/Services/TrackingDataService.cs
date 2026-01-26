@@ -375,16 +375,16 @@ namespace MelsecHelper.APP.Services
                return;
             }
 
-            // 6. 在後站找第一片（從前往後找）
+            // 6. 在後站找最後一片（從後往前找，最後面的是最新放入的料片）
             var nextStation = _config.GetStation(nextStationId.Value);
-            for (int slot = 1; slot <= nextStation.Capacity; slot++)
+            for (int slot = nextStation.Capacity; slot >= 1; slot--)
             {
                string address = nextStation.CalculateSlotAddress(slot);
                var data = await ReadDataByAddressAsync(address, ct);
 
                if (!IsEmptyData(data))
                {
-                  // 設定後站第一片的 Last Flag
+                  // 設定後站最後一片的 Last Flag
                   data.SetLastFlag(true);
                   await _controller.WriteWordsAsync(address, data.ToRawData(), ct);
                   return;
