@@ -45,9 +45,13 @@ namespace MelsecHelper.APP
       // 連接狀態標記
       private bool _isOpened;
       private ushort _machineStatus = 4; // 預設：生產中
+      private MockMxComponentReader _mockReader;
 
       // MoveOut 服務
       private MoveOutService _moveOutService;
+
+      // 烤箱資料轉拋服務 (模擬)
+      private OvenDataTransferService _ovenService;
       private int _path = -1;
       private uint _processingCounter;
 
@@ -58,11 +62,6 @@ namespace MelsecHelper.APP
       // 掃描監控視窗 (單例)
       private ScanMonitorForm _scanMonitorForm;
       private AppControllerSettings _settings;
-
-      // 烤箱資料轉拋服務 (模擬)
-      private OvenDataTransferService _ovenService;
-      private MockMxComponentReader _mockReader;
-      private MockMxComponentReader _mockReader;
       private MockMelsecApiAdapter _sharedMockAdapter; // 共享的 Mock Adapter（用於 Simulator 模式）
 
       // PLC 模擬器
@@ -501,6 +500,16 @@ namespace MelsecHelper.APP
                btnStartMaintMonitor.Enabled = false;
                btnStopMaintMonitor.Enabled = true;
 
+               // 初始化烤箱轉拋服務
+               if (_ovenService == null)
+               {
+                   _mockReader = new MockMxComponentReader();
+                   _ovenService = new OvenDataTransferService(
+                       dataSourceReader: () => Task.Run(() => _mockReader.GetAllOvenData()),
+                       dest: _appPlcService.Controller
+                   );
+               }
+
                if (_scanMonitorForm != null && !_scanMonitorForm.IsDisposed)
                {
                   // 更新 Monitor 視窗的 Controller 參照
@@ -544,6 +553,15 @@ namespace MelsecHelper.APP
             btnClose.Enabled = false;
 
             _appPlcService?.StopTrackingDataMaintenanceMonitor();
+
+            // 停止並釋放烤箱服務
+            if (_ovenService != null)
+            {
+               _ovenService.Stop();
+               _ovenService.Dispose();
+               _ovenService = null;
+            }
+            _mockReader = null;
 
             // 先在 UI 執行緒上停止 Timer 並重置按鈕狀態
             if (_scanMonitorForm != null && !_scanMonitorForm.IsDisposed)
@@ -780,14 +798,24 @@ namespace MelsecHelper.APP
       private void btnStartRegularReport_Click(object sender, EventArgs e)
       {
          int interval = _settings.RegularReport.Interval;
-         _ovenService.Start(interval);
-         Log($"啟動烤箱資料轉拋，間隔: {interval} 秒");
+         if (_ovenService != null)
+         {
+            _ovenService.Start(interval);
+            Log($"啟動烤箱資料轉拋，間隔: {interval} 秒");
+         }
+         else
+         {
+            Log("服務尚未初始化，請先連接 PLC | Service not initialized, please connect PLC first");
+         }
       }
 
       private void btnStopRegularReport_Click(object sender, EventArgs e)
       {
-         _ovenService.Stop();
-         Log("停止烤箱資料轉拋");
+         if (_ovenService != null)
+         {
+            _ovenService.Stop();
+            Log("停止烤箱資料轉拋");
+         }
       }
 
       private void btnStopSimulator_Click(object sender, EventArgs e)
