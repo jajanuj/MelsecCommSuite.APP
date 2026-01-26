@@ -30,6 +30,7 @@ namespace MelsecHelper.APP.Forms
         {
          this.tabControl1 = new System.Windows.Forms.TabControl();
          this.tabPage1 = new System.Windows.Forms.TabPage();
+         this.btnSetSituation1 = new System.Windows.Forms.Button();
          this.btnMoveOut = new System.Windows.Forms.Button();
          this.lblCapacity1 = new System.Windows.Forms.Label();
          this.btnUpdate1 = new System.Windows.Forms.Button();
@@ -110,6 +111,7 @@ namespace MelsecHelper.APP.Forms
          // 
          // tabPage1
          // 
+         this.tabPage1.Controls.Add(this.btnSetSituation1);
          this.tabPage1.Controls.Add(this.btnMoveOut);
          this.tabPage1.Controls.Add(this.lblCapacity1);
          this.tabPage1.Controls.Add(this.btnUpdate1);
@@ -125,6 +127,16 @@ namespace MelsecHelper.APP.Forms
          this.tabPage1.TabIndex = 0;
          this.tabPage1.Text = "情境1: 單片更新";
          this.tabPage1.UseVisualStyleBackColor = true;
+         // 
+         // btnSetSituation1
+         // 
+         this.btnSetSituation1.Location = new System.Drawing.Point(247, 90);
+         this.btnSetSituation1.Name = "btnSetSituation1";
+         this.btnSetSituation1.Size = new System.Drawing.Size(128, 23);
+         this.btnSetSituation1.TabIndex = 7;
+         this.btnSetSituation1.Text = "Set Situation1";
+         this.btnSetSituation1.UseVisualStyleBackColor = true;
+         this.btnSetSituation1.Click += new System.EventHandler(this.btnSetSituation1_Click);
          // 
          // btnMoveOut
          // 
@@ -785,5 +797,6 @@ namespace MelsecHelper.APP.Forms
       private System.Windows.Forms.Label lblJudgmentResult;
       private System.Windows.Forms.ComboBox cboJudgmentResult;
       private System.Windows.Forms.CheckBox chkLastFlag;
+      private System.Windows.Forms.Button btnSetSituation1;
    }
 }

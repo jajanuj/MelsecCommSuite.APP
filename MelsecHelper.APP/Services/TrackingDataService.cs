@@ -360,23 +360,23 @@ namespace MelsecHelper.APP.Services
                }
             }
 
-            // 5. 同站沒有其他片，找前一個站別的最後一片
-            int? previousStationId = GetPreviousStationId(currentStationId);
-            if (previousStationId == null)
+            // 5. 同站沒有其他片，找下一個站別（後站）的第一片
+            int? nextStationId = GetNextStationId(currentStationId);
+            if (nextStationId == null)
             {
-               return; // 已是第一站，無前站
+               return; // 已是最後一站，無後站
             }
 
-            // 6. 在前一站找最後一片（從後往前找）
-            var previousStation = _config.GetStation(previousStationId.Value);
-            for (int slot = previousStation.Capacity; slot >= 1; slot--)
+            // 6. 在後站找第一片（從前往後找）
+            var nextStation = _config.GetStation(nextStationId.Value);
+            for (int slot = 1; slot <= nextStation.Capacity; slot++)
             {
-               string address = previousStation.CalculateSlotAddress(slot);
+               string address = nextStation.CalculateSlotAddress(slot);
                var data = await ReadDataByAddressAsync(address, ct);
 
                if (!IsEmptyData(data))
                {
-                  // 設定前一站最後一片的 Last Flag
+                  // 設定後站第一片的 Last Flag
                   data.SetLastFlag(true);
                   await _controller.WriteWordsAsync(address, data.ToRawData(), ct);
                   return;
@@ -412,6 +412,23 @@ namespace MelsecHelper.APP.Services
          }
 
          return null;
+      }
+
+      /// <summary>
+      /// 取得下一個站別 ID（後站）
+      /// </summary>
+      private int? GetNextStationId(int currentStationId)
+      {
+         // 在字典中找哪個站別的前站是 currentStationId
+         foreach (var kvp in _stationSequence)
+         {
+            if (kvp.Value == currentStationId)
+            {
+               return kvp.Key;
+            }
+         }
+
+         return null; // 沒有下一站
       }
 
       /// <summary>

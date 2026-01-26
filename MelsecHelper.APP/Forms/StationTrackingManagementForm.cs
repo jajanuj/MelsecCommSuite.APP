@@ -496,6 +496,76 @@ namespace MelsecHelper.APP.Forms
          }
       }
 
+      private async void btnSetSituation1_Click(object sender, EventArgs e)
+      {
+         int slotIndex = 1;
+         var stationId = 3;
+         var station = _service.GetStation(stationId);
+         var startAddress = station.CalculateSlotAddress(slotIndex);
+         var data = new TrackingData
+         {
+            StartAddress = startAddress,
+            BoardId = new[]
+            {
+               (ushort)11,
+               (ushort)22,
+               (ushort)3
+            },
+            LayerCount = 44,
+            LotNoChar = 'A',
+            LotNoNum = 456,
+            JudgeFlag1 = 8888,
+            JudgeFlag2 = 8207,
+            JudgeFlag3 = 9999
+         };
+
+         await _service.UpdateSingleSlotAsync(stationId, slotIndex, data, _cts.Token);
+
+         stationId = 4;
+         slotIndex = 2;
+         station = _service.GetStation(stationId);
+         startAddress = station.CalculateSlotAddress(slotIndex);
+         data = new TrackingData
+         {
+            StartAddress = startAddress,
+            BoardId = new[]
+            {
+               (ushort)11,
+               (ushort)22,
+               (ushort)2
+            },
+            LayerCount = 44,
+            LotNoChar = 'A',
+            LotNoNum = 456,
+            JudgeFlag1 = 8888,
+            JudgeFlag2 = 15,
+            JudgeFlag3 = 9999
+         };
+         await _service.UpdateSingleSlotAsync(stationId, slotIndex, data, _cts.Token);
+
+         stationId = 4;
+         slotIndex = 1;
+         station = _service.GetStation(stationId);
+         startAddress = station.CalculateSlotAddress(slotIndex);
+         data = new TrackingData
+         {
+            StartAddress = startAddress,
+            BoardId = new[]
+            {
+               (ushort)11,
+               (ushort)22,
+               (ushort)1
+            },
+            LayerCount = 44,
+            LotNoChar = 'A',
+            LotNoNum = 456,
+            JudgeFlag1 = 8888,
+            JudgeFlag2 = 15,
+            JudgeFlag3 = 9999
+         };
+         await _service.UpdateSingleSlotAsync(stationId, slotIndex, data, _cts.Token);
+      }
+
       #endregion
    }
 }
