@@ -34,6 +34,7 @@ namespace MelsecHelper.APP.Models
             Tracking = loaded.Tracking ?? new TrackingSettings();
             Maintenance = loaded.Maintenance ?? new MaintenanceSettings();
             MoveOut = loaded.MoveOut ?? new MoveOutSettings();
+            RegularReport = loaded.RegularReport ?? new RegularReportSettings();
          }
          else
          {
@@ -69,6 +70,8 @@ namespace MelsecHelper.APP.Models
       public MaintenanceSettings Maintenance { get; set; } = new MaintenanceSettings();
 
       public MoveOutSettings MoveOut { get; set; } = new MoveOutSettings();
+
+      public RegularReportSettings RegularReport { get; set; } = new RegularReportSettings();
 
       #endregion
 

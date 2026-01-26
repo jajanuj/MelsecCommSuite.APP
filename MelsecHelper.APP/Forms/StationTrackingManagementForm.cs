@@ -24,11 +24,7 @@ namespace MelsecHelper.APP.Forms
 
       private readonly TrackingDataService _service;
       private readonly AppControllerSettings _settings;
-      private MockMxComponentReader _mockReader;
       private MoveOutService _moveOutService;
-
-      // 烤箱資料服務
-      private OvenDataTransferService _ovenService;
 
       #endregion
 
@@ -50,11 +46,6 @@ namespace MelsecHelper.APP.Forms
          _moveOutService = new MoveOutService(_appPlcService, _settings, msg => Log($"[MoveOut] {msg}"));
          _moveOutService.MoveOutCompleted += OnMoveOutServiceOnMoveOutCompleted;
 
-         // 初始化烤箱資料轉拋服務 (模擬)
-         _mockReader = new MockMxComponentReader();
-         _ovenService = new OvenDataTransferService(dataSourceReader: () => Task.Run(() => _mockReader.GetAllOvenData()), dest: _controller);
-         _ovenService.Start();
-
          InitializeStationComboBoxes();
          InitializeJudgmentResultComboBox();
       }
@@ -66,8 +57,6 @@ namespace MelsecHelper.APP.Forms
       protected override void OnFormClosing(FormClosingEventArgs e)
       {
          _cts?.Cancel();
-         _ovenService?.Stop();
-         _ovenService?.Dispose();
          base.OnFormClosing(e);
       }
 

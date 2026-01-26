@@ -23,9 +23,10 @@ namespace MelsecHelper.APP.Services
       // 資料來源委派：一個非同步方法，回傳 short[]
       private readonly Func<Task<short[]>> _dataSourceReader;
       private readonly ICCLinkController _destination;
-      private readonly int _intervalMs = 30000;
+      private int _intervalMs = 30000;
       private readonly Timer _timer;
       private bool _disposed = false;
+      private bool _isRunning = false;
 
       // 緩存上次成功的資料 (錯誤處理)
       private short[] _lastSuccessData;
@@ -53,7 +54,44 @@ namespace MelsecHelper.APP.Services
       #region Public Methods
 
       /// <summary>
+      /// 上報間隔 (秒)，設定時會即時更新 Timer
+      /// </summary>
+      public int Interval
+      {
+         get => _intervalMs / 1000;
+         set
+         {
+            int newIntervalMs = value * 1000;
+            if (_intervalMs != newIntervalMs)
+            {
+               _intervalMs = newIntervalMs;
+               // 如果正在運行，立即更新 Timer
+               if (_isRunning && !_disposed)
+               {
+                  _timer.Change(0, _intervalMs);
+               }
+            }
+         }
+      }
+
+      /// <summary>
       /// 啟動服務
+      /// </summary>
+      /// <param name="intervalSeconds">初始間隔 (秒)</param>
+      public void Start(int intervalSeconds)
+      {
+         if (_disposed)
+         {
+            throw new ObjectDisposedException(nameof(OvenDataTransferService));
+         }
+
+         Interval = intervalSeconds;
+         _isRunning = true;
+         _timer.Change(0, _intervalMs); // 立即執行，然後每 N 秒
+      }
+
+      /// <summary>
+      /// 啟動服務 (使用當前間隔)
       /// </summary>
       public void Start()
       {
@@ -62,7 +100,8 @@ namespace MelsecHelper.APP.Services
             throw new ObjectDisposedException(nameof(OvenDataTransferService));
          }
 
-         _timer.Change(0, _intervalMs); // 立即執行，然後每 30 秒
+         _isRunning = true;
+         _timer.Change(0, _intervalMs);
       }
 
       /// <summary>
@@ -70,6 +109,7 @@ namespace MelsecHelper.APP.Services
       /// </summary>
       public void Stop()
       {
+         _isRunning = false;
          _timer.Change(Timeout.Infinite, Timeout.Infinite);
       }
 

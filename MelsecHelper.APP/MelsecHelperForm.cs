@@ -58,6 +58,11 @@ namespace MelsecHelper.APP
       // 掃描監控視窗 (單例)
       private ScanMonitorForm _scanMonitorForm;
       private AppControllerSettings _settings;
+
+      // 烤箱資料轉拋服務 (模擬)
+      private OvenDataTransferService _ovenService;
+      private MockMxComponentReader _mockReader;
+      private MockMxComponentReader _mockReader;
       private MockMelsecApiAdapter _sharedMockAdapter; // 共享的 Mock Adapter（用於 Simulator 模式）
 
       // PLC 模擬器
@@ -770,6 +775,19 @@ namespace MelsecHelper.APP
             btnPlcSettings.Enabled = true;
             Log("環境初始化失敗 | Environment initialization failed (Error: " + ex.Message + ")");
          }
+      }
+
+      private void btnStartRegularReport_Click(object sender, EventArgs e)
+      {
+         int interval = _settings.RegularReport.Interval;
+         _ovenService.Start(interval);
+         Log($"啟動烤箱資料轉拋，間隔: {interval} 秒");
+      }
+
+      private void btnStopRegularReport_Click(object sender, EventArgs e)
+      {
+         _ovenService.Stop();
+         Log("停止烤箱資料轉拋");
       }
 
       private void btnStopSimulator_Click(object sender, EventArgs e)

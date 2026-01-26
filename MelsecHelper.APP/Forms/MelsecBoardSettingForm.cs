@@ -67,6 +67,8 @@ namespace MelsecHelper.APP.Forms
 
             paramMoveOutT1Timeout.Value = appSettings.Maintenance?.PlcToDeviceT1Timeout ?? 1000;
             paramMoveOutT2Timeout.Value = appSettings.Maintenance?.PlcToDeviceT2Timeout ?? 1000;
+
+            paramRegularReportInterval.Value = appSettings.RegularReport?.Interval ?? 30000;
          }
       }
 
@@ -121,6 +123,8 @@ namespace MelsecHelper.APP.Forms
 
             appSettings.MoveOut.T1Timeout = (int)paramMoveOutT1Timeout.Value;
             appSettings.MoveOut.T2Timeout = (int)paramMoveOutT2Timeout.Value;
+
+            appSettings.RegularReport.Interval = (int)paramRegularReportInterval.Value;
          }
       }
 

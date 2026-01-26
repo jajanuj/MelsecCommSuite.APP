@@ -112,6 +112,9 @@
          this.tpLotMixingPrevention = new System.Windows.Forms.TabPage();
          this.tpLinkReport = new System.Windows.Forms.TabPage();
          this.tpHandshake = new System.Windows.Forms.TabPage();
+         this.tpRegularDataCollectionReport = new System.Windows.Forms.TabPage();
+         this.btnStartRegularReport = new System.Windows.Forms.Button();
+         this.btnStopRegularReport = new System.Windows.Forms.Button();
          this.grpConnectionMode.SuspendLayout();
          this.grpManualTime.SuspendLayout();
          this.grpConnectMode.SuspendLayout();
@@ -140,6 +143,7 @@
          this.tpLotMixingPrevention.SuspendLayout();
          this.tpLinkReport.SuspendLayout();
          this.tpHandshake.SuspendLayout();
+         this.tpRegularDataCollectionReport.SuspendLayout();
          this.SuspendLayout();
          // 
          // grpConnectionMode
@@ -276,7 +280,7 @@
          // 
          // btnTrackingControl
          // 
-         this.btnTrackingControl.Location = new System.Drawing.Point(218, 64);
+         this.btnTrackingControl.Location = new System.Drawing.Point(15, 13);
          this.btnTrackingControl.Margin = new System.Windows.Forms.Padding(10);
          this.btnTrackingControl.Name = "btnTrackingControl";
          this.btnTrackingControl.Size = new System.Drawing.Size(181, 26);
@@ -648,6 +652,7 @@
          this.tabMain.Controls.Add(this.tpPosReport);
          this.tabMain.Controls.Add(this.tpLotMixingPrevention);
          this.tabMain.Controls.Add(this.tpLinkReport);
+         this.tabMain.Controls.Add(this.tpRegularDataCollectionReport);
          this.tabMain.Controls.Add(this.tpHandshake);
          this.tabMain.Location = new System.Drawing.Point(0, 3);
          this.tabMain.Multiline = true;
@@ -678,10 +683,10 @@
          // 
          this.tpCheckClock.Controls.Add(this.btnStartHeartbeat);
          this.tpCheckClock.Controls.Add(this.btnStopHeartbeat);
-         this.tpCheckClock.Location = new System.Drawing.Point(4, 44);
+         this.tpCheckClock.Location = new System.Drawing.Point(4, 24);
          this.tpCheckClock.Name = "tpCheckClock";
          this.tpCheckClock.Padding = new System.Windows.Forms.Padding(3);
-         this.tpCheckClock.Size = new System.Drawing.Size(772, 370);
+         this.tpCheckClock.Size = new System.Drawing.Size(772, 390);
          this.tpCheckClock.TabIndex = 0;
          this.tpCheckClock.Text = "Check Clock";
          this.tpCheckClock.UseVisualStyleBackColor = true;
@@ -692,10 +697,10 @@
          this.tpClockUpdate.Controls.Add(this.btnForceTimeSync);
          this.tpClockUpdate.Controls.Add(this.btnStartTimeSync);
          this.tpClockUpdate.Controls.Add(this.btnStopTimeSync);
-         this.tpClockUpdate.Location = new System.Drawing.Point(4, 44);
+         this.tpClockUpdate.Location = new System.Drawing.Point(4, 24);
          this.tpClockUpdate.Name = "tpClockUpdate";
          this.tpClockUpdate.Padding = new System.Windows.Forms.Padding(3);
-         this.tpClockUpdate.Size = new System.Drawing.Size(772, 370);
+         this.tpClockUpdate.Size = new System.Drawing.Size(772, 390);
          this.tpClockUpdate.TabIndex = 1;
          this.tpClockUpdate.Text = "Clock Update";
          this.tpClockUpdate.UseVisualStyleBackColor = true;
@@ -707,9 +712,9 @@
          this.tpMoveOut.Controls.Add(this.tlpMoveOutData);
          this.tpMoveOut.Controls.Add(this.btnMoveOutStop);
          this.tpMoveOut.Controls.Add(this.btnMoveOutStart);
-         this.tpMoveOut.Location = new System.Drawing.Point(4, 44);
+         this.tpMoveOut.Location = new System.Drawing.Point(4, 24);
          this.tpMoveOut.Name = "tpMoveOut";
-         this.tpMoveOut.Size = new System.Drawing.Size(772, 370);
+         this.tpMoveOut.Size = new System.Drawing.Size(772, 390);
          this.tpMoveOut.TabIndex = 4;
          this.tpMoveOut.Text = "Move Out";
          this.tpMoveOut.UseVisualStyleBackColor = true;
@@ -1042,9 +1047,9 @@
          // tpRecipeCheck
          // 
          this.tpRecipeCheck.Controls.Add(this.btnRecipeCheck);
-         this.tpRecipeCheck.Location = new System.Drawing.Point(4, 44);
+         this.tpRecipeCheck.Location = new System.Drawing.Point(4, 24);
          this.tpRecipeCheck.Name = "tpRecipeCheck";
-         this.tpRecipeCheck.Size = new System.Drawing.Size(772, 370);
+         this.tpRecipeCheck.Size = new System.Drawing.Size(772, 390);
          this.tpRecipeCheck.TabIndex = 5;
          this.tpRecipeCheck.Text = "Recipe Check";
          this.tpRecipeCheck.UseVisualStyleBackColor = true;
@@ -1053,10 +1058,10 @@
          // 
          this.tpAlarm.Controls.Add(this.ltbErrorCodes);
          this.tpAlarm.Controls.Add(this.grpAlarm);
-         this.tpAlarm.Location = new System.Drawing.Point(4, 44);
+         this.tpAlarm.Location = new System.Drawing.Point(4, 24);
          this.tpAlarm.Name = "tpAlarm";
          this.tpAlarm.Padding = new System.Windows.Forms.Padding(3);
-         this.tpAlarm.Size = new System.Drawing.Size(772, 370);
+         this.tpAlarm.Size = new System.Drawing.Size(772, 390);
          this.tpAlarm.TabIndex = 2;
          this.tpAlarm.Text = "Alarm";
          this.tpAlarm.UseVisualStyleBackColor = true;
@@ -1068,10 +1073,10 @@
          this.tpCommonReport.Controls.Add(this.textBox1);
          this.tpCommonReport.Controls.Add(this.btnAutoRun);
          this.tpCommonReport.Controls.Add(this.btnManualRun);
-         this.tpCommonReport.Location = new System.Drawing.Point(4, 44);
+         this.tpCommonReport.Location = new System.Drawing.Point(4, 24);
          this.tpCommonReport.Name = "tpCommonReport";
          this.tpCommonReport.Padding = new System.Windows.Forms.Padding(3);
-         this.tpCommonReport.Size = new System.Drawing.Size(772, 370);
+         this.tpCommonReport.Size = new System.Drawing.Size(772, 390);
          this.tpCommonReport.TabIndex = 6;
          this.tpCommonReport.Text = "Common Report";
          this.tpCommonReport.UseVisualStyleBackColor = true;
@@ -1080,10 +1085,10 @@
          // 
          this.tpMaintenance.Controls.Add(this.btnStartMaintMonitor);
          this.tpMaintenance.Controls.Add(this.btnStopMaintMonitor);
-         this.tpMaintenance.Location = new System.Drawing.Point(4, 44);
+         this.tpMaintenance.Location = new System.Drawing.Point(4, 24);
          this.tpMaintenance.Name = "tpMaintenance";
          this.tpMaintenance.Padding = new System.Windows.Forms.Padding(3);
-         this.tpMaintenance.Size = new System.Drawing.Size(772, 370);
+         this.tpMaintenance.Size = new System.Drawing.Size(772, 390);
          this.tpMaintenance.TabIndex = 7;
          this.tpMaintenance.Text = "Maintenance";
          this.tpMaintenance.UseVisualStyleBackColor = true;
@@ -1145,6 +1150,40 @@
          this.tpHandshake.Text = "Handshake";
          this.tpHandshake.UseVisualStyleBackColor = true;
          // 
+         // tpRegularDataCollectionReport
+         // 
+         this.tpRegularDataCollectionReport.Controls.Add(this.btnStartRegularReport);
+         this.tpRegularDataCollectionReport.Controls.Add(this.btnStopRegularReport);
+         this.tpRegularDataCollectionReport.Location = new System.Drawing.Point(4, 44);
+         this.tpRegularDataCollectionReport.Name = "tpRegularDataCollectionReport";
+         this.tpRegularDataCollectionReport.Padding = new System.Windows.Forms.Padding(3);
+         this.tpRegularDataCollectionReport.Size = new System.Drawing.Size(772, 370);
+         this.tpRegularDataCollectionReport.TabIndex = 13;
+         this.tpRegularDataCollectionReport.Text = "Regular Data Collection Report";
+         this.tpRegularDataCollectionReport.UseVisualStyleBackColor = true;
+         // 
+         // btnStartRegularReport
+         // 
+         this.btnStartRegularReport.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+         this.btnStartRegularReport.Location = new System.Drawing.Point(20, 20);
+         this.btnStartRegularReport.Margin = new System.Windows.Forms.Padding(5);
+         this.btnStartRegularReport.Name = "btnStartRegularReport";
+         this.btnStartRegularReport.Size = new System.Drawing.Size(181, 26);
+         this.btnStartRegularReport.TabIndex = 21;
+         this.btnStartRegularReport.Text = "Start Regular Report";
+         this.btnStartRegularReport.UseVisualStyleBackColor = true;
+         // 
+         // btnStopRegularReport
+         // 
+         this.btnStopRegularReport.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+         this.btnStopRegularReport.Location = new System.Drawing.Point(20, 56);
+         this.btnStopRegularReport.Margin = new System.Windows.Forms.Padding(5);
+         this.btnStopRegularReport.Name = "btnStopRegularReport";
+         this.btnStopRegularReport.Size = new System.Drawing.Size(181, 26);
+         this.btnStopRegularReport.TabIndex = 22;
+         this.btnStopRegularReport.Text = "Stop Regular Report";
+         this.btnStopRegularReport.UseVisualStyleBackColor = true;
+         // 
          // Form1
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1192,6 +1231,7 @@
          this.tpLotMixingPrevention.ResumeLayout(false);
          this.tpLinkReport.ResumeLayout(false);
          this.tpHandshake.ResumeLayout(false);
+         this.tpRegularDataCollectionReport.ResumeLayout(false);
          this.ResumeLayout(false);
 
       }
@@ -1290,6 +1330,9 @@
       private System.Windows.Forms.Label label1;
       private System.Windows.Forms.ComboBox cboPlcMoveOutTestMode;
       private System.Windows.Forms.Label lblPlcTestMode;
+      private System.Windows.Forms.TabPage tpRegularDataCollectionReport;
+      private System.Windows.Forms.Button btnStartRegularReport;
+      private System.Windows.Forms.Button btnStopRegularReport;
    }
 }
 
