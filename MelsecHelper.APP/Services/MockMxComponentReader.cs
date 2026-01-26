@@ -8,7 +8,13 @@ namespace MelsecHelper.APP.Services
    /// </summary>
    public class MockMxComponentReader
    {
+      #region Fields
+
       private readonly Random _random = new Random();
+
+      #endregion
+
+      #region Public Methods
 
       /// <summary>
       /// 模擬讀取 8 爐資料 (520 words)
@@ -54,10 +60,10 @@ namespace MelsecHelper.APP.Services
             SetDataFloat(ovenData, 11, tempPv); // PV (11-12)
 
             // 7. Step 相關 (15-18)
-            ovenData[15] = (short)_random.Next(1, 10); // Step No
+            ovenData[15] = (short)_random.Next(1, 10);  // Step No
             ovenData[16] = (short)_random.Next(0, 100); // Hour
-            ovenData[17] = (short)_random.Next(0, 60); // Min
-            ovenData[18] = (short)now.Second; // Sec (Updated by User Request)
+            ovenData[17] = (short)_random.Next(0, 60);  // Min
+            ovenData[18] = (short)now.Second;           // Sec (Updated by User Request)
 
             // 8. 電壓 (19-21 in my plan? No.20-22 => index 19-24, 2 words each)
             SetDataFloat(ovenData, 19, 220.0f + _random.Next(-10, 10)); // Voltage R
@@ -85,7 +91,7 @@ namespace MelsecHelper.APP.Services
                if (k * 2 < strBytes.Length)
                {
                   byte low = strBytes[k * 2];
-                  byte high = (k * 2 + 1 < strBytes.Length) ? strBytes[k * 2 + 1] : (byte)0;
+                  byte high = k * 2 + 1 < strBytes.Length ? strBytes[k * 2 + 1] : (byte)0;
                   ovenData[46 + k] = (short)(low | (high << 8));
                }
             }
@@ -99,13 +105,23 @@ namespace MelsecHelper.APP.Services
          return allData.ToArray();
       }
 
+      #endregion
+
+      #region Private Methods
+
       private void SetDataFloat(short[] data, int startIndex, float value)
       {
-         if (startIndex + 1 >= data.Length) return;
+         if (startIndex + 1 >= data.Length)
+         {
+            return;
+         }
+
          byte[] bytes = BitConverter.GetBytes(value);
          // 假設低位在前 [Low][High]
          data[startIndex] = BitConverter.ToInt16(bytes, 0);
          data[startIndex + 1] = BitConverter.ToInt16(bytes, 2);
       }
+
+      #endregion
    }
 }

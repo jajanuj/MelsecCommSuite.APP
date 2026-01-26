@@ -23,6 +23,7 @@ namespace MelsecHelper.APP.Services
       // 資料來源委派：一個非同步方法，回傳 short[]
       private readonly Func<Task<short[]>> _dataSourceReader;
       private readonly ICCLinkController _destination;
+      private readonly Action<string> _logger;
 
       private bool _disposed = false;
 
@@ -43,10 +44,12 @@ namespace MelsecHelper.APP.Services
       /// </summary>
       /// <param name="dataSourceReader">資料讀取委派</param>
       /// <param name="dest">PLC 控制器</param>
-      public OvenDataTransferService(Func<Task<short[]>> dataSourceReader, ICCLinkController dest)
+      /// <param name="logger">日誌委派</param>
+      public OvenDataTransferService(Func<Task<short[]>> dataSourceReader, ICCLinkController dest, Action<string> logger = null)
       {
          _dataSourceReader = dataSourceReader ?? throw new ArgumentNullException(nameof(dataSourceReader));
          _destination = dest ?? throw new ArgumentNullException(nameof(dest));
+         _logger = logger ?? (msg => Console.WriteLine($"[OvenService] {DateTime.Now:HH:mm:ss}: {msg}"));
       }
 
       #endregion
@@ -54,12 +57,12 @@ namespace MelsecHelper.APP.Services
       #region Properties
 
       /// <summary>
-      /// 上報間隔 (秒)
+      /// 上報間隔 (毫秒)
       /// </summary>
       public int Interval
       {
-         get => _intervalMs / 1000;
-         set => _intervalMs = Math.Max(1, value) * 1000;
+         get => _intervalMs;
+         set => _intervalMs = Math.Max(1000, value);
       }
 
       #endregion
@@ -69,15 +72,15 @@ namespace MelsecHelper.APP.Services
       /// <summary>
       /// 啟動服務
       /// </summary>
-      /// <param name="intervalSeconds">初始間隔 (秒)</param>
-      public void Start(int intervalSeconds)
+      /// <param name="intervalMs">初始間隔 (毫秒)</param>
+      public void Start(int intervalMs)
       {
          if (_disposed)
          {
             throw new ObjectDisposedException(nameof(OvenDataTransferService));
          }
 
-         Interval = intervalSeconds;
+         Interval = intervalMs;
          Start();
       }
 
@@ -203,7 +206,7 @@ namespace MelsecHelper.APP.Services
          }
       }
 
-      private void Log(string msg) => Console.WriteLine($"[OvenService] {DateTime.Now:HH:mm:ss}: {msg}");
+      private void Log(string msg) => _logger?.Invoke(msg);
 
       #endregion
 

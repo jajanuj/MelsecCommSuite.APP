@@ -506,7 +506,8 @@ namespace MelsecHelper.APP
                   _mockReader = new MockMxComponentReader();
                   _ovenService = new OvenDataTransferService(
                      dataSourceReader: () => Task.Run(() => _mockReader.GetAllOvenData()),
-                     dest: _appPlcService.Controller
+                     dest: _appPlcService.Controller,
+                     logger: msg => Log($"[Oven] {msg}")
                   );
                }
 
@@ -802,7 +803,7 @@ namespace MelsecHelper.APP
          if (_ovenService != null)
          {
             _ovenService.Start(interval);
-            Log($"啟動烤箱資料轉拋，間隔: {interval} 秒");
+            Log($"啟動烤箱資料轉拋，間隔: {interval} ms");
          }
          else
          {
