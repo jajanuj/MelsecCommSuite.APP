@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace MelsecHelper.APP.Services
 {
    /// <summary>
-   /// 烤箱資料轉拋服務
+   /// 烤箱資料轉拋服務 (Task Loop Version)
    /// </summary>
    public class OvenDataTransferService : IDisposable
    {
@@ -23,13 +23,16 @@ namespace MelsecHelper.APP.Services
       // 資料來源委派：一個非同步方法，回傳 short[]
       private readonly Func<Task<short[]>> _dataSourceReader;
       private readonly ICCLinkController _destination;
-      private int _intervalMs = 30000;
-      private readonly Timer _timer;
+
       private bool _disposed = false;
+
+      private int _intervalMs = 30000;
       private bool _isRunning = false;
 
       // 緩存上次成功的資料 (錯誤處理)
       private short[] _lastSuccessData;
+      private CancellationTokenSource _loopCts;
+      private Task _loopTask;
 
       #endregion
 
@@ -44,35 +47,24 @@ namespace MelsecHelper.APP.Services
       {
          _dataSourceReader = dataSourceReader ?? throw new ArgumentNullException(nameof(dataSourceReader));
          _destination = dest ?? throw new ArgumentNullException(nameof(dest));
+      }
 
-         // 使用 Timeout.Infinite 防止建構時自動啟動
-         _timer = new Timer(OnTimerElapsed, null, Timeout.Infinite, Timeout.Infinite);
+      #endregion
+
+      #region Properties
+
+      /// <summary>
+      /// 上報間隔 (秒)
+      /// </summary>
+      public int Interval
+      {
+         get => _intervalMs / 1000;
+         set => _intervalMs = Math.Max(1, value) * 1000;
       }
 
       #endregion
 
       #region Public Methods
-
-      /// <summary>
-      /// 上報間隔 (秒)，設定時會即時更新 Timer
-      /// </summary>
-      public int Interval
-      {
-         get => _intervalMs / 1000;
-         set
-         {
-            int newIntervalMs = value * 1000;
-            if (_intervalMs != newIntervalMs)
-            {
-               _intervalMs = newIntervalMs;
-               // 如果正在運行，立即更新 Timer
-               if (_isRunning && !_disposed)
-               {
-                  _timer.Change(0, _intervalMs);
-               }
-            }
-         }
-      }
 
       /// <summary>
       /// 啟動服務
@@ -86,8 +78,7 @@ namespace MelsecHelper.APP.Services
          }
 
          Interval = intervalSeconds;
-         _isRunning = true;
-         _timer.Change(0, _intervalMs); // 立即執行，然後每 N 秒
+         Start();
       }
 
       /// <summary>
@@ -100,8 +91,15 @@ namespace MelsecHelper.APP.Services
             throw new ObjectDisposedException(nameof(OvenDataTransferService));
          }
 
+         if (_isRunning)
+         {
+            return;
+         }
+
          _isRunning = true;
-         _timer.Change(0, _intervalMs);
+         _loopCts = new CancellationTokenSource();
+         // 啟動背景迴圈
+         _loopTask = Task.Run(() => TransferLoopAsync(_loopCts.Token));
       }
 
       /// <summary>
@@ -110,7 +108,7 @@ namespace MelsecHelper.APP.Services
       public void Stop()
       {
          _isRunning = false;
-         _timer.Change(Timeout.Infinite, Timeout.Infinite);
+         _loopCts?.Cancel();
       }
 
       /// <summary>
@@ -132,13 +130,40 @@ namespace MelsecHelper.APP.Services
 
       #region Private Methods
 
-      private async void OnTimerElapsed(object state)
+      private async Task TransferLoopAsync(CancellationToken token)
       {
-         if (_disposed)
+         Log("服務迴圈已啟動");
+
+         while (!token.IsCancellationRequested)
          {
-            return;
+            try
+            {
+               await DoTransferAsync();
+            }
+            catch (Exception ex)
+            {
+               Log($"轉拋過程發生例外: {ex.Message}");
+            }
+
+            try
+            {
+               // 等待間隔 (支援取消)
+               int delay = Math.Max(1000, _intervalMs);
+               await Task.Delay(delay, token);
+            }
+            catch (OperationCanceledException)
+            {
+               Log("服務迴圈已取消");
+               break;
+            }
          }
 
+         _isRunning = false;
+         Log("服務迴圈已結束");
+      }
+
+      private async Task DoTransferAsync()
+      {
          short[] dataToWrite = null;
          try
          {
@@ -154,13 +179,13 @@ namespace MelsecHelper.APP.Services
             {
                // 讀取失敗，使用上次資料
                dataToWrite = _lastSuccessData;
-               Log("讀取長度錯誤或為null，使用上次資料");
+               Log("讀取資料長度錯誤或為null，使用上次緩存");
             }
          }
          catch (Exception ex)
          {
             dataToWrite = _lastSuccessData;
-            Log($"讀取異常: {ex.Message}，使用上次資料");
+            Log($"讀取資料異常: {ex.Message}，使用上次緩存");
          }
 
          // 寫入資料
@@ -178,7 +203,7 @@ namespace MelsecHelper.APP.Services
          }
       }
 
-      private void Log(string msg) => Console.WriteLine($"[OvenService] {DateTime.Now}: {msg}");
+      private void Log(string msg) => Console.WriteLine($"[OvenService] {DateTime.Now:HH:mm:ss}: {msg}");
 
       #endregion
 
@@ -186,9 +211,12 @@ namespace MelsecHelper.APP.Services
       {
          if (!_disposed)
          {
-            _timer?.Dispose();
+            Stop();
+            _loopCts?.Dispose();
             _disposed = true;
          }
+
+         GC.SuppressFinalize(this);
       }
    }
 }

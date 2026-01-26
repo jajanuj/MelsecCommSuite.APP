@@ -503,11 +503,11 @@ namespace MelsecHelper.APP
                // 初始化烤箱轉拋服務
                if (_ovenService == null)
                {
-                   _mockReader = new MockMxComponentReader();
-                   _ovenService = new OvenDataTransferService(
-                       dataSourceReader: () => Task.Run(() => _mockReader.GetAllOvenData()),
-                       dest: _appPlcService.Controller
-                   );
+                  _mockReader = new MockMxComponentReader();
+                  _ovenService = new OvenDataTransferService(
+                     dataSourceReader: () => Task.Run(() => _mockReader.GetAllOvenData()),
+                     dest: _appPlcService.Controller
+                  );
                }
 
                if (_scanMonitorForm != null && !_scanMonitorForm.IsDisposed)
@@ -561,6 +561,7 @@ namespace MelsecHelper.APP
                _ovenService.Dispose();
                _ovenService = null;
             }
+
             _mockReader = null;
 
             // 先在 UI 執行緒上停止 Timer 並重置按鈕狀態

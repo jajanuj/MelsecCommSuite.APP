@@ -1172,6 +1172,7 @@
          this.btnStartRegularReport.TabIndex = 21;
          this.btnStartRegularReport.Text = "Start Regular Report";
          this.btnStartRegularReport.UseVisualStyleBackColor = true;
+         this.btnStartRegularReport.Click += new System.EventHandler(this.btnStartRegularReport_Click);
          // 
          // btnStopRegularReport
          // 
@@ -1183,6 +1184,7 @@
          this.btnStopRegularReport.TabIndex = 22;
          this.btnStopRegularReport.Text = "Stop Regular Report";
          this.btnStopRegularReport.UseVisualStyleBackColor = true;
+         this.btnStopRegularReport.Click += new System.EventHandler(this.btnStopRegularReport_Click);
          // 
          // Form1
          // 
