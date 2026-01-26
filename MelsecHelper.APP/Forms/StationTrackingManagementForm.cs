@@ -69,10 +69,10 @@ namespace MelsecHelper.APP.Forms
          {
             // 先處理 Last Flag 傳遞（在清除之前讀取資料）
             await _service.HandleLastFlagTransferAsync(startAddress, _cts.Token);
-            
+
             // 然後清除資料
             await _service.ClearDataByAddressAsync(startAddress, _cts.Token);
-            
+
             Log($"[MoveOut] MoveOut Completed. Start Address: {startAddress}");
          }
          catch (Exception e)

@@ -1,11 +1,11 @@
+using Melsec.Helper.Interfaces;
+using MelsecHelper.APP.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Melsec.Helper.Interfaces;
-using MelsecHelper.APP.Models;
 
 namespace MelsecHelper.APP.Services
 {
@@ -16,39 +16,41 @@ namespace MelsecHelper.APP.Services
    {
       #region Fields
 
-      private readonly IPlcController _controller;
       private readonly StationTrackingConfig _config;
-      private Action<string, Exception> ShowError;
+
+      private readonly ICCLinkController _controller;
 
       /// <summary>
       /// 站別流程順序對應表 (Key: 當前站別ID, Value: 前一站別ID，0表示無前站)
       /// </summary>
       private readonly Dictionary<int, int> _stationSequence = new Dictionary<int, int>
       {
-         { 1, 0 },    // 上游平台 (第一站)
-         { 2, 1 },    // 插框機手臂
-         { 3, 2 },    // 插框站
-         { 4, 3 },    // 插框機出料
-         { 5, 4 },    // RGV
-         { 6, 5 },    // 烤箱1
-         { 7, 6 },    // 烤箱2
-         { 8, 7 },    // 烤箱3
-         { 9, 8 },    // 烤箱4
-         { 10, 9 },   // 烤箱5
-         { 11, 10 },  // 烤箱6
-         { 12, 11 },  // 烤箱7
-         { 13, 12 },  // 烤箱8
-         { 14, 13 },  // 拆框機入料
-         { 15, 14 },  // 拆框機入料平台
-         { 16, 15 },  // 拆框機移載預備
-         { 17, 16 },  // 拆框機移載完成
-         { 18, 17 },  // 拆框機出料平台
-         { 19, 18 },  // 拆框站
-         { 20, 19 },  // 拆框機出料
-         { 21, 20 },  // 拆框機手臂
-         { 22, 21 },  // 下游平台
-         { 23, 22 }   // 手動口
+         { 1, 0 },   // 上游平台 (第一站)
+         { 2, 1 },   // 插框機手臂
+         { 3, 2 },   // 插框站
+         { 4, 3 },   // 插框機出料
+         { 5, 4 },   // RGV
+         { 6, 5 },   // 烤箱1
+         { 7, 6 },   // 烤箱2
+         { 8, 7 },   // 烤箱3
+         { 9, 8 },   // 烤箱4
+         { 10, 9 },  // 烤箱5
+         { 11, 10 }, // 烤箱6
+         { 12, 11 }, // 烤箱7
+         { 13, 12 }, // 烤箱8
+         { 14, 13 }, // 拆框機入料
+         { 15, 14 }, // 拆框機入料平台
+         { 16, 15 }, // 拆框機移載預備
+         { 17, 16 }, // 拆框機移載完成
+         { 18, 17 }, // 拆框機出料平台
+         { 19, 18 }, // 拆框站
+         { 20, 19 }, // 拆框機出料
+         { 21, 20 }, // 拆框機手臂
+         { 22, 21 }, // 下游平台
+         { 23, 22 }  // 手動口
       };
+
+      private Action<string, Exception> ShowError;
 
       #endregion
 
@@ -303,7 +305,7 @@ namespace MelsecHelper.APP.Services
             {
                throw new ArgumentException(
                   $"位址格式錯誤: '{address}'\\n" +
-                  $"正確格式應為 LW + 4位十六進位數字（例如：LW1868）", 
+                  $"正確格式應為 LW + 4位十六進位數字（例如：LW1868）",
                   nameof(address));
             }
 
@@ -323,24 +325,6 @@ namespace MelsecHelper.APP.Services
       }
 
       /// <summary>
-      /// 設定最後一片旗標（僅修改 Bit 13）
-      /// </summary>
-      /// <param name="isLast">是否為最後一片</param>
-      public void SetLastFlag(bool isLast)
-      {
-         if (isLast)
-         {
-            // 設定 Bit 13 = 1 (OR with 0x2000)
-            JudgeFlag2 |= (1 << 13);
-         }
-         else
-         {
-            // 清除 Bit 13 = 0 (AND with ~0x2000)
-            JudgeFlag2 &= unchecked((ushort)~(1 << 13));
-         }
-      }
-
-      /// <summary>
       /// 處理 MoveOut 後的 Last Flag 傳遞邏輯（支援跨站別）
       /// </summary>
       /// <param name="clearedAddress">被清除的位址</param>
@@ -354,7 +338,9 @@ namespace MelsecHelper.APP.Services
 
             // 2. 檢查 Last Flag
             if (!clearedData.IsLastFlag)
-               return;  // 不是最後一片，無需處理
+            {
+               return; // 不是最後一片，無需處理
+            }
 
             // 3. 找到該位址對應的 station 和 slot
             var (currentStationId, currentSlot) = FindStationAndSlot(clearedAddress);
@@ -379,7 +365,9 @@ namespace MelsecHelper.APP.Services
             // 5. 同站沒有其他片，找前一個站別的最後一片
             int? previousStationId = GetPreviousStationId(currentStationId);
             if (previousStationId == null)
-               return;  // 已是第一站，無前站
+            {
+               return; // 已是第一站，無前站
+            }
 
             // 6. 在前一站找最後一片（從後往前找）
             var previousStation = _config.GetStation(previousStationId.Value);
@@ -424,6 +412,7 @@ namespace MelsecHelper.APP.Services
          {
             return previousId == 0 ? null : (int?)previousId;
          }
+
          return null;
       }
 
@@ -432,7 +421,7 @@ namespace MelsecHelper.APP.Services
       /// </summary>
       private (int stationId, int slotIndex) FindStationAndSlot(string address)
       {
-         string hexPart = address.Substring(2);  // "LW1868" -> "1868"
+         string hexPart = address.Substring(2); // "LW1868" -> "1868"
          int addressValue = Convert.ToInt32(hexPart, 16);
 
          foreach (var station in _config.Stations)
@@ -443,7 +432,7 @@ namespace MelsecHelper.APP.Services
             if (addressValue >= baseAddress && addressValue < maxAddress)
             {
                int offset = addressValue - baseAddress;
-               int slotIndex = (offset / 10) + 1;
+               int slotIndex = offset / 10 + 1;
                return (station.StationId, slotIndex);
             }
          }
@@ -503,7 +492,7 @@ namespace MelsecHelper.APP.Services
       private void ShowError(string title, Exception ex)
       {
          string message = $"{title}\n\n錯誤訊息: {ex.Message}";
-         MessageBox.Show(message, "追蹤資料管理錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+         MessageBox.Show(message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
 
       #endregion
