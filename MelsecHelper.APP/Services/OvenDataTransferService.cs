@@ -1,7 +1,7 @@
+using Melsec.Helper.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Melsec.Helper.Interfaces;
 
 namespace MelsecHelper.APP.Services
 {
@@ -10,19 +10,29 @@ namespace MelsecHelper.APP.Services
    /// </summary>
    public class OvenDataTransferService : IDisposable
    {
-      // 資料來源委派：一個非同步方法，回傳 short[]
-      private readonly Func<Task<short[]>> _dataSourceReader;
-      private readonly ICCLinkController _destination;
-      private readonly Timer _timer;
-      private readonly int _intervalMs = 30000;
-
-      // 緩存上次成功的資料 (錯誤處理)
-      private short[] _lastSuccessData;
-      private bool _disposed = false;
+      #region Constant
 
       // 寫入起始位址 0x119E = LW119E
       private const string DEST_START_ADDRESS = "LW119E";
       private const int TOTAL_WORDS = 520;
+
+      #endregion
+
+      #region Fields
+
+      // 資料來源委派：一個非同步方法，回傳 short[]
+      private readonly Func<Task<short[]>> _dataSourceReader;
+      private readonly ICCLinkController _destination;
+      private readonly int _intervalMs = 30000;
+      private readonly Timer _timer;
+      private bool _disposed = false;
+
+      // 緩存上次成功的資料 (錯誤處理)
+      private short[] _lastSuccessData;
+
+      #endregion
+
+      #region Constructors
 
       /// <summary>
       /// 建構子
@@ -33,17 +43,25 @@ namespace MelsecHelper.APP.Services
       {
          _dataSourceReader = dataSourceReader ?? throw new ArgumentNullException(nameof(dataSourceReader));
          _destination = dest ?? throw new ArgumentNullException(nameof(dest));
-         
+
          // 使用 Timeout.Infinite 防止建構時自動啟動
          _timer = new Timer(OnTimerElapsed, null, Timeout.Infinite, Timeout.Infinite);
       }
+
+      #endregion
+
+      #region Public Methods
 
       /// <summary>
       /// 啟動服務
       /// </summary>
       public void Start()
       {
-         if (_disposed) throw new ObjectDisposedException(nameof(OvenDataTransferService));
+         if (_disposed)
+         {
+            throw new ObjectDisposedException(nameof(OvenDataTransferService));
+         }
+
          _timer.Change(0, _intervalMs); // 立即執行，然後每 30 秒
       }
 
@@ -59,7 +77,7 @@ namespace MelsecHelper.APP.Services
       /// 取得配方編號 (輔助方法)
       /// </summary>
       public ushort GetRecipeNo(short[] data, int ovenIndex) => (ushort)data[ovenIndex * 65 + 0];
-      
+
       /// <summary>
       /// 取得爐狀態 (輔助方法)
       /// </summary>
@@ -70,9 +88,16 @@ namespace MelsecHelper.APP.Services
       /// </summary>
       public ushort GetConnectionStatus(short[] data, int ovenIndex) => (ushort)data[ovenIndex * 65 + 2];
 
+      #endregion
+
+      #region Private Methods
+
       private async void OnTimerElapsed(object state)
       {
-         if (_disposed) return;
+         if (_disposed)
+         {
+            return;
+         }
 
          short[] dataToWrite = null;
          try
@@ -113,6 +138,10 @@ namespace MelsecHelper.APP.Services
          }
       }
 
+      private void Log(string msg) => Console.WriteLine($"[OvenService] {DateTime.Now}: {msg}");
+
+      #endregion
+
       public void Dispose()
       {
          if (!_disposed)
@@ -121,7 +150,5 @@ namespace MelsecHelper.APP.Services
             _disposed = true;
          }
       }
-
-      private void Log(string msg) => Console.WriteLine($"[OvenService] {DateTime.Now}: {msg}");
    }
 }

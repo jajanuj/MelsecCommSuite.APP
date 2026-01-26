@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MelsecHelper.APP.Forms
@@ -23,11 +24,11 @@ namespace MelsecHelper.APP.Forms
 
       private readonly TrackingDataService _service;
       private readonly AppControllerSettings _settings;
+      private MockMxComponentReader _mockReader;
       private MoveOutService _moveOutService;
 
       // 烤箱資料服務
       private OvenDataTransferService _ovenService;
-      private MockMxComponentReader _mockReader;
 
       #endregion
 
@@ -51,15 +52,16 @@ namespace MelsecHelper.APP.Forms
 
          // 初始化烤箱資料轉拋服務 (模擬)
          _mockReader = new MockMxComponentReader();
-         _ovenService = new OvenDataTransferService(
-             dataSourceReader: () => Task.Run(() => _mockReader.GetAllOvenData()),
-             dest: _controller
-         );
+         _ovenService = new OvenDataTransferService(dataSourceReader: () => Task.Run(() => _mockReader.GetAllOvenData()), dest: _controller);
          _ovenService.Start();
 
          InitializeStationComboBoxes();
          InitializeJudgmentResultComboBox();
       }
+
+      #endregion
+
+      #region Protected Methods
 
       protected override void OnFormClosing(FormClosingEventArgs e)
       {

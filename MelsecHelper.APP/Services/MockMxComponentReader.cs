@@ -47,7 +47,7 @@ namespace MelsecHelper.APP.Services
             ovenData[10] = (short)now.Minute;
             ovenData[11] = (short)now.Second;
 
-            // 6. 溫度 PV/SV (Word 12-14) - 根據原計畫修正：PV=11,12 ? SV=13,14
+            // 6. 溫度 PV/SV (Word 12-14)
             float tempSv = 200.0f + i * 10;
             float tempPv = tempSv + _random.Next(-5, 5);
             SetDataFloat(ovenData, 13, tempSv); // SV (13-14)
@@ -57,7 +57,7 @@ namespace MelsecHelper.APP.Services
             ovenData[15] = (short)_random.Next(1, 10); // Step No
             ovenData[16] = (short)_random.Next(0, 100); // Hour
             ovenData[17] = (short)_random.Next(0, 60); // Min
-            ovenData[18] = (short)_random.Next(0, 60); // Sec
+            ovenData[18] = (short)now.Second; // Sec (Updated by User Request)
 
             // 8. 電壓 (19-21 in my plan? No.20-22 => index 19-24, 2 words each)
             SetDataFloat(ovenData, 19, 220.0f + _random.Next(-10, 10)); // Voltage R
@@ -65,7 +65,6 @@ namespace MelsecHelper.APP.Services
             SetDataFloat(ovenData, 23, 220.0f + _random.Next(-10, 10)); // Voltage T
 
             // 9. 電流 (22-25) -> index 25-30?
-            // Base on plan: No.23(22) ~ No.25(24) -> index 22+3=25
             SetDataFloat(ovenData, 25, 15.0f + (float)_random.NextDouble()); // Current R
             SetDataFloat(ovenData, 27, 16.0f + (float)_random.NextDouble()); // Current S
             SetDataFloat(ovenData, 29, 15.5f + (float)_random.NextDouble()); // Current T
@@ -77,9 +76,8 @@ namespace MelsecHelper.APP.Services
             }
 
             // ... 其他依照原計畫填入 ...
-            // 為求效率，這裡僅示範主要數據，其餘保持 0 或簡單隨機
 
-            // 15. Recipe Name (Word 56-65)
+            // 11. Recipe Name (Word 47-56)
             string recipeName = $"RCP-TEST-{i:00}";
             byte[] strBytes = System.Text.Encoding.ASCII.GetBytes(recipeName);
             for (int k = 0; k < 10; k++)
@@ -88,9 +86,11 @@ namespace MelsecHelper.APP.Services
                {
                   byte low = strBytes[k * 2];
                   byte high = (k * 2 + 1 < strBytes.Length) ? strBytes[k * 2 + 1] : (byte)0;
-                  ovenData[56 + k] = (short)(low | (high << 8));
+                  ovenData[46 + k] = (short)(low | (high << 8));
                }
             }
+
+            // Word 57-65 (Index 56-64) 預設為 0，無需設置
 
             // 填入列表
             allData.AddRange(ovenData);
