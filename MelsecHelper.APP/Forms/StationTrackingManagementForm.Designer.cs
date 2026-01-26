@@ -30,6 +30,7 @@ namespace MelsecHelper.APP.Forms
         {
          this.tabControl1 = new System.Windows.Forms.TabControl();
          this.tabPage1 = new System.Windows.Forms.TabPage();
+         this.btnMoveOut = new System.Windows.Forms.Button();
          this.lblCapacity1 = new System.Windows.Forms.Label();
          this.btnUpdate1 = new System.Windows.Forms.Button();
          this.nudSlotIndex = new System.Windows.Forms.NumericUpDown();
@@ -76,7 +77,6 @@ namespace MelsecHelper.APP.Forms
          this.label8 = new System.Windows.Forms.Label();
          this.rtbLog = new System.Windows.Forms.RichTextBox();
          this.label15 = new System.Windows.Forms.Label();
-         this.btnMoveOut = new System.Windows.Forms.Button();
          this.tabControl1.SuspendLayout();
          this.tabPage1.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.nudSlotIndex)).BeginInit();
@@ -125,6 +125,17 @@ namespace MelsecHelper.APP.Forms
          this.tabPage1.TabIndex = 0;
          this.tabPage1.Text = "情境1: 單片更新";
          this.tabPage1.UseVisualStyleBackColor = true;
+         // 
+         // btnMoveOut
+         // 
+         this.btnMoveOut.Location = new System.Drawing.Point(132, 110);
+         this.btnMoveOut.Margin = new System.Windows.Forms.Padding(2);
+         this.btnMoveOut.Name = "btnMoveOut";
+         this.btnMoveOut.Size = new System.Drawing.Size(93, 28);
+         this.btnMoveOut.TabIndex = 6;
+         this.btnMoveOut.Text = "Move Out";
+         this.btnMoveOut.UseVisualStyleBackColor = true;
+         this.btnMoveOut.Click += new System.EventHandler(this.btnMoveOut_Click);
          // 
          // lblCapacity1
          // 
@@ -208,11 +219,11 @@ namespace MelsecHelper.APP.Forms
          this.tabPage2.Controls.Add(this.label4);
          this.tabPage2.Controls.Add(this.cmbFromStation);
          this.tabPage2.Controls.Add(this.label3);
-         this.tabPage2.Location = new System.Drawing.Point(4, 22);
+         this.tabPage2.Location = new System.Drawing.Point(4, 24);
          this.tabPage2.Margin = new System.Windows.Forms.Padding(2);
          this.tabPage2.Name = "tabPage2";
          this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
-         this.tabPage2.Size = new System.Drawing.Size(427, 172);
+         this.tabPage2.Size = new System.Drawing.Size(427, 170);
          this.tabPage2.TabIndex = 1;
          this.tabPage2.Text = "情境2: 站別切換";
          this.tabPage2.UseVisualStyleBackColor = true;
@@ -273,10 +284,10 @@ namespace MelsecHelper.APP.Forms
          this.tabPage3.Controls.Add(this.btnUpdate3);
          this.tabPage3.Controls.Add(this.cmbStation3);
          this.tabPage3.Controls.Add(this.label5);
-         this.tabPage3.Location = new System.Drawing.Point(4, 22);
+         this.tabPage3.Location = new System.Drawing.Point(4, 24);
          this.tabPage3.Margin = new System.Windows.Forms.Padding(2);
          this.tabPage3.Name = "tabPage3";
-         this.tabPage3.Size = new System.Drawing.Size(427, 172);
+         this.tabPage3.Size = new System.Drawing.Size(427, 170);
          this.tabPage3.TabIndex = 2;
          this.tabPage3.Text = "情境3: 單片站更新";
          this.tabPage3.UseVisualStyleBackColor = true;
@@ -445,6 +456,39 @@ namespace MelsecHelper.APP.Forms
          this.groupBox1.TabStop = false;
          this.groupBox1.Text = "追蹤資料輸入";
          // 
+         // chkLastFlag
+         // 
+         this.chkLastFlag.AutoSize = true;
+         this.chkLastFlag.Location = new System.Drawing.Point(251, 142);
+         this.chkLastFlag.Margin = new System.Windows.Forms.Padding(2);
+         this.chkLastFlag.Name = "chkLastFlag";
+         this.chkLastFlag.Size = new System.Drawing.Size(74, 19);
+         this.chkLastFlag.TabIndex = 18;
+         this.chkLastFlag.Text = "最後一片";
+         this.chkLastFlag.UseVisualStyleBackColor = true;
+         this.chkLastFlag.CheckedChanged += new System.EventHandler(this.chkLastFlag_CheckedChanged);
+         // 
+         // cboJudgmentResult
+         // 
+         this.cboJudgmentResult.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this.cboJudgmentResult.FormattingEnabled = true;
+         this.cboJudgmentResult.Location = new System.Drawing.Point(108, 139);
+         this.cboJudgmentResult.Margin = new System.Windows.Forms.Padding(2);
+         this.cboJudgmentResult.Name = "cboJudgmentResult";
+         this.cboJudgmentResult.Size = new System.Drawing.Size(93, 23);
+         this.cboJudgmentResult.TabIndex = 17;
+         this.cboJudgmentResult.SelectedIndexChanged += new System.EventHandler(this.cboJudgmentResult_SelectedIndexChanged);
+         // 
+         // lblJudgmentResult
+         // 
+         this.lblJudgmentResult.AutoSize = true;
+         this.lblJudgmentResult.Location = new System.Drawing.Point(14, 142);
+         this.lblJudgmentResult.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+         this.lblJudgmentResult.Name = "lblJudgmentResult";
+         this.lblJudgmentResult.Size = new System.Drawing.Size(58, 15);
+         this.lblJudgmentResult.TabIndex = 16;
+         this.lblJudgmentResult.Text = "判斷結果:";
+         // 
          // nudJudge3
          // 
          this.nudJudge3.Location = new System.Drawing.Point(327, 110);
@@ -480,39 +524,6 @@ namespace MelsecHelper.APP.Forms
          this.nudJudge2.Name = "nudJudge2";
          this.nudJudge2.Size = new System.Drawing.Size(93, 22);
          this.nudJudge2.TabIndex = 13;
-         // 
-         // lblJudgmentResult
-         // 
-         this.lblJudgmentResult.AutoSize = true;
-         this.lblJudgmentResult.Location = new System.Drawing.Point(14, 142);
-         this.lblJudgmentResult.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-         this.lblJudgmentResult.Name = "lblJudgmentResult";
-         this.lblJudgmentResult.Size = new System.Drawing.Size(66, 15);
-         this.lblJudgmentResult.TabIndex = 16;
-         this.lblJudgmentResult.Text = "判斷結果:";
-         // 
-         // cboJudgmentResult
-         // 
-         this.cboJudgmentResult.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-         this.cboJudgmentResult.FormattingEnabled = true;
-         this.cboJudgmentResult.Location = new System.Drawing.Point(108, 139);
-         this.cboJudgmentResult.Margin = new System.Windows.Forms.Padding(2);
-         this.cboJudgmentResult.Name = "cboJudgmentResult";
-         this.cboJudgmentResult.Size = new System.Drawing.Size(93, 23);
-         this.cboJudgmentResult.TabIndex = 17;
-         this.cboJudgmentResult.SelectedIndexChanged +=  new System.EventHandler(this.cboJudgmentResult_SelectedIndexChanged);
-         // 
-         // chkLastFlag
-         // 
-         this.chkLastFlag.AutoSize = true;
-         this.chkLastFlag.Location = new System.Drawing.Point(251, 142);
-         this.chkLastFlag.Margin = new System.Windows.Forms.Padding(2);
-         this.chkLastFlag.Name = "chkLastFlag";
-         this.chkLastFlag.Size = new System.Drawing.Size(86, 19);
-         this.chkLastFlag.TabIndex = 18;
-         this.chkLastFlag.Text = "最後一片";
-         this.chkLastFlag.UseVisualStyleBackColor = true;
-         this.chkLastFlag.CheckedChanged += new System.EventHandler(this.chkLastFlag_CheckedChanged);
          // 
          // label13
          // 
@@ -664,7 +675,7 @@ namespace MelsecHelper.APP.Forms
          // rtbLog
          // 
          this.rtbLog.Font = new System.Drawing.Font("Sarasa Fixed TC", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.rtbLog.Location = new System.Drawing.Point(9, 379);
+         this.rtbLog.Location = new System.Drawing.Point(9, 410);
          this.rtbLog.Margin = new System.Windows.Forms.Padding(2);
          this.rtbLog.Name = "rtbLog";
          this.rtbLog.Size = new System.Drawing.Size(437, 95);
@@ -674,29 +685,18 @@ namespace MelsecHelper.APP.Forms
          // label15
          // 
          this.label15.AutoSize = true;
-         this.label15.Location = new System.Drawing.Point(9, 361);
+         this.label15.Location = new System.Drawing.Point(10, 391);
          this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
          this.label15.Name = "label15";
          this.label15.Size = new System.Drawing.Size(58, 15);
          this.label15.TabIndex = 3;
          this.label15.Text = "操作記錄:";
          // 
-         // btnMoveOut
-         // 
-         this.btnMoveOut.Location = new System.Drawing.Point(132, 110);
-         this.btnMoveOut.Margin = new System.Windows.Forms.Padding(2);
-         this.btnMoveOut.Name = "btnMoveOut";
-         this.btnMoveOut.Size = new System.Drawing.Size(93, 28);
-         this.btnMoveOut.TabIndex = 6;
-         this.btnMoveOut.Text = "Move Out";
-         this.btnMoveOut.UseVisualStyleBackColor = true;
-         this.btnMoveOut.Click += new System.EventHandler(this.btnMoveOut_Click);
-         // 
          // StationTrackingManagementForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(454, 482);
+         this.ClientSize = new System.Drawing.Size(454, 510);
          this.Controls.Add(this.label15);
          this.Controls.Add(this.rtbLog);
          this.Controls.Add(this.groupBox1);

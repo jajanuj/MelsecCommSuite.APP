@@ -126,7 +126,9 @@ namespace MelsecHelper.APP.Forms
       private void UpdateJudgeFlag2FromControls()
       {
          if (cboJudgmentResult.SelectedItem == null)
+         {
             return;
+         }
 
          // 讀取當前值
          ushort currentValue = (ushort)nudJudge2.Value;
@@ -142,9 +144,13 @@ namespace MelsecHelper.APP.Forms
 
          // 設定/清除 Bit 13 (Last Flag)
          if (chkLastFlag.Checked)
-            withResult |= (1 << 13);
+         {
+            withResult |= 1 << 13;
+         }
          else
+         {
             withResult &= unchecked((ushort)~(1 << 13));
+         }
 
          // 更新顯示
          nudJudge2.Value = withResult;
