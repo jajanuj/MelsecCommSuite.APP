@@ -50,8 +50,6 @@ namespace MelsecHelper.APP.Services
          { 23, 22 }  // 手動口
       };
 
-      private Action<string, Exception> ShowError;
-
       #endregion
 
       #region Constructors
