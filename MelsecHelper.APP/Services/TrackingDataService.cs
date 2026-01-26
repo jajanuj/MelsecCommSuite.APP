@@ -454,8 +454,8 @@ namespace MelsecHelper.APP.Services
       /// </summary>
       private async Task<TrackingData> ReadDataByAddressAsync(string address, CancellationToken ct)
       {
-         short[] data = await _controller.ReadWordsAsync(address, 10, ct);
-         return TrackingData.FromRawData(data);
+         var data = await _controller.ReadWordsAsync(address, 10, ct);
+         return TrackingData.FromRawData(data.ToArray());
       }
 
       /// <summary>
