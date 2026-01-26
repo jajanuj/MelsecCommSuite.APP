@@ -364,7 +364,15 @@ namespace MelsecHelper.APP.Services
             int? nextStationId = GetNextStationId(currentStationId);
             if (nextStationId == null)
             {
-               return; // 已是最後一站，無後站
+               // 已是最後一站，且同站沒有其他片
+               MessageBox.Show(
+                  $"警告：清除位址 {clearedAddress} 的最後一片後，\n" +
+                  $"無法找到可傳遞 Last Flag 的片。\n" +
+                  $"（已是最後一站，且同站無其他片）",
+                  "Last Flag 傳遞警告",
+                  MessageBoxButtons.OK,
+                  MessageBoxIcon.Warning);
+               return;
             }
 
             // 6. 在後站找第一片（從前往後找）
@@ -382,6 +390,15 @@ namespace MelsecHelper.APP.Services
                   return;
                }
             }
+
+            // 7. 後站也找不到片，顯示警告
+            MessageBox.Show(
+               $"警告：清除位址 {clearedAddress} 的最後一片後，\n" +
+               $"無法找到可傳遞 Last Flag 的片。\n" +
+               $"（同站無其他片，後站 {nextStation.StationName} 也無片）",
+               "Last Flag 傳遞警告",
+               MessageBoxButtons.OK,
+               MessageBoxIcon.Warning);
          }
          catch (Exception ex)
          {
