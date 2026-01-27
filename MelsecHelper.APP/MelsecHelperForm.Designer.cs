@@ -66,7 +66,7 @@
          this.btnAlarmReset = new System.Windows.Forms.Button();
          this.txtAlarmCode = new System.Windows.Forms.TextBox();
          this.btnAddAlarm = new System.Windows.Forms.Button();
-         this.btnRecipeCheck = new System.Windows.Forms.Button();
+
          this.textBox1 = new System.Windows.Forms.TextBox();
          this.btnHandshake = new System.Windows.Forms.Button();
          this.btnManualRun = new System.Windows.Forms.Button();
@@ -541,18 +541,7 @@
          this.btnAddAlarm.Text = "Add Alarm";
          this.btnAddAlarm.UseVisualStyleBackColor = true;
          this.btnAddAlarm.Click += new System.EventHandler(this.btnAddAlarm_Click);
-         // 
-         // btnRecipeCheck
-         // 
-         this.btnRecipeCheck.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.btnRecipeCheck.Location = new System.Drawing.Point(15, 21);
-         this.btnRecipeCheck.Margin = new System.Windows.Forms.Padding(10);
-         this.btnRecipeCheck.Name = "btnRecipeCheck";
-         this.btnRecipeCheck.Size = new System.Drawing.Size(142, 26);
-         this.btnRecipeCheck.TabIndex = 30;
-         this.btnRecipeCheck.Text = "Recipe Check";
-         this.btnRecipeCheck.UseVisualStyleBackColor = true;
-         this.btnRecipeCheck.Click += new System.EventHandler(this.btnRecipeCheck_Click);
+
          // 
          // textBox1
          // 
@@ -1053,7 +1042,7 @@
          // 
          // tpRecipeCheck
          // 
-         this.tpRecipeCheck.Controls.Add(this.btnRecipeCheck);
+
          this.tpRecipeCheck.Location = new System.Drawing.Point(4, 44);
          this.tpRecipeCheck.Name = "tpRecipeCheck";
          this.tpRecipeCheck.Size = new System.Drawing.Size(772, 370);
@@ -1397,7 +1386,7 @@
       private System.Windows.Forms.Button btnDeleteAlarm;
       private System.Windows.Forms.Button btnHandshake;
       private System.Windows.Forms.TextBox textBox1;
-      private System.Windows.Forms.Button btnRecipeCheck;
+
       private System.Windows.Forms.Button btnShowPlcSimulatorForm;
       private System.Windows.Forms.Button btnLotMixingPrevention;
       private System.Windows.Forms.Button btnShowPosTrackingDataForm;

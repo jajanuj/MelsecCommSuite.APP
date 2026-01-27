@@ -53,7 +53,11 @@ namespace MelsecHelper.APP
       // 烤箱資料轉拋服務 (模擬)
       private OvenDataTransferService _ovenService;
       private int _path = -1;
+
       private uint _processingCounter;
+
+      // RecipeCheck 嵌入表單
+      private RecipeCheckForm _recipeCheckForm;
 
       // 定期上報 Status2 設定值
       private ushort _redLightStatus;
@@ -282,6 +286,37 @@ namespace MelsecHelper.APP
 
       #region Private Methods
 
+      private void InitializeRecipeCheckTab()
+      {
+         try
+         {
+            if (_appPlcService?.Controller == null)
+            {
+               return;
+            }
+
+            // 清此 Tab 內容
+            tpRecipeCheck.Controls.Clear();
+
+            // 實例化 Form
+            _recipeCheckForm = new RecipeCheckForm(_appPlcService, _simulator);
+
+            // 設定嵌入屬性
+            _recipeCheckForm.TopLevel = false;
+            _recipeCheckForm.FormBorderStyle = FormBorderStyle.None;
+            _recipeCheckForm.Dock = DockStyle.Fill;
+            _recipeCheckForm.Visible = true;
+
+            // 加入容器
+            tpRecipeCheck.Controls.Add(_recipeCheckForm);
+            Log("[UI] RecipeCheckForm 已嵌入至 tpRecipeCheck");
+         }
+         catch (Exception ex)
+         {
+            Log($"[UI Error] 初始化 RecipeCheckForm 失敗: {ex.Message}");
+         }
+      }
+
       private void InitializeComboBox()
       {
          cboPlcMoveOutTestMode.DataSource = Enum.GetValues(typeof(TestMode));
@@ -490,6 +525,11 @@ namespace MelsecHelper.APP
             // 啟動 Maintenance Monitor (Device Logic)
             _appPlcService.StartTrackingDataMaintenanceMonitor(TimeSpan.FromMilliseconds(200));
 
+            if (_simulator != null)
+            {
+               _simulator.StartRecipeCheckMode();
+            }
+
             BeginInvoke((Action)(() =>
             {
                // 互鎖: 開啟後禁用 Open 按鈕和 RadioButton，啟用 Close 按鈕
@@ -518,6 +558,9 @@ namespace MelsecHelper.APP
                   // 自動啟動監控
                   _scanMonitorForm.StartMonitoring();
                }
+
+               // 初始化並嵌入 RecipeCheckForm
+               InitializeRecipeCheckTab();
             }));
          }
          catch (Exception ex)
@@ -560,6 +603,15 @@ namespace MelsecHelper.APP
                _ovenService.Stop();
                _ovenService.Dispose();
                _ovenService = null;
+            }
+
+            // 移除並釋放 RecipeCheckForm
+            if (_recipeCheckForm != null)
+            {
+               _recipeCheckForm.Close();
+               _recipeCheckForm.Dispose();
+               _recipeCheckForm = null;
+               tpRecipeCheck.Controls.Clear();
             }
 
             _mockReader = null;
@@ -1310,18 +1362,6 @@ namespace MelsecHelper.APP
       private async void btnManualRun_Click(object sender, EventArgs e)
       {
          await _appPlcService.SetControlStatus(ControlStatus.ManualRun);
-      }
-
-      private void btnRecipeCheck_Click(object sender, EventArgs e)
-      {
-         if (_appPlcService?.Controller == null)
-         {
-            MessageBox.Show("請先連接 PLC | Please connect PLC first");
-            return;
-         }
-
-         var form = new RecipeCheckForm(_appPlcService, _simulator);
-         form.Show();
       }
 
       private void btnShowPlcSimulatorForm_Click(object sender, EventArgs e)

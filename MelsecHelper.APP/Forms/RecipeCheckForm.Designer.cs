@@ -49,6 +49,8 @@ namespace MelsecHelper.APP.Forms
          this.grpSettings = new System.Windows.Forms.GroupBox();
          this.propertyGridSettings = new System.Windows.Forms.PropertyGrid();
          this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+         this.chkEnableCheckLogMixing = new System.Windows.Forms.CheckBox();
+         this.chkEnableAutoRecipe = new System.Windows.Forms.CheckBox();
          this.grpRequest.SuspendLayout();
          this.grpResponse.SuspendLayout();
          this.grpSettings.SuspendLayout();
@@ -60,6 +62,8 @@ namespace MelsecHelper.APP.Forms
          // 
          // grpRequest
          // 
+         this.grpRequest.Controls.Add(this.chkEnableAutoRecipe);
+         this.grpRequest.Controls.Add(this.chkEnableCheckLogMixing);
          this.grpRequest.Controls.Add(this.label4);
          this.grpRequest.Controls.Add(this.txtRecipeName);
          this.grpRequest.Controls.Add(this.label3);
@@ -302,6 +306,26 @@ namespace MelsecHelper.APP.Forms
          this.splitContainer1.SplitterWidth = 5;
          this.splitContainer1.TabIndex = 3;
          // 
+         // chkEnableCheckLogMixing
+         // 
+         this.chkEnableCheckLogMixing.AutoSize = true;
+         this.chkEnableCheckLogMixing.Location = new System.Drawing.Point(29, 204);
+         this.chkEnableCheckLogMixing.Name = "chkEnableCheckLogMixing";
+         this.chkEnableCheckLogMixing.Size = new System.Drawing.Size(169, 19);
+         this.chkEnableCheckLogMixing.TabIndex = 32;
+         this.chkEnableCheckLogMixing.Text = "Enable Check Log Mixing";
+         this.chkEnableCheckLogMixing.UseVisualStyleBackColor = true;
+         // 
+         // chkEnableAutoRecipe
+         // 
+         this.chkEnableAutoRecipe.AutoSize = true;
+         this.chkEnableAutoRecipe.Location = new System.Drawing.Point(214, 204);
+         this.chkEnableAutoRecipe.Name = "chkEnableAutoRecipe";
+         this.chkEnableAutoRecipe.Size = new System.Drawing.Size(135, 19);
+         this.chkEnableAutoRecipe.TabIndex = 33;
+         this.chkEnableAutoRecipe.Text = "Enable Auto Recipe";
+         this.chkEnableAutoRecipe.UseVisualStyleBackColor = true;
+         // 
          // RecipeCheckForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -347,5 +371,7 @@ namespace MelsecHelper.APP.Forms
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label lblResponseTime;
-    }
+      private System.Windows.Forms.CheckBox chkEnableAutoRecipe;
+      private System.Windows.Forms.CheckBox chkEnableCheckLogMixing;
+   }
 }
