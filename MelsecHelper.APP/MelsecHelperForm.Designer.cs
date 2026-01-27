@@ -111,10 +111,16 @@
          this.tpPosReport = new System.Windows.Forms.TabPage();
          this.tpLotMixingPrevention = new System.Windows.Forms.TabPage();
          this.tpLinkReport = new System.Windows.Forms.TabPage();
-         this.tpHandshake = new System.Windows.Forms.TabPage();
          this.tpRegularDataCollectionReport = new System.Windows.Forms.TabPage();
          this.btnStartRegularReport = new System.Windows.Forms.Button();
          this.btnStopRegularReport = new System.Windows.Forms.Button();
+         this.tpHandshake = new System.Windows.Forms.TabPage();
+         this.paramNgTime = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
+         this.paramPdTime = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
+         this.btnSetRgvTrackingData = new System.Windows.Forms.Button();
+         this.btnMoveToOven1 = new System.Windows.Forms.Button();
+         this.paramOvenWorkTime = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
+         this.lblOvenWorkTime = new System.Windows.Forms.Label();
          this.grpConnectionMode.SuspendLayout();
          this.grpManualTime.SuspendLayout();
          this.grpConnectMode.SuspendLayout();
@@ -142,8 +148,8 @@
          this.tpPosReport.SuspendLayout();
          this.tpLotMixingPrevention.SuspendLayout();
          this.tpLinkReport.SuspendLayout();
-         this.tpHandshake.SuspendLayout();
          this.tpRegularDataCollectionReport.SuspendLayout();
+         this.tpHandshake.SuspendLayout();
          this.SuspendLayout();
          // 
          // grpConnectionMode
@@ -281,7 +287,7 @@
          // btnTrackingControl
          // 
          this.btnTrackingControl.Location = new System.Drawing.Point(15, 13);
-         this.btnTrackingControl.Margin = new System.Windows.Forms.Padding(10);
+         this.btnTrackingControl.Margin = new System.Windows.Forms.Padding(5);
          this.btnTrackingControl.Name = "btnTrackingControl";
          this.btnTrackingControl.Size = new System.Drawing.Size(181, 26);
          this.btnTrackingControl.TabIndex = 18;
@@ -683,10 +689,10 @@
          // 
          this.tpCheckClock.Controls.Add(this.btnStartHeartbeat);
          this.tpCheckClock.Controls.Add(this.btnStopHeartbeat);
-         this.tpCheckClock.Location = new System.Drawing.Point(4, 24);
+         this.tpCheckClock.Location = new System.Drawing.Point(4, 44);
          this.tpCheckClock.Name = "tpCheckClock";
          this.tpCheckClock.Padding = new System.Windows.Forms.Padding(3);
-         this.tpCheckClock.Size = new System.Drawing.Size(772, 390);
+         this.tpCheckClock.Size = new System.Drawing.Size(772, 370);
          this.tpCheckClock.TabIndex = 0;
          this.tpCheckClock.Text = "Check Clock";
          this.tpCheckClock.UseVisualStyleBackColor = true;
@@ -697,10 +703,10 @@
          this.tpClockUpdate.Controls.Add(this.btnForceTimeSync);
          this.tpClockUpdate.Controls.Add(this.btnStartTimeSync);
          this.tpClockUpdate.Controls.Add(this.btnStopTimeSync);
-         this.tpClockUpdate.Location = new System.Drawing.Point(4, 24);
+         this.tpClockUpdate.Location = new System.Drawing.Point(4, 44);
          this.tpClockUpdate.Name = "tpClockUpdate";
          this.tpClockUpdate.Padding = new System.Windows.Forms.Padding(3);
-         this.tpClockUpdate.Size = new System.Drawing.Size(772, 390);
+         this.tpClockUpdate.Size = new System.Drawing.Size(772, 370);
          this.tpClockUpdate.TabIndex = 1;
          this.tpClockUpdate.Text = "Clock Update";
          this.tpClockUpdate.UseVisualStyleBackColor = true;
@@ -712,9 +718,9 @@
          this.tpMoveOut.Controls.Add(this.tlpMoveOutData);
          this.tpMoveOut.Controls.Add(this.btnMoveOutStop);
          this.tpMoveOut.Controls.Add(this.btnMoveOutStart);
-         this.tpMoveOut.Location = new System.Drawing.Point(4, 24);
+         this.tpMoveOut.Location = new System.Drawing.Point(4, 44);
          this.tpMoveOut.Name = "tpMoveOut";
-         this.tpMoveOut.Size = new System.Drawing.Size(772, 390);
+         this.tpMoveOut.Size = new System.Drawing.Size(772, 370);
          this.tpMoveOut.TabIndex = 4;
          this.tpMoveOut.Text = "Move Out";
          this.tpMoveOut.UseVisualStyleBackColor = true;
@@ -1047,9 +1053,9 @@
          // tpRecipeCheck
          // 
          this.tpRecipeCheck.Controls.Add(this.btnRecipeCheck);
-         this.tpRecipeCheck.Location = new System.Drawing.Point(4, 24);
+         this.tpRecipeCheck.Location = new System.Drawing.Point(4, 44);
          this.tpRecipeCheck.Name = "tpRecipeCheck";
-         this.tpRecipeCheck.Size = new System.Drawing.Size(772, 390);
+         this.tpRecipeCheck.Size = new System.Drawing.Size(772, 370);
          this.tpRecipeCheck.TabIndex = 5;
          this.tpRecipeCheck.Text = "Recipe Check";
          this.tpRecipeCheck.UseVisualStyleBackColor = true;
@@ -1058,10 +1064,10 @@
          // 
          this.tpAlarm.Controls.Add(this.ltbErrorCodes);
          this.tpAlarm.Controls.Add(this.grpAlarm);
-         this.tpAlarm.Location = new System.Drawing.Point(4, 24);
+         this.tpAlarm.Location = new System.Drawing.Point(4, 44);
          this.tpAlarm.Name = "tpAlarm";
          this.tpAlarm.Padding = new System.Windows.Forms.Padding(3);
-         this.tpAlarm.Size = new System.Drawing.Size(772, 390);
+         this.tpAlarm.Size = new System.Drawing.Size(772, 370);
          this.tpAlarm.TabIndex = 2;
          this.tpAlarm.Text = "Alarm";
          this.tpAlarm.UseVisualStyleBackColor = true;
@@ -1073,10 +1079,10 @@
          this.tpCommonReport.Controls.Add(this.textBox1);
          this.tpCommonReport.Controls.Add(this.btnAutoRun);
          this.tpCommonReport.Controls.Add(this.btnManualRun);
-         this.tpCommonReport.Location = new System.Drawing.Point(4, 24);
+         this.tpCommonReport.Location = new System.Drawing.Point(4, 44);
          this.tpCommonReport.Name = "tpCommonReport";
          this.tpCommonReport.Padding = new System.Windows.Forms.Padding(3);
-         this.tpCommonReport.Size = new System.Drawing.Size(772, 390);
+         this.tpCommonReport.Size = new System.Drawing.Size(772, 370);
          this.tpCommonReport.TabIndex = 6;
          this.tpCommonReport.Text = "Common Report";
          this.tpCommonReport.UseVisualStyleBackColor = true;
@@ -1085,16 +1091,22 @@
          // 
          this.tpMaintenance.Controls.Add(this.btnStartMaintMonitor);
          this.tpMaintenance.Controls.Add(this.btnStopMaintMonitor);
-         this.tpMaintenance.Location = new System.Drawing.Point(4, 24);
+         this.tpMaintenance.Location = new System.Drawing.Point(4, 44);
          this.tpMaintenance.Name = "tpMaintenance";
          this.tpMaintenance.Padding = new System.Windows.Forms.Padding(3);
-         this.tpMaintenance.Size = new System.Drawing.Size(772, 390);
+         this.tpMaintenance.Size = new System.Drawing.Size(772, 370);
          this.tpMaintenance.TabIndex = 7;
          this.tpMaintenance.Text = "Maintenance";
          this.tpMaintenance.UseVisualStyleBackColor = true;
          // 
          // tpTrackingData
          // 
+         this.tpTrackingData.Controls.Add(this.lblOvenWorkTime);
+         this.tpTrackingData.Controls.Add(this.paramOvenWorkTime);
+         this.tpTrackingData.Controls.Add(this.btnMoveToOven1);
+         this.tpTrackingData.Controls.Add(this.btnSetRgvTrackingData);
+         this.tpTrackingData.Controls.Add(this.paramPdTime);
+         this.tpTrackingData.Controls.Add(this.paramNgTime);
          this.tpTrackingData.Controls.Add(this.btnTrackingControl);
          this.tpTrackingData.Location = new System.Drawing.Point(4, 44);
          this.tpTrackingData.Name = "tpTrackingData";
@@ -1139,17 +1151,6 @@
          this.tpLinkReport.Text = "Link Report";
          this.tpLinkReport.UseVisualStyleBackColor = true;
          // 
-         // tpHandshake
-         // 
-         this.tpHandshake.Controls.Add(this.btnHandshake);
-         this.tpHandshake.Location = new System.Drawing.Point(4, 44);
-         this.tpHandshake.Name = "tpHandshake";
-         this.tpHandshake.Padding = new System.Windows.Forms.Padding(3);
-         this.tpHandshake.Size = new System.Drawing.Size(772, 370);
-         this.tpHandshake.TabIndex = 12;
-         this.tpHandshake.Text = "Handshake";
-         this.tpHandshake.UseVisualStyleBackColor = true;
-         // 
          // tpRegularDataCollectionReport
          // 
          this.tpRegularDataCollectionReport.Controls.Add(this.btnStartRegularReport);
@@ -1185,6 +1186,97 @@
          this.btnStopRegularReport.Text = "Stop Regular Report";
          this.btnStopRegularReport.UseVisualStyleBackColor = true;
          this.btnStopRegularReport.Click += new System.EventHandler(this.btnStopRegularReport_Click);
+         // 
+         // tpHandshake
+         // 
+         this.tpHandshake.Controls.Add(this.btnHandshake);
+         this.tpHandshake.Location = new System.Drawing.Point(4, 44);
+         this.tpHandshake.Name = "tpHandshake";
+         this.tpHandshake.Padding = new System.Windows.Forms.Padding(3);
+         this.tpHandshake.Size = new System.Drawing.Size(772, 370);
+         this.tpHandshake.TabIndex = 12;
+         this.tpHandshake.Text = "Handshake";
+         this.tpHandshake.UseVisualStyleBackColor = true;
+         // 
+         // paramNgTime
+         // 
+         this.paramNgTime.Caption = "NG Time(sec)";
+         this.paramNgTime.CaptionWidth = 75F;
+         this.paramNgTime.DecimalPlaces = 1;
+         this.paramNgTime.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.paramNgTime.Increment = 60D;
+         this.paramNgTime.Location = new System.Drawing.Point(15, 138);
+         this.paramNgTime.MaxNumber = 3600D;
+         this.paramNgTime.MinimumSize = new System.Drawing.Size(171, 30);
+         this.paramNgTime.MinNumber = 10D;
+         this.paramNgTime.Name = "paramNgTime";
+         this.paramNgTime.Size = new System.Drawing.Size(314, 30);
+         this.paramNgTime.TabIndex = 19;
+         this.paramNgTime.Value = 20D;
+         // 
+         // paramPdTime
+         // 
+         this.paramPdTime.Caption = "PD Time(sec)";
+         this.paramPdTime.CaptionWidth = 75F;
+         this.paramPdTime.DecimalPlaces = 1;
+         this.paramPdTime.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.paramPdTime.Increment = 60D;
+         this.paramPdTime.Location = new System.Drawing.Point(15, 102);
+         this.paramPdTime.MaxNumber = 3600D;
+         this.paramPdTime.MinimumSize = new System.Drawing.Size(171, 30);
+         this.paramPdTime.MinNumber = 10D;
+         this.paramPdTime.Name = "paramPdTime";
+         this.paramPdTime.Size = new System.Drawing.Size(314, 30);
+         this.paramPdTime.TabIndex = 20;
+         this.paramPdTime.Value = 10D;
+         // 
+         // btnSetRgvTrackingData
+         // 
+         this.btnSetRgvTrackingData.Location = new System.Drawing.Point(13, 176);
+         this.btnSetRgvTrackingData.Margin = new System.Windows.Forms.Padding(5);
+         this.btnSetRgvTrackingData.Name = "btnSetRgvTrackingData";
+         this.btnSetRgvTrackingData.Size = new System.Drawing.Size(181, 26);
+         this.btnSetRgvTrackingData.TabIndex = 21;
+         this.btnSetRgvTrackingData.Text = "Set RGV Tracking Data";
+         this.btnSetRgvTrackingData.UseVisualStyleBackColor = true;
+         this.btnSetRgvTrackingData.Click += new System.EventHandler(this.btnSetRgvTrackingData_Click);
+         // 
+         // btnMoveToOven1
+         // 
+         this.btnMoveToOven1.Location = new System.Drawing.Point(13, 212);
+         this.btnMoveToOven1.Margin = new System.Windows.Forms.Padding(5);
+         this.btnMoveToOven1.Name = "btnMoveToOven1";
+         this.btnMoveToOven1.Size = new System.Drawing.Size(181, 26);
+         this.btnMoveToOven1.TabIndex = 22;
+         this.btnMoveToOven1.Text = "Move To Oven1";
+         this.btnMoveToOven1.UseVisualStyleBackColor = true;
+         this.btnMoveToOven1.Click += new System.EventHandler(this.btnMoveToOven1_Click);
+         // 
+         // paramOvenWorkTime
+         // 
+         this.paramOvenWorkTime.Caption = "Oven Work Time(sec)";
+         this.paramOvenWorkTime.CaptionWidth = 75F;
+         this.paramOvenWorkTime.DecimalPlaces = 1;
+         this.paramOvenWorkTime.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.paramOvenWorkTime.Increment = 60D;
+         this.paramOvenWorkTime.Location = new System.Drawing.Point(15, 66);
+         this.paramOvenWorkTime.MaxNumber = 3600D;
+         this.paramOvenWorkTime.MinimumSize = new System.Drawing.Size(171, 30);
+         this.paramOvenWorkTime.MinNumber = 10D;
+         this.paramOvenWorkTime.Name = "paramOvenWorkTime";
+         this.paramOvenWorkTime.Size = new System.Drawing.Size(314, 30);
+         this.paramOvenWorkTime.TabIndex = 23;
+         this.paramOvenWorkTime.Value = 15D;
+         // 
+         // lblOvenWorkTime
+         // 
+         this.lblOvenWorkTime.Font = new System.Drawing.Font("更紗黑體 UI TC", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+         this.lblOvenWorkTime.Location = new System.Drawing.Point(11, 261);
+         this.lblOvenWorkTime.Name = "lblOvenWorkTime";
+         this.lblOvenWorkTime.Size = new System.Drawing.Size(183, 24);
+         this.lblOvenWorkTime.TabIndex = 24;
+         this.lblOvenWorkTime.Text = "00:00:00";
+         this.lblOvenWorkTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
          // 
          // Form1
          // 
@@ -1232,8 +1324,8 @@
          this.tpPosReport.ResumeLayout(false);
          this.tpLotMixingPrevention.ResumeLayout(false);
          this.tpLinkReport.ResumeLayout(false);
-         this.tpHandshake.ResumeLayout(false);
          this.tpRegularDataCollectionReport.ResumeLayout(false);
+         this.tpHandshake.ResumeLayout(false);
          this.ResumeLayout(false);
 
       }
@@ -1335,6 +1427,12 @@
       private System.Windows.Forms.TabPage tpRegularDataCollectionReport;
       private System.Windows.Forms.Button btnStartRegularReport;
       private System.Windows.Forms.Button btnStopRegularReport;
+      private GRT.SDK.Framework.Component.ParamNumericUpDownUserControl paramPdTime;
+      private GRT.SDK.Framework.Component.ParamNumericUpDownUserControl paramNgTime;
+      private System.Windows.Forms.Button btnMoveToOven1;
+      private System.Windows.Forms.Button btnSetRgvTrackingData;
+      private GRT.SDK.Framework.Component.ParamNumericUpDownUserControl paramOvenWorkTime;
+      private System.Windows.Forms.Label lblOvenWorkTime;
    }
 }
 

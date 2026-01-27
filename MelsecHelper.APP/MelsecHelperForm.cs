@@ -1394,6 +1394,14 @@ namespace MelsecHelper.APP
          }
       }
 
+      private void btnSetRgvTrackingData_Click(object sender, EventArgs e)
+      {
+      }
+
+      private void btnMoveToOven1_Click(object sender, EventArgs e)
+      {
+      }
+
       #endregion
    }
 }

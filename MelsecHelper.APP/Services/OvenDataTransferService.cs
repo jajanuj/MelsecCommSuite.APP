@@ -52,10 +52,6 @@ namespace MelsecHelper.APP.Services
       #endregion
 
       #region Properties
-...
-      private void Log(string msg) => Console.WriteLine($"[OvenService] {DateTime.Now:HH:mm:ss}: {msg}");
-
-      #endregion
 
       /// <summary>
       /// 上報間隔 (毫秒)
