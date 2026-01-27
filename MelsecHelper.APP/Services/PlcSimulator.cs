@@ -46,6 +46,13 @@ namespace MelsecHelper.APP.Services
       private TestMode _maintenanceTestMode;
       private Task _monitorTask;
 
+      // Independent tasks for concurrency
+      private CancellationTokenSource _linkReportCts;
+      private Task _linkReportTask;
+
+      private CancellationTokenSource _moveOutCts;
+      private Task _moveOutTask;
+
       private int _pollMs = 100; // monitor interval for response
       private Task _task;
 
@@ -240,127 +247,135 @@ namespace MelsecHelper.APP.Services
       {
          lock (_syncLock)
          {
-            Stop(); // 確保完全停止
+            StopTask(ref _linkReportTask, ref _linkReportCts, "Link Report Simulator"); // 僅重置自己
 
-            _cts = new CancellationTokenSource();
-            var ct = _cts.Token;
+            _linkReportCts = new CancellationTokenSource();
+            var ct = _linkReportCts.Token;
 
-            _task = Task.Run(async () =>
+            try
             {
-               _logger?.Invoke($"模擬 PLC 連結報告模式啟動 | Simulator Link Report mode started");
-
-               bool lastRequestState = false;
-               int step = 0;              // 初始狀態
-               int responseDelayMs = 100; // 固定延遲
-
-               while (!ct.IsCancellationRequested)
+               _linkReportTask = Task.Run(async () =>
                {
-                  try
+                  _logger?.Invoke($"模擬 PLC 連結報告模式啟動 | Simulator Link Report mode started");
+
+                  bool lastRequestState = false;
+                  int step = 0;              // 初始狀態
+                  int responseDelayMs = 100; // 固定延遲
+
+                  while (!ct.IsCancellationRequested)
                   {
-                     switch (step)
+                     try
                      {
-                        case 0: // 預備狀態 / 檢查 Request 狀態
-                           bool requestOn = GetBit(_requestAddr);
-                           if (requestOn && !lastRequestState)
-                           {
-                              // 偵測到上升沿
-                              step = 20;
-                           }
-                           else if (!requestOn)
-                           {
-                              step = 0; // 持續監控
-                           }
+                        switch (step)
+                        {
+                           case 0: // 預備狀態 / 檢查 Request 狀態
+                              bool requestOn = GetBit(_requestAddr);
+                              if (requestOn && !lastRequestState)
+                              {
+                                 // 偵測到上升沿
+                                 step = 20;
+                              }
+                              else if (!requestOn)
+                              {
+                                 step = 0; // 持續監控
+                              }
 
-                           // 更新最後狀態以便偵測上升沿
-                           lastRequestState = requestOn;
-                           break;
+                              // 更新最後狀態以便偵測上升沿
+                              lastRequestState = requestOn;
+                              break;
 
-                        case 20: // 檢測到 Request 上升沿（OFF -> ON）
-                           _logger?.Invoke($"[模擬 PLC] 偵測到 EQ Request ON | Detected EQ Request ON (Addr: {_requestAddr})");
+                           case 20: // 檢測到 Request 上升沿（OFF -> ON）
+                              _logger?.Invoke($"[模擬 PLC] 偵測到 EQ Request ON | Detected EQ Request ON (Addr: {_requestAddr})");
 
-                           // T1 測試模式：不回覆 Response
-                           if (_linkTestMode == TestMode.T1Timeout)
-                           {
-                              _logger?.Invoke($"[模擬 PLC] T1 測試模式：不回覆 Response | T1 Test: No Response");
-                              // 停留在這一步，不進入下一步，或者可以回到 0 等待下一次（視需求而定，這裡選擇等待直到 Request 消失或其他重置條件）
-                              // 為了能夠重置，我們檢查若 Request 變回 OFF 則重置
-                              step = 888;
-                           }
-                           else
-                           {
-                              step = 30; // 進入延遲回應
-                           }
+                              // T1 測試模式：不回覆 Response
+                              if (_linkTestMode == TestMode.T1Timeout)
+                              {
+                                 _logger?.Invoke($"[模擬 PLC] T1 測試模式：不回覆 Response | T1 Test: No Response");
+                                 // 停留在這一步，不進入下一步，或者可以回到 0 等待下一次（視需求而定，這裡選擇等待直到 Request 消失或其他重置條件）
+                                 // 為了能夠重置，我們檢查若 Request 變回 OFF 則重置
+                                 step = 888;
+                              }
+                              else
+                              {
+                                 step = 30; // 進入延遲回應
+                              }
 
-                           break;
+                              break;
 
-                        case 30: // 延遲後發送 Response ON
-                           await Task.Delay(responseDelayMs, ct).ConfigureAwait(false);
-                           SetResponse(true);
-                           _logger?.Invoke($"[模擬 PLC] 已回應 Response ON | Sent Response ON (Addr: {_responseAddr})");
+                           case 30: // 延遲後發送 Response ON
+                              await Task.Delay(responseDelayMs, ct).ConfigureAwait(false);
+                              SetResponse(true);
+                              _logger?.Invoke($"[模擬 PLC] 已回應 Response ON | Sent Response ON (Addr: {_responseAddr})");
 
-                           step = 40; // 等待 Request OFF
-                           break;
+                              step = 40; // 等待 Request OFF
+                              break;
 
-                        case 40: // 檢查是否需要維持或清除
-                           // T2 測試模式：回覆 Response ON 後不清除
-                           if (_linkTestMode == TestMode.T2Timeout)
-                           {
-                              _logger?.Invoke($"[模擬 PLC] T2 測試模式：Response ON 將持續維持 | T2 Test: Response will stay ON");
-                              step = 888; // 進入完成/凍結狀態
-                           }
-                           else
-                           {
-                              // 正常模式：等待 Request OFF
-                              step = 50;
-                           }
+                           case 40: // 檢查是否需要維持或清除
+                              // T2 測試模式：回覆 Response ON 後不清除
+                              if (_linkTestMode == TestMode.T2Timeout)
+                              {
+                                 _logger?.Invoke($"[模擬 PLC] T2 測試模式：Response ON 將持續維持 | T2 Test: Response will stay ON");
+                                 step = 888; // 進入完成/凍結狀態
+                              }
+                              else
+                              {
+                                 // 正常模式：等待 Request OFF
+                                 step = 50;
+                              }
 
-                           break;
+                              break;
 
-                        case 50: // 等待 EQ Request OFF
-                           if (!GetBit(_requestAddr))
-                           {
-                              _logger?.Invoke($"[模擬 PLC] 偵測到 EQ Request OFF | Detected EQ Request OFF");
-                              step = 60; // 準備清除 Response
-                           }
+                           case 50: // 等待 EQ Request OFF
+                              if (!GetBit(_requestAddr))
+                              {
+                                 _logger?.Invoke($"[模擬 PLC] 偵測到 EQ Request OFF | Detected EQ Request OFF");
+                                 step = 60; // 準備清除 Response
+                              }
 
-                           break;
+                              break;
 
-                        case 60: // 清除 Response OFF
-                           // 模擬處理/反應時間
-                           await Task.Delay(100, ct).ConfigureAwait(false);
-                           SetResponse(false);
-                           _logger?.Invoke($"[模擬 PLC] 已清除 Response OFF | Cleared Response OFF");
+                           case 60: // 清除 Response OFF
+                              // 模擬處理/反應時間
+                              await Task.Delay(100, ct).ConfigureAwait(false);
+                              SetResponse(false);
+                              _logger?.Invoke($"[模擬 PLC] 已清除 Response OFF | Cleared Response OFF");
 
-                           step = 0;                 // 回到初始狀態
-                           lastRequestState = false; // 重置狀態
-                           break;
+                              step = 0;                 // 回到初始狀態
+                              lastRequestState = false; // 重置狀態
+                              break;
 
-                        case 888: // 特殊狀態：等待 Request OFF 重置
-                           if (!GetBit(_requestAddr))
-                           {
-                              lastRequestState = false;
-                              step = 0; // 當 Request 消失時重置
-                           }
+                           case 888: // 特殊狀態：等待 Request OFF 重置
+                              if (!GetBit(_requestAddr))
+                              {
+                                 lastRequestState = false;
+                                 step = 0; // 當 Request 消失時重置
+                              }
 
-                           break;
+                              break;
+                        }
+
+                        await Task.Delay(50, ct).ConfigureAwait(false);
                      }
+                     catch (TaskCanceledException)
+                     {
+                        break;
+                     }
+                     catch (Exception ex)
+                     {
+                        _logger?.Invoke($"模擬 PLC 連結報告模式例外 | Exception: {ex.Message}");
+                        await Task.Delay(500, ct).ConfigureAwait(false);
+                        step = 0; // 發生錯誤重置
+                     }
+                  }
 
-                     await Task.Delay(50, ct).ConfigureAwait(false);
-                  }
-                  catch (TaskCanceledException)
-                  {
-                     break;
-                  }
-                  catch (Exception ex)
-                  {
-                     _logger?.Invoke($"模擬 PLC 連結報告模式例外 | Exception: {ex.Message}");
-                     await Task.Delay(500, ct).ConfigureAwait(false);
-                     step = 0; // 發生錯誤重置
-                  }
-               }
-
-               _logger?.Invoke($"模擬 PLC 連結報告模式已停止 | Simulator Link Report mode stopped");
-            }, ct);
+                  _logger?.Invoke($"模擬 PLC 連結報告模式已停止 | Simulator Link Report mode stopped");
+               }, ct);
+            }
+            catch (Exception e)
+            {
+               Console.WriteLine(e);
+               throw;
+            }
          }
       }
 
@@ -614,41 +629,9 @@ namespace MelsecHelper.APP.Services
       {
          lock (_syncLock)
          {
-            try
-            {
-               if (_cts != null)
-               {
-                  try
-                  {
-                     _cts.Cancel();
-                  }
-                  catch (Exception ex)
-                  {
-                     _logger?.Invoke($"模擬 PLC 停止取消例外 | Exception while canceling simulator token (Error: {ex.Message})");
-                  }
-
-                  try
-                  {
-                     // 增加超時時間，確保 Task 完全結束
-                     if (_task != null && !_task.Wait(TimeSpan.FromSeconds(5)))
-                     {
-                        _logger?.Invoke("協助任務關閉超時 | Warning: Task did not end within 5s, forcing wait");
-                        _task.Wait(); // 強制等待直到結束
-                     }
-                  }
-                  catch (AggregateException ex)
-                  {
-                     _logger?.Invoke($"等待模擬 PLC 停止例外 | Exception while waiting for simulator task to stop (Error: {ex.InnerException?.Message ?? ex.Message})");
-                  }
-
-                  _cts.Dispose();
-                  _cts = null;
-               }
-            }
-            finally
-            {
-               _task = null;
-            }
+            StopTask(ref _task, ref _cts, "Main Simulator");
+            StopTask(ref _linkReportTask, ref _linkReportCts, "Link Report Simulator");
+            StopTask(ref _moveOutTask, ref _moveOutCts, "Move Out Simulator");
 
             StopMonitor();
          }
@@ -739,10 +722,10 @@ namespace MelsecHelper.APP.Services
          {
             StopMoveOutFlow(); // Ensure stopped
 
-            _cts = new CancellationTokenSource();
-            var ct = _cts.Token;
+            _moveOutCts = new CancellationTokenSource();
+            var ct = _moveOutCts.Token;
 
-            _task = Task.Run(async () =>
+            _moveOutTask = Task.Run(async () =>
             {
                _logger?.Invoke("[Sim MoveOut] Simulation Started");
                var timer = new CTimer();
@@ -853,7 +836,10 @@ namespace MelsecHelper.APP.Services
 
       public void StopMoveOutFlow()
       {
-         Stop();
+         lock (_syncLock)
+         {
+            StopTask(ref _moveOutTask, ref _moveOutCts, "Move Out Simulator");
+         }
       }
 
       #endregion
@@ -1075,6 +1061,38 @@ namespace MelsecHelper.APP.Services
       }
 
       #endregion
+
+      private void StopTask(ref Task task, ref CancellationTokenSource cts, string name)
+      {
+         if (cts != null)
+         {
+            try
+            {
+               cts.Cancel();
+            }
+            catch (Exception ex)
+            {
+               _logger?.Invoke($"{name} 停止取消例外 | Exception while canceling {name} token (Error: {ex.Message})");
+            }
+
+            try
+            {
+               if (task != null && !task.Wait(TimeSpan.FromSeconds(5)))
+               {
+                  _logger?.Invoke($"{name} 關閉超時 | Warning: {name} task did not end within 5s, forcing wait");
+                  task.Wait();
+               }
+            }
+            catch (AggregateException ex)
+            {
+               _logger?.Invoke($"等待 {name} 停止例外 | Exception while waiting for {name} task to stop (Error: {ex.InnerException?.Message ?? ex.Message})");
+            }
+
+            cts.Dispose();
+            cts = null;
+         }
+         task = null;
+      }
 
       public void Dispose()
       {

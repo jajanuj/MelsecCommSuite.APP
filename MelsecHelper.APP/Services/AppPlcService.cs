@@ -537,7 +537,7 @@ namespace MelsecHelper.APP.Services
                {
                   try
                   {
-                     _logger?.Invoke($"[LinkReport] 開始回報 - BoardID: {_pendingLinkReport.BoardId}");
+                     _logger?.Invoke($"[LinkReport] 開始回報 - BoardID: {_pendingLinkReport.BoardId?.FormatBoardId() ?? "Null"}");
 
                      // 1. 寫入數據
                      var rawData = _pendingLinkReport.ToRawData();

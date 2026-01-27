@@ -325,7 +325,7 @@ namespace MelsecHelper.APP.Forms
          {
             btnUpdate3.Enabled = false;
 
-            var data = CreateTrackingDataFromInputs();
+            var data = CreateTrackingDataFromInputs(stationId, 1);
             bool success = await _service.UpdateSingleCapacityStationAsync(stationId, data, _cts.Token);
 
             if (success)

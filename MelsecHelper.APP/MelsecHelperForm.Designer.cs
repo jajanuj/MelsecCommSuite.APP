@@ -108,6 +108,12 @@
          this.tpCommonReport = new System.Windows.Forms.TabPage();
          this.tpMaintenance = new System.Windows.Forms.TabPage();
          this.tpTrackingData = new System.Windows.Forms.TabPage();
+         this.lblOvenWorkTime = new System.Windows.Forms.Label();
+         this.paramOvenWorkTime = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
+         this.btnMoveToOven1 = new System.Windows.Forms.Button();
+         this.btnSetRgvTrackingData = new System.Windows.Forms.Button();
+         this.paramPdTime = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
+         this.paramNgTime = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
          this.tpPosReport = new System.Windows.Forms.TabPage();
          this.tpLotMixingPrevention = new System.Windows.Forms.TabPage();
          this.tpLinkReport = new System.Windows.Forms.TabPage();
@@ -115,12 +121,7 @@
          this.btnStartRegularReport = new System.Windows.Forms.Button();
          this.btnStopRegularReport = new System.Windows.Forms.Button();
          this.tpHandshake = new System.Windows.Forms.TabPage();
-         this.paramNgTime = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
-         this.paramPdTime = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
-         this.btnSetRgvTrackingData = new System.Windows.Forms.Button();
-         this.btnMoveToOven1 = new System.Windows.Forms.Button();
-         this.paramOvenWorkTime = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
-         this.lblOvenWorkTime = new System.Windows.Forms.Label();
+         this.chkEnableCheckLogMixing = new System.Windows.Forms.CheckBox();
          this.grpConnectionMode.SuspendLayout();
          this.grpManualTime.SuspendLayout();
          this.grpConnectMode.SuspendLayout();
@@ -1116,6 +1117,86 @@
          this.tpTrackingData.Text = "Tracking Data";
          this.tpTrackingData.UseVisualStyleBackColor = true;
          // 
+         // lblOvenWorkTime
+         // 
+         this.lblOvenWorkTime.Font = new System.Drawing.Font("更紗黑體 UI TC", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+         this.lblOvenWorkTime.Location = new System.Drawing.Point(11, 261);
+         this.lblOvenWorkTime.Name = "lblOvenWorkTime";
+         this.lblOvenWorkTime.Size = new System.Drawing.Size(183, 24);
+         this.lblOvenWorkTime.TabIndex = 24;
+         this.lblOvenWorkTime.Text = "00:00:00";
+         this.lblOvenWorkTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+         // 
+         // paramOvenWorkTime
+         // 
+         this.paramOvenWorkTime.Caption = "Oven Work Time(sec)";
+         this.paramOvenWorkTime.CaptionWidth = 75F;
+         this.paramOvenWorkTime.DecimalPlaces = 1;
+         this.paramOvenWorkTime.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.paramOvenWorkTime.Increment = 60D;
+         this.paramOvenWorkTime.Location = new System.Drawing.Point(15, 66);
+         this.paramOvenWorkTime.MaxNumber = 3600D;
+         this.paramOvenWorkTime.MinimumSize = new System.Drawing.Size(171, 30);
+         this.paramOvenWorkTime.MinNumber = 10D;
+         this.paramOvenWorkTime.Name = "paramOvenWorkTime";
+         this.paramOvenWorkTime.Size = new System.Drawing.Size(314, 30);
+         this.paramOvenWorkTime.TabIndex = 23;
+         this.paramOvenWorkTime.Value = 15D;
+         // 
+         // btnMoveToOven1
+         // 
+         this.btnMoveToOven1.Location = new System.Drawing.Point(13, 212);
+         this.btnMoveToOven1.Margin = new System.Windows.Forms.Padding(5);
+         this.btnMoveToOven1.Name = "btnMoveToOven1";
+         this.btnMoveToOven1.Size = new System.Drawing.Size(181, 26);
+         this.btnMoveToOven1.TabIndex = 22;
+         this.btnMoveToOven1.Text = "Move To Oven1";
+         this.btnMoveToOven1.UseVisualStyleBackColor = true;
+         this.btnMoveToOven1.Click += new System.EventHandler(this.btnMoveToOven1_Click);
+         // 
+         // btnSetRgvTrackingData
+         // 
+         this.btnSetRgvTrackingData.Location = new System.Drawing.Point(13, 176);
+         this.btnSetRgvTrackingData.Margin = new System.Windows.Forms.Padding(5);
+         this.btnSetRgvTrackingData.Name = "btnSetRgvTrackingData";
+         this.btnSetRgvTrackingData.Size = new System.Drawing.Size(181, 26);
+         this.btnSetRgvTrackingData.TabIndex = 21;
+         this.btnSetRgvTrackingData.Text = "Set RGV Tracking Data";
+         this.btnSetRgvTrackingData.UseVisualStyleBackColor = true;
+         this.btnSetRgvTrackingData.Click += new System.EventHandler(this.btnSetRgvTrackingData_Click);
+         // 
+         // paramPdTime
+         // 
+         this.paramPdTime.Caption = "PD Time(sec)";
+         this.paramPdTime.CaptionWidth = 75F;
+         this.paramPdTime.DecimalPlaces = 1;
+         this.paramPdTime.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.paramPdTime.Increment = 60D;
+         this.paramPdTime.Location = new System.Drawing.Point(15, 102);
+         this.paramPdTime.MaxNumber = 3600D;
+         this.paramPdTime.MinimumSize = new System.Drawing.Size(171, 30);
+         this.paramPdTime.MinNumber = 10D;
+         this.paramPdTime.Name = "paramPdTime";
+         this.paramPdTime.Size = new System.Drawing.Size(314, 30);
+         this.paramPdTime.TabIndex = 20;
+         this.paramPdTime.Value = 11D;
+         // 
+         // paramNgTime
+         // 
+         this.paramNgTime.Caption = "NG Time(sec)";
+         this.paramNgTime.CaptionWidth = 75F;
+         this.paramNgTime.DecimalPlaces = 1;
+         this.paramNgTime.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
+         this.paramNgTime.Increment = 60D;
+         this.paramNgTime.Location = new System.Drawing.Point(15, 138);
+         this.paramNgTime.MaxNumber = 3600D;
+         this.paramNgTime.MinimumSize = new System.Drawing.Size(171, 30);
+         this.paramNgTime.MinNumber = 10D;
+         this.paramNgTime.Name = "paramNgTime";
+         this.paramNgTime.Size = new System.Drawing.Size(314, 30);
+         this.paramNgTime.TabIndex = 19;
+         this.paramNgTime.Value = 20D;
+         // 
          // tpPosReport
          // 
          this.tpPosReport.Controls.Add(this.btnShowPosTrackingDataForm);
@@ -1129,6 +1210,7 @@
          // 
          // tpLotMixingPrevention
          // 
+         this.tpLotMixingPrevention.Controls.Add(this.chkEnableCheckLogMixing);
          this.tpLotMixingPrevention.Controls.Add(this.btnLotMixingPrevention);
          this.tpLotMixingPrevention.Location = new System.Drawing.Point(4, 44);
          this.tpLotMixingPrevention.Name = "tpLotMixingPrevention";
@@ -1198,85 +1280,15 @@
          this.tpHandshake.Text = "Handshake";
          this.tpHandshake.UseVisualStyleBackColor = true;
          // 
-         // paramNgTime
+         // chkEnableCheckLogMixing
          // 
-         this.paramNgTime.Caption = "NG Time(sec)";
-         this.paramNgTime.CaptionWidth = 75F;
-         this.paramNgTime.DecimalPlaces = 1;
-         this.paramNgTime.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
-         this.paramNgTime.Increment = 60D;
-         this.paramNgTime.Location = new System.Drawing.Point(15, 138);
-         this.paramNgTime.MaxNumber = 3600D;
-         this.paramNgTime.MinimumSize = new System.Drawing.Size(171, 30);
-         this.paramNgTime.MinNumber = 10D;
-         this.paramNgTime.Name = "paramNgTime";
-         this.paramNgTime.Size = new System.Drawing.Size(314, 30);
-         this.paramNgTime.TabIndex = 19;
-         this.paramNgTime.Value = 20D;
-         // 
-         // paramPdTime
-         // 
-         this.paramPdTime.Caption = "PD Time(sec)";
-         this.paramPdTime.CaptionWidth = 75F;
-         this.paramPdTime.DecimalPlaces = 1;
-         this.paramPdTime.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
-         this.paramPdTime.Increment = 60D;
-         this.paramPdTime.Location = new System.Drawing.Point(15, 102);
-         this.paramPdTime.MaxNumber = 3600D;
-         this.paramPdTime.MinimumSize = new System.Drawing.Size(171, 30);
-         this.paramPdTime.MinNumber = 10D;
-         this.paramPdTime.Name = "paramPdTime";
-         this.paramPdTime.Size = new System.Drawing.Size(314, 30);
-         this.paramPdTime.TabIndex = 20;
-         this.paramPdTime.Value = 11D;
-         // 
-         // btnSetRgvTrackingData
-         // 
-         this.btnSetRgvTrackingData.Location = new System.Drawing.Point(13, 176);
-         this.btnSetRgvTrackingData.Margin = new System.Windows.Forms.Padding(5);
-         this.btnSetRgvTrackingData.Name = "btnSetRgvTrackingData";
-         this.btnSetRgvTrackingData.Size = new System.Drawing.Size(181, 26);
-         this.btnSetRgvTrackingData.TabIndex = 21;
-         this.btnSetRgvTrackingData.Text = "Set RGV Tracking Data";
-         this.btnSetRgvTrackingData.UseVisualStyleBackColor = true;
-         this.btnSetRgvTrackingData.Click += new System.EventHandler(this.btnSetRgvTrackingData_Click);
-         // 
-         // btnMoveToOven1
-         // 
-         this.btnMoveToOven1.Location = new System.Drawing.Point(13, 212);
-         this.btnMoveToOven1.Margin = new System.Windows.Forms.Padding(5);
-         this.btnMoveToOven1.Name = "btnMoveToOven1";
-         this.btnMoveToOven1.Size = new System.Drawing.Size(181, 26);
-         this.btnMoveToOven1.TabIndex = 22;
-         this.btnMoveToOven1.Text = "Move To Oven1";
-         this.btnMoveToOven1.UseVisualStyleBackColor = true;
-         this.btnMoveToOven1.Click += new System.EventHandler(this.btnMoveToOven1_Click);
-         // 
-         // paramOvenWorkTime
-         // 
-         this.paramOvenWorkTime.Caption = "Oven Work Time(sec)";
-         this.paramOvenWorkTime.CaptionWidth = 75F;
-         this.paramOvenWorkTime.DecimalPlaces = 1;
-         this.paramOvenWorkTime.Font = new System.Drawing.Font("更紗黑體 UI TC", 9.749999F);
-         this.paramOvenWorkTime.Increment = 60D;
-         this.paramOvenWorkTime.Location = new System.Drawing.Point(15, 66);
-         this.paramOvenWorkTime.MaxNumber = 3600D;
-         this.paramOvenWorkTime.MinimumSize = new System.Drawing.Size(171, 30);
-         this.paramOvenWorkTime.MinNumber = 10D;
-         this.paramOvenWorkTime.Name = "paramOvenWorkTime";
-         this.paramOvenWorkTime.Size = new System.Drawing.Size(314, 30);
-         this.paramOvenWorkTime.TabIndex = 23;
-         this.paramOvenWorkTime.Value = 15D;
-         // 
-         // lblOvenWorkTime
-         // 
-         this.lblOvenWorkTime.Font = new System.Drawing.Font("更紗黑體 UI TC", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.lblOvenWorkTime.Location = new System.Drawing.Point(11, 261);
-         this.lblOvenWorkTime.Name = "lblOvenWorkTime";
-         this.lblOvenWorkTime.Size = new System.Drawing.Size(183, 24);
-         this.lblOvenWorkTime.TabIndex = 24;
-         this.lblOvenWorkTime.Text = "00:00:00";
-         this.lblOvenWorkTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+         this.chkEnableCheckLogMixing.AutoSize = true;
+         this.chkEnableCheckLogMixing.Location = new System.Drawing.Point(205, 23);
+         this.chkEnableCheckLogMixing.Name = "chkEnableCheckLogMixing";
+         this.chkEnableCheckLogMixing.Size = new System.Drawing.Size(169, 19);
+         this.chkEnableCheckLogMixing.TabIndex = 31;
+         this.chkEnableCheckLogMixing.Text = "Enable Check Log Mixing";
+         this.chkEnableCheckLogMixing.UseVisualStyleBackColor = true;
          // 
          // Form1
          // 
@@ -1323,6 +1335,7 @@
          this.tpTrackingData.ResumeLayout(false);
          this.tpPosReport.ResumeLayout(false);
          this.tpLotMixingPrevention.ResumeLayout(false);
+         this.tpLotMixingPrevention.PerformLayout();
          this.tpLinkReport.ResumeLayout(false);
          this.tpRegularDataCollectionReport.ResumeLayout(false);
          this.tpHandshake.ResumeLayout(false);
@@ -1433,6 +1446,7 @@
       private System.Windows.Forms.Button btnSetRgvTrackingData;
       private GRT.SDK.Framework.Component.ParamNumericUpDownUserControl paramOvenWorkTime;
       private System.Windows.Forms.Label lblOvenWorkTime;
+      private System.Windows.Forms.CheckBox chkEnableCheckLogMixing;
    }
 }
 

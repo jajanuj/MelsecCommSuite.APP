@@ -13,7 +13,7 @@ namespace MelsecHelper.APP.Models
       /// <summary>
       /// 基板條碼 ID (追蹤資料)
       /// </summary>
-      public string BoardId { get; set; }
+      public TrackingData BoardId { get; set; }
 
       /// <summary>
       /// 基板開始時間
@@ -52,18 +52,11 @@ namespace MelsecHelper.APP.Models
 
          short[] data = new short[17];
 
-         // 1. 基板條碼 ID (10 words = 20 bytes)
-         byte[] idBytes = new byte[20];
-         if (!string.IsNullOrEmpty(BoardId))
+         // 1. 基板條碼 ID (10 words) - 直接使用 TrackingData 的轉換方法
+         if (BoardId != null)
          {
-            byte[] source = Encoding.ASCII.GetBytes(BoardId);
-            Array.Copy(source, idBytes, Math.Min(source.Length, 20));
-         }
-
-         for (int i = 0; i < 10; i++)
-         {
-            // 將 byte 陣列以 Little Endian 方式打包進 short 陣列
-            data[i] = (short)(idBytes[i * 2] | (idBytes[i * 2 + 1] << 8));
+            short[] trackingRaw = BoardId.ToRawData();
+            Array.Copy(trackingRaw, 0, data, 0, 10);
          }
 
          // 2. 基板開始時間

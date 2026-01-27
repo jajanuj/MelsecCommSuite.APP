@@ -147,6 +147,9 @@
     <Compile Include="Services\RecipeCheckClient.cs" />
     <Compile Include="Services\SliderRobotHandshakeService.cs" />
     <Compile Include="Services\TrackingDataService.cs" />
+    <EmbeddedResource Include="Forms\RecipeCheckForm.resx">
+      <DependentUpon>RecipeCheckForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\StationTrackingManagementForm.resx">
       <DependentUpon>StationTrackingManagementForm.cs</DependentUpon>
     </EmbeddedResource>

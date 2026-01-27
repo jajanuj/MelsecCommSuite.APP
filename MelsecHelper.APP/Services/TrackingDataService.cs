@@ -155,6 +155,10 @@ namespace MelsecHelper.APP.Services
             // 批次寫入目標站
             await _controller.WriteWordsAsync(toStation.StartAddress, allData, ct);
 
+            // 清除來源站資料 (寫入 0)
+            short[] zeroData = new short[totalWords];
+            await _controller.WriteWordsAsync(fromStation.StartAddress, zeroData, ct);
+
             return true;
          }
          catch (Exception ex)

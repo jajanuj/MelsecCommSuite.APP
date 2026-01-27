@@ -1123,13 +1123,19 @@ namespace MelsecHelper.APP
             btnSendLinkData.Enabled = false;
             var data = new LinkReportData
             {
-               BoardId = "TEST_BOARD_" + DateTime.Now.ToString("HHmmss"),
+               BoardId = new TrackingData
+               {
+                  BoardId = new ushort[] { 1, 2, 3 },
+                  LayerCount = 10,
+                  LotNoChar = 'T',
+                  LotNoNum = 123
+               },
                StartTime = DateTime.Now.AddMinutes(-5),
                EndTime = DateTime.Now,
                RecipeNo = (ushort)_currentRecipeNo
             };
 
-            Log($"[UI btnSendLinkData] 嘗試發送測試資料... ID: {data.BoardId}");
+            Log($"[UI btnSendLinkData] 嘗試發送測試資料... ID: {data.BoardId?.FormatBoardId()}");
             bool success = await _appPlcService.SendLinkReportAsync(data);
             Log($"[UI btnSendLinkData] 發送請求結果: {(success ? "已接受" : "拒絕")}");
          }
@@ -1434,7 +1440,7 @@ namespace MelsecHelper.APP
                   {
                      (ushort)99,
                      (ushort)88,
-                     (ushort)1
+                     (ushort)i
                   },
                   LayerCount = 44,
                   LotNoChar = 'A',
