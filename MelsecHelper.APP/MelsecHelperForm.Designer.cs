@@ -1228,7 +1228,7 @@
          this.paramPdTime.Name = "paramPdTime";
          this.paramPdTime.Size = new System.Drawing.Size(314, 30);
          this.paramPdTime.TabIndex = 20;
-         this.paramPdTime.Value = 10D;
+         this.paramPdTime.Value = 11D;
          // 
          // btnSetRgvTrackingData
          // 

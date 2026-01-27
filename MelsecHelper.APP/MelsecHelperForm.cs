@@ -1394,12 +1394,182 @@ namespace MelsecHelper.APP
          }
       }
 
-      private void btnSetRgvTrackingData_Click(object sender, EventArgs e)
+      private async void btnSetRgvTrackingData_Click(object sender, EventArgs e)
       {
+         try
+         {
+            btnSetRgvTrackingData.Enabled = false;
+
+            if (_appPlcService?.Controller == null)
+            {
+               MessageBox.Show("請先連接 PLC", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+               return;
+            }
+
+            var service = new TrackingDataService(_appPlcService.Controller, "Config/StationTracking.json");
+            int stationId = 5; // RGV
+
+            var station = service.GetStation(stationId);
+            if (station == null)
+            {
+               MessageBox.Show($"找不到站號 {stationId}", "錯誤");
+               return;
+            }
+
+            for (int i = 1; i <= 30; i++)
+            {
+               // 確保不超出容量
+               if (i > station.Capacity)
+               {
+                  break;
+               }
+
+               // 計算地址
+               string address = station.CalculateSlotAddress(i);
+
+               var data = new TrackingData
+               {
+                  StartAddress = address,
+                  BoardId = new[]
+                  {
+                     (ushort)99,
+                     (ushort)88,
+                     (ushort)1
+                  },
+                  LayerCount = 44,
+                  LotNoChar = 'A',
+                  LotNoNum = 456,
+                  JudgeFlag1 = 8888,
+                  JudgeFlag2 = 15, // Initial Value
+                  JudgeFlag3 = 9999
+               };
+
+               await service.UpdateSingleSlotAsync(stationId, i, data, _cts.Token);
+            }
+
+            Log($"已設定 RGV (Station {stationId}) 測試資料 (Slot 1-30)");
+            MessageBox.Show("設定完成", "成功");
+         }
+         catch (Exception ex)
+         {
+            Log($"設定 RGV 資料失敗: {ex.Message}");
+            MessageBox.Show($"失敗: {ex.Message}", "錯誤");
+         }
+         finally
+         {
+            btnSetRgvTrackingData.Enabled = true;
+         }
       }
 
-      private void btnMoveToOven1_Click(object sender, EventArgs e)
+      private async void btnMoveToOven1_Click(object sender, EventArgs e)
       {
+         try
+         {
+            if (_appPlcService?.Controller == null)
+            {
+               MessageBox.Show("請先連接 PLC", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+               return;
+            }
+
+            btnMoveToOven1.Enabled = false;
+
+            // 讀取參數
+            double workTimeSetting = paramOvenWorkTime.Value;
+            double pdTime = paramPdTime.Value;
+            double ngTime = paramNgTime.Value;
+
+            int durationSec = (int)workTimeSetting;
+
+            // 1. 站別轉移 (RGV -> Oven1)
+            // RGV = 5, Oven1 = 6 (依據 Service 內的註解推斷)
+            int fromStationId = 5;
+            int toStationId = 6;
+
+            var service = new TrackingDataService(_appPlcService.Controller, "Config/StationTracking.json");
+
+            Log($"開始傳送資料: 站 {fromStationId} -> 站 {toStationId}");
+            bool transferSuccess = await service.TransferStationDataAsync(fromStationId, toStationId, _cts.Token);
+
+            if (!transferSuccess)
+            {
+               Log("資料傳送失敗，中止流程");
+               return;
+            }
+
+            // 2. 模擬工作時間
+            Log($"開始模擬烤箱工作 ({durationSec}秒)...");
+
+            for (int t = durationSec; t > 0; t--)
+            {
+               if (lblOvenWorkTime.InvokeRequired)
+               {
+                  lblOvenWorkTime.Invoke((Action)(() => lblOvenWorkTime.Text = $"Work Time: {t} s"));
+               }
+               else
+               {
+                  lblOvenWorkTime.Text = $"Work Time: {t} s";
+               }
+
+               await Task.Delay(1000);
+            }
+
+            // 3. 判斷結果
+            JudgmentResult result;
+            if (workTimeSetting < pdTime)
+            {
+               result = JudgmentResult.OK;
+            }
+            else if (workTimeSetting >= ngTime)
+            {
+               result = JudgmentResult.NG;
+            }
+            else
+            {
+               result = JudgmentResult.PD;
+            }
+
+            string resultText = $"Result: {result} ({workTimeSetting}s)";
+            if (lblOvenWorkTime.InvokeRequired)
+            {
+               lblOvenWorkTime.Invoke((Action)(() => lblOvenWorkTime.Text = resultText));
+            }
+            else
+            {
+               lblOvenWorkTime.Text = resultText;
+            }
+
+            Log($"烤箱工作完成，判斷結果: {result}");
+
+            // 4. 更新 Oven1 資料 (更新 JudgeFlag2)
+            // 讀取整站資料
+            var allData = await service.ReadStationDataAsync(toStationId, _cts.Token);
+            if (allData != null)
+            {
+               for (int i = 0; i < allData.Count; i++)
+               {
+                  var data = allData[i];
+                  // 僅針對有效資料更新
+                  if (data.BoardId[0] != 0 || data.BoardId[1] != 0 || data.BoardId[2] != 0)
+                  {
+                     data.SetJudgmentResult(result);
+
+                     // 寫回 PLC (Slot Index 是 i + 1)
+                     await service.UpdateSingleSlotAsync(toStationId, i + 1, data, _cts.Token);
+                  }
+               }
+
+               Log($"已更新站 {toStationId} 的判斷結果");
+            }
+         }
+         catch (Exception ex)
+         {
+            Log($"烤箱模擬流程失敗: {ex.Message}");
+            MessageBox.Show($"失敗: {ex.Message}", "錯誤");
+         }
+         finally
+         {
+            btnMoveToOven1.Enabled = true;
+         }
       }
 
       #endregion
