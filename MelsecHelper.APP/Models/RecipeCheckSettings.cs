@@ -1,8 +1,11 @@
+using System;
+
 namespace MelsecHelper.APP.Models
 {
    /// <summary>
    /// Recipe Check 設定
    /// </summary>
+   [Serializable]
    public class RecipeCheckSettings
    {
       #region Properties
@@ -38,7 +41,7 @@ namespace MelsecHelper.APP.Models
       public string ResponseRecipeNameAddress { get; set; } = "LW05DE";
 
       /// <summary>Response 超時時間（毫秒）</summary>
-      public int ResponseTimeoutMs { get; set; } = 5000;
+      public int ResponseT1Timeout { get; set; } = 5000;
 
       #endregion
    }

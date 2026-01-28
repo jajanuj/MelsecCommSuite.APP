@@ -1,9 +1,9 @@
+using Melsec.Helper.Interfaces;
+using MelsecHelper.APP.Models;
 using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Melsec.Helper.Interfaces;
-using MelsecHelper.APP.Models;
 
 namespace MelsecHelper.APP.Services
 {
@@ -112,12 +112,12 @@ namespace MelsecHelper.APP.Services
       /// </summary>
       private async Task<RecipeCheckResponse> WaitForResponseAsync()
       {
-         var cts = new CancellationTokenSource(_settings.ResponseTimeoutMs);
+         var cts = new CancellationTokenSource(_settings.ResponseT1Timeout);
          _ = DateTime.Now;
 
          try
          {
-            Log($"[Recipe Check] 等待 MPLC 回應（超時：{_settings.ResponseTimeoutMs} ms）");
+            Log($"[Recipe Check] 等待 MPLC 回應（超時：{_settings.ResponseT1Timeout} ms）");
 
             while (!cts.Token.IsCancellationRequested)
             {
@@ -169,7 +169,7 @@ namespace MelsecHelper.APP.Services
             }
 
             // 超時
-            Log($"[Recipe Check] 等待回應超時（{_settings.ResponseTimeoutMs} ms）");
+            Log($"[Recipe Check] 等待回應超時（{_settings.ResponseT1Timeout} ms）");
             return RecipeCheckResponse.CreateTimeoutResponse();
          }
          catch (OperationCanceledException)

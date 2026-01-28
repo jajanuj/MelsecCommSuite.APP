@@ -69,6 +69,15 @@ namespace MelsecHelper.APP.Forms
             paramMoveOutT2Timeout.Value = appSettings.Maintenance?.PlcToDeviceT2Timeout ?? 1000;
 
             paramRegularReportInterval.Value = appSettings.RegularReport?.Interval ?? 30000;
+
+            paramRecipeRequestFlagAddress.TextValue = appSettings.RecipeCheck.RequestFlagAddress ?? "LB0303";
+            paramRecipeRequestDataAddress.TextValue = appSettings.RecipeCheck.RequestDataAddress ?? "LW17C7";
+            paramRecipeRequestRecipeNoAddress.TextValue = appSettings.RecipeCheck.RequestRecipeNoAddress ?? "LW1155";
+            paramRecipeResponseOkAddress.TextValue = appSettings.RecipeCheck.ResponseOkAddress ?? "LB0104";
+            paramRecipeResponseNgAddress.TextValue = appSettings.RecipeCheck.ResponseNgAddress ?? "LB0105";
+            paramRecipeResponseThicknessAddress.TextValue = appSettings.RecipeCheck.ResponseThicknessAddress ?? "LW05DA";
+            paramRecipeResponseRecipeNoAddress.TextValue = appSettings.RecipeCheck.ResponseRecipeNoAddress ?? "LW05DC";
+            paramRecipeT1Timeout.Value = appSettings.RecipeCheck?.ResponseT1Timeout ?? 5000;
          }
       }
 

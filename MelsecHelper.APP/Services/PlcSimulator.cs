@@ -42,13 +42,13 @@ namespace MelsecHelper.APP.Services
       private CancellationTokenSource _cts;
 
       private bool _disposed;
-      private TestMode _linkTestMode;
-      private TestMode _maintenanceTestMode;
-      private Task _monitorTask;
 
       // Independent tasks for concurrency
       private CancellationTokenSource _linkReportCts;
       private Task _linkReportTask;
+      private TestMode _linkTestMode;
+      private TestMode _maintenanceTestMode;
+      private Task _monitorTask;
 
       private CancellationTokenSource _moveOutCts;
       private Task _moveOutTask;
@@ -1060,8 +1060,6 @@ namespace MelsecHelper.APP.Services
          }
       }
 
-      #endregion
-
       private void StopTask(ref Task task, ref CancellationTokenSource cts, string name)
       {
          if (cts != null)
@@ -1091,8 +1089,11 @@ namespace MelsecHelper.APP.Services
             cts.Dispose();
             cts = null;
          }
+
          task = null;
       }
+
+      #endregion
 
       public void Dispose()
       {

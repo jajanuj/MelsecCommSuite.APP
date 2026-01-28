@@ -35,6 +35,7 @@ namespace MelsecHelper.APP.Models
             Maintenance = loaded.Maintenance ?? new MaintenanceSettings();
             MoveOut = loaded.MoveOut ?? new MoveOutSettings();
             RegularReport = loaded.RegularReport ?? new RegularReportSettings();
+            RecipeCheck = loaded.RecipeCheck ?? new RecipeCheckSettings();
          }
          else
          {
@@ -72,6 +73,8 @@ namespace MelsecHelper.APP.Models
       public MoveOutSettings MoveOut { get; set; } = new MoveOutSettings();
 
       public RegularReportSettings RegularReport { get; set; } = new RegularReportSettings();
+
+      public RecipeCheckSettings RecipeCheck { get; set; } = new RecipeCheckSettings();
 
       #endregion
 

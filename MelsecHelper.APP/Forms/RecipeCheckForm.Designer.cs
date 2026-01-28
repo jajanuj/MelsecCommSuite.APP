@@ -30,6 +30,8 @@ namespace MelsecHelper.APP.Forms
         private void InitializeComponent()
         {
          this.grpRequest = new System.Windows.Forms.GroupBox();
+         this.chkEnableAutoRecipe = new System.Windows.Forms.CheckBox();
+         this.chkEnableCheckLogMixing = new System.Windows.Forms.CheckBox();
          this.label4 = new System.Windows.Forms.Label();
          this.txtRecipeName = new System.Windows.Forms.TextBox();
          this.label3 = new System.Windows.Forms.Label();
@@ -46,18 +48,8 @@ namespace MelsecHelper.APP.Forms
          this.lblThickness = new System.Windows.Forms.Label();
          this.lblResult = new System.Windows.Forms.Label();
          this.txtLog = new System.Windows.Forms.TextBox();
-         this.grpSettings = new System.Windows.Forms.GroupBox();
-         this.propertyGridSettings = new System.Windows.Forms.PropertyGrid();
-         this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-         this.chkEnableCheckLogMixing = new System.Windows.Forms.CheckBox();
-         this.chkEnableAutoRecipe = new System.Windows.Forms.CheckBox();
          this.grpRequest.SuspendLayout();
          this.grpResponse.SuspendLayout();
-         this.grpSettings.SuspendLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-         this.splitContainer1.Panel1.SuspendLayout();
-         this.splitContainer1.Panel2.SuspendLayout();
-         this.splitContainer1.SuspendLayout();
          this.SuspendLayout();
          // 
          // grpRequest
@@ -76,13 +68,33 @@ namespace MelsecHelper.APP.Forms
          this.grpRequest.Controls.Add(this.label1);
          this.grpRequest.Dock = System.Windows.Forms.DockStyle.Top;
          this.grpRequest.Location = new System.Drawing.Point(0, 0);
-         this.grpRequest.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+         this.grpRequest.Margin = new System.Windows.Forms.Padding(4);
          this.grpRequest.Name = "grpRequest";
-         this.grpRequest.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-         this.grpRequest.Size = new System.Drawing.Size(525, 242);
+         this.grpRequest.Padding = new System.Windows.Forms.Padding(4);
+         this.grpRequest.Size = new System.Drawing.Size(558, 242);
          this.grpRequest.TabIndex = 0;
          this.grpRequest.TabStop = false;
          this.grpRequest.Text = "Recipe Check 請求";
+         // 
+         // chkEnableAutoRecipe
+         // 
+         this.chkEnableAutoRecipe.AutoSize = true;
+         this.chkEnableAutoRecipe.Location = new System.Drawing.Point(214, 204);
+         this.chkEnableAutoRecipe.Name = "chkEnableAutoRecipe";
+         this.chkEnableAutoRecipe.Size = new System.Drawing.Size(135, 19);
+         this.chkEnableAutoRecipe.TabIndex = 33;
+         this.chkEnableAutoRecipe.Text = "Enable Auto Recipe";
+         this.chkEnableAutoRecipe.UseVisualStyleBackColor = true;
+         // 
+         // chkEnableCheckLogMixing
+         // 
+         this.chkEnableCheckLogMixing.AutoSize = true;
+         this.chkEnableCheckLogMixing.Location = new System.Drawing.Point(29, 204);
+         this.chkEnableCheckLogMixing.Name = "chkEnableCheckLogMixing";
+         this.chkEnableCheckLogMixing.Size = new System.Drawing.Size(169, 19);
+         this.chkEnableCheckLogMixing.TabIndex = 32;
+         this.chkEnableCheckLogMixing.Text = "Enable Check Log Mixing";
+         this.chkEnableCheckLogMixing.UseVisualStyleBackColor = true;
          // 
          // label4
          // 
@@ -98,7 +110,7 @@ namespace MelsecHelper.APP.Forms
          // txtRecipeName
          // 
          this.txtRecipeName.Location = new System.Drawing.Point(125, 162);
-         this.txtRecipeName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+         this.txtRecipeName.Margin = new System.Windows.Forms.Padding(4);
          this.txtRecipeName.Name = "txtRecipeName";
          this.txtRecipeName.Size = new System.Drawing.Size(299, 22);
          this.txtRecipeName.TabIndex = 8;
@@ -116,7 +128,7 @@ namespace MelsecHelper.APP.Forms
          // txtRecipeNo
          // 
          this.txtRecipeNo.Location = new System.Drawing.Point(125, 128);
-         this.txtRecipeNo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+         this.txtRecipeNo.Margin = new System.Windows.Forms.Padding(4);
          this.txtRecipeNo.Name = "txtRecipeNo";
          this.txtRecipeNo.Size = new System.Drawing.Size(116, 22);
          this.txtRecipeNo.TabIndex = 6;
@@ -125,7 +137,7 @@ namespace MelsecHelper.APP.Forms
          // btnSend
          // 
          this.btnSend.Location = new System.Drawing.Point(432, 154);
-         this.btnSend.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+         this.btnSend.Margin = new System.Windows.Forms.Padding(4);
          this.btnSend.Name = "btnSend";
          this.btnSend.Size = new System.Drawing.Size(72, 36);
          this.btnSend.TabIndex = 5;
@@ -137,7 +149,7 @@ namespace MelsecHelper.APP.Forms
          // 
          this.rdoString.AutoSize = true;
          this.rdoString.Location = new System.Drawing.Point(257, 94);
-         this.rdoString.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+         this.rdoString.Margin = new System.Windows.Forms.Padding(4);
          this.rdoString.Name = "rdoString";
          this.rdoString.Size = new System.Drawing.Size(73, 19);
          this.rdoString.TabIndex = 4;
@@ -150,7 +162,7 @@ namespace MelsecHelper.APP.Forms
          this.rdoNumeric.AutoSize = true;
          this.rdoNumeric.Checked = true;
          this.rdoNumeric.Location = new System.Drawing.Point(125, 94);
-         this.rdoNumeric.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+         this.rdoNumeric.Margin = new System.Windows.Forms.Padding(4);
          this.rdoNumeric.Name = "rdoNumeric";
          this.rdoNumeric.Size = new System.Drawing.Size(73, 19);
          this.rdoNumeric.TabIndex = 3;
@@ -172,7 +184,7 @@ namespace MelsecHelper.APP.Forms
          // txtTrackingData
          // 
          this.txtTrackingData.Location = new System.Drawing.Point(125, 31);
-         this.txtTrackingData.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+         this.txtTrackingData.Margin = new System.Windows.Forms.Padding(4);
          this.txtTrackingData.Name = "txtTrackingData";
          this.txtTrackingData.Size = new System.Drawing.Size(379, 22);
          this.txtTrackingData.TabIndex = 1;
@@ -197,10 +209,10 @@ namespace MelsecHelper.APP.Forms
          this.grpResponse.Controls.Add(this.txtLog);
          this.grpResponse.Dock = System.Windows.Forms.DockStyle.Fill;
          this.grpResponse.Location = new System.Drawing.Point(0, 242);
-         this.grpResponse.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+         this.grpResponse.Margin = new System.Windows.Forms.Padding(4);
          this.grpResponse.Name = "grpResponse";
-         this.grpResponse.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-         this.grpResponse.Size = new System.Drawing.Size(525, 273);
+         this.grpResponse.Padding = new System.Windows.Forms.Padding(4);
+         this.grpResponse.Size = new System.Drawing.Size(558, 303);
          this.grpResponse.TabIndex = 1;
          this.grpResponse.TabStop = false;
          this.grpResponse.Text = "Response 結果顯示";
@@ -256,95 +268,29 @@ namespace MelsecHelper.APP.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
          this.txtLog.Font = new System.Drawing.Font("Sarasa Fixed TC", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
          this.txtLog.Location = new System.Drawing.Point(7, 130);
-         this.txtLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+         this.txtLog.Margin = new System.Windows.Forms.Padding(4);
          this.txtLog.Multiline = true;
          this.txtLog.Name = "txtLog";
          this.txtLog.ReadOnly = true;
          this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-         this.txtLog.Size = new System.Drawing.Size(510, 135);
+         this.txtLog.Size = new System.Drawing.Size(543, 165);
          this.txtLog.TabIndex = 0;
-         // 
-         // grpSettings
-         // 
-         this.grpSettings.Controls.Add(this.propertyGridSettings);
-         this.grpSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.grpSettings.Location = new System.Drawing.Point(0, 0);
-         this.grpSettings.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-         this.grpSettings.Name = "grpSettings";
-         this.grpSettings.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-         this.grpSettings.Size = new System.Drawing.Size(192, 515);
-         this.grpSettings.TabIndex = 2;
-         this.grpSettings.TabStop = false;
-         this.grpSettings.Text = "PLC 地址設定";
-         // 
-         // propertyGridSettings
-         // 
-         this.propertyGridSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.propertyGridSettings.Location = new System.Drawing.Point(4, 19);
-         this.propertyGridSettings.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-         this.propertyGridSettings.Name = "propertyGridSettings";
-         this.propertyGridSettings.Size = new System.Drawing.Size(184, 492);
-         this.propertyGridSettings.TabIndex = 0;
-         // 
-         // splitContainer1
-         // 
-         this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-         this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-         this.splitContainer1.Name = "splitContainer1";
-         // 
-         // splitContainer1.Panel1
-         // 
-         this.splitContainer1.Panel1.Controls.Add(this.grpResponse);
-         this.splitContainer1.Panel1.Controls.Add(this.grpRequest);
-         // 
-         // splitContainer1.Panel2
-         // 
-         this.splitContainer1.Panel2.Controls.Add(this.grpSettings);
-         this.splitContainer1.Size = new System.Drawing.Size(722, 515);
-         this.splitContainer1.SplitterDistance = 525;
-         this.splitContainer1.SplitterWidth = 5;
-         this.splitContainer1.TabIndex = 3;
-         // 
-         // chkEnableCheckLogMixing
-         // 
-         this.chkEnableCheckLogMixing.AutoSize = true;
-         this.chkEnableCheckLogMixing.Location = new System.Drawing.Point(29, 204);
-         this.chkEnableCheckLogMixing.Name = "chkEnableCheckLogMixing";
-         this.chkEnableCheckLogMixing.Size = new System.Drawing.Size(169, 19);
-         this.chkEnableCheckLogMixing.TabIndex = 32;
-         this.chkEnableCheckLogMixing.Text = "Enable Check Log Mixing";
-         this.chkEnableCheckLogMixing.UseVisualStyleBackColor = true;
-         // 
-         // chkEnableAutoRecipe
-         // 
-         this.chkEnableAutoRecipe.AutoSize = true;
-         this.chkEnableAutoRecipe.Location = new System.Drawing.Point(214, 204);
-         this.chkEnableAutoRecipe.Name = "chkEnableAutoRecipe";
-         this.chkEnableAutoRecipe.Size = new System.Drawing.Size(135, 19);
-         this.chkEnableAutoRecipe.TabIndex = 33;
-         this.chkEnableAutoRecipe.Text = "Enable Auto Recipe";
-         this.chkEnableAutoRecipe.UseVisualStyleBackColor = true;
          // 
          // RecipeCheckForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(722, 515);
-         this.Controls.Add(this.splitContainer1);
+         this.ClientSize = new System.Drawing.Size(558, 545);
+         this.Controls.Add(this.grpResponse);
+         this.Controls.Add(this.grpRequest);
          this.Font = new System.Drawing.Font("更紗黑體 UI TC", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+         this.Margin = new System.Windows.Forms.Padding(4);
          this.Name = "RecipeCheckForm";
          this.Text = "Recipe Check 測試";
          this.grpRequest.ResumeLayout(false);
          this.grpRequest.PerformLayout();
          this.grpResponse.ResumeLayout(false);
          this.grpResponse.PerformLayout();
-         this.grpSettings.ResumeLayout(false);
-         this.splitContainer1.Panel1.ResumeLayout(false);
-         this.splitContainer1.Panel2.ResumeLayout(false);
-         ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-         this.splitContainer1.ResumeLayout(false);
          this.ResumeLayout(false);
 
         }
@@ -364,11 +310,8 @@ namespace MelsecHelper.APP.Forms
         private System.Windows.Forms.Label lblResult;
         private System.Windows.Forms.Label lblResponseRecipe;
         private System.Windows.Forms.Label lblThickness;
-        private System.Windows.Forms.GroupBox grpSettings;
-        private System.Windows.Forms.PropertyGrid propertyGridSettings;
         private System.Windows.Forms.TextBox txtRecipeName;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label lblResponseTime;
       private System.Windows.Forms.CheckBox chkEnableAutoRecipe;

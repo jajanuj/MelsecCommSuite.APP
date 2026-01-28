@@ -299,13 +299,16 @@ namespace MelsecHelper.APP
             tpRecipeCheck.Controls.Clear();
 
             // 實例化 Form
-            _recipeCheckForm = new RecipeCheckForm(_appPlcService, _simulator);
+            _recipeCheckForm = new RecipeCheckForm(_appPlcService, _settings, _simulator);
 
             // 設定嵌入屬性
             _recipeCheckForm.TopLevel = false;
             _recipeCheckForm.FormBorderStyle = FormBorderStyle.None;
             _recipeCheckForm.Dock = DockStyle.Fill;
             _recipeCheckForm.Visible = true;
+
+            // 同步 Online 狀態
+            _recipeCheckForm.IsOnline = IsOnlineMode;
 
             // 加入容器
             tpRecipeCheck.Controls.Add(_recipeCheckForm);
@@ -1208,6 +1211,11 @@ namespace MelsecHelper.APP
             _appPlcService.OnlineMode = true;
             Log("已切換至 Online 模式 | Switched to Online mode");
          }
+
+         if (_recipeCheckForm != null)
+         {
+            _recipeCheckForm.IsOnline = true;
+         }
       }
 
       private void Offline_CheckedChanged(object sender, EventArgs e)
@@ -1216,6 +1224,11 @@ namespace MelsecHelper.APP
          {
             _appPlcService.OnlineMode = false;
             Log("已切換至 Offline 模式 | Switched to Offline mode");
+         }
+
+         if (_recipeCheckForm != null)
+         {
+            _recipeCheckForm.IsOnline = false;
          }
       }
 
