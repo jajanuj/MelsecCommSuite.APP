@@ -10,11 +10,30 @@ namespace MelsecHelper.APP.Services
    {
       #region Fields
 
+      private readonly Dictionary<int, short> _manualOvenStatus = new Dictionary<int, short>();
+
       private readonly Random _random = new Random();
 
       #endregion
 
       #region Public Methods
+
+      /// <summary>
+      /// 設定指定爐的狀態 (模擬)
+      /// </summary>
+      /// <param name="ovenIndex">爐號 (1-8)</param>
+      /// <param name="status">狀態值 (1:不可生產, 2:可以生產, 3:投入Lot, 4:生產中)</param>
+      public void SetOvenStatus(int ovenIndex, short status)
+      {
+         if (_manualOvenStatus.ContainsKey(ovenIndex))
+         {
+            _manualOvenStatus[ovenIndex] = status;
+         }
+         else
+         {
+            _manualOvenStatus.Add(ovenIndex, status);
+         }
+      }
 
       /// <summary>
       /// 模擬讀取 8 爐資料 (520 words)
@@ -32,8 +51,16 @@ namespace MelsecHelper.APP.Services
             ovenData[0] = (short)(100 + i);
 
             // 2. 爐狀態 (Word 1) - 模擬與 Bit 相關的狀態
-            // Bit 0: 運轉中, Bit 1: 異常
-            ovenData[1] = (short)(_random.Next(0, 2) == 0 ? 1 : 0);
+            // 1:不可生產, 2:可以生產, 3:投入Lot(已經設定配方), 4:生產中
+            if (_manualOvenStatus.TryGetValue(i + 1, out short manualStatus))
+            {
+               ovenData[1] = manualStatus;
+            }
+            else
+            {
+               //先不隨機產生，改成固定狀態
+               //ovenData[1] = (short)(_random.Next(0, 2) == 0 ? 1 : 0);
+            }
 
             // 3. 連線狀態 (Word 2)
             // 1: Remote, 2: Local, 3: Offline

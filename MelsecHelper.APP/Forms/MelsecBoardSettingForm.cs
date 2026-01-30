@@ -65,8 +65,8 @@ namespace MelsecHelper.APP.Forms
             paramAddrDeviceToPlcRequestPosData.TextValue = appSettings.Maintenance?.AddrDeviceToPlcRequestPosData ?? "LW17DB";
             paramAddrDeviceToPlcResponseFlag.TextValue = appSettings.Maintenance?.AddrDeviceToPlcResponseFlag ?? "LB0107";
 
-            paramMoveOutT1Timeout.Value = appSettings.Maintenance?.PlcToDeviceT1Timeout ?? 1000;
-            paramMoveOutT2Timeout.Value = appSettings.Maintenance?.PlcToDeviceT2Timeout ?? 1000;
+            paramMoveOutT1Timeout.Value = appSettings.MoveOut?.T1Timeout ?? 1000;
+            paramMoveOutT2Timeout.Value = appSettings.MoveOut?.T2Timeout ?? 1000;
 
             paramRegularReportInterval.Value = appSettings.RegularReport?.Interval ?? 30000;
 

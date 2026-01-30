@@ -140,6 +140,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AlarmHelper.cs" />
     <Compile Include="Services\AppPlcService.cs" />
+    <Compile Include="Services\LotMixingService.cs" />
     <Compile Include="Services\MockMxComponentReader.cs" />
     <Compile Include="Services\MoveOutService.cs" />
     <Compile Include="Services\OvenDataTransferService.cs" />

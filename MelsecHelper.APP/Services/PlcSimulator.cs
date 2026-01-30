@@ -53,6 +53,10 @@ namespace MelsecHelper.APP.Services
       private CancellationTokenSource _moveOutCts;
       private Task _moveOutTask;
 
+      // Noise Simulation Fields
+      private CancellationTokenSource _noiseCts;
+      private Task _noiseTask;
+
       private int _pollMs = 100; // monitor interval for response
       private Task _task;
 
@@ -626,6 +630,68 @@ namespace MelsecHelper.APP.Services
          catch (Exception ex)
          {
             _logger?.Invoke($"模擬 PLC 設定回應例外 | Exception while setting simulator response (Error: {ex.Message})");
+         }
+      }
+
+      /// <summary>
+      /// 啟動雜訊模擬：在指定地址產生快速脈衝
+      /// </summary>
+      /// <param name="target">目標位元地址</param>
+      /// <param name="noiseWidthMs">雜訊寬度 (毫秒)</param>
+      /// <param name="intervalMs">間隔時間 (毫秒)</param>
+      public void StartNoiseSimulation(LinkDeviceAddress target, int noiseWidthMs, int intervalMs)
+      {
+         StopNoiseSimulation(); // 先停止現有測試
+
+         _noiseCts = new CancellationTokenSource();
+         var ct = _noiseCts.Token;
+
+         _noiseTask = Task.Run(async () =>
+         {
+            _logger?.Invoke($"[雜訊模擬] 開始 - 地址: {target.Kind}{target.Start:X4}, 寬度: {noiseWidthMs}ms, 間隔: {intervalMs}ms");
+
+            while (!ct.IsCancellationRequested)
+            {
+               try
+               {
+                  SetRequest(target, true);
+                  await Task.Delay(noiseWidthMs, ct).ConfigureAwait(false);
+                  SetRequest(target, false);
+                  await Task.Delay(intervalMs, ct).ConfigureAwait(false);
+               }
+               catch (TaskCanceledException)
+               {
+                  break;
+               }
+               catch (Exception ex)
+               {
+                  _logger?.Invoke($"[雜訊模擬] 例外: {ex.Message}");
+                  await Task.Delay(500, ct).ConfigureAwait(false);
+               }
+            }
+
+            _logger?.Invoke("[雜訊模擬] 已停止");
+         }, ct);
+      }
+
+      /// <summary>
+      /// 停止雜訊模擬
+      /// </summary>
+      public void StopNoiseSimulation()
+      {
+         if (_noiseCts != null)
+         {
+            _noiseCts.Cancel();
+            try
+            {
+               _noiseTask?.Wait(500);
+            }
+            catch
+            {
+            }
+
+            _noiseCts.Dispose();
+            _noiseCts = null;
          }
       }
 

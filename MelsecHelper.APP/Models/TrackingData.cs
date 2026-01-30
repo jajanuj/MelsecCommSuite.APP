@@ -97,14 +97,30 @@ namespace MelsecHelper.APP.Models
       /// <summary>
       /// 最後一片旗標 (JudgeFlag2 Bit 13)
       /// </summary>
+      /// <summary>
+      /// 最後一片旗標 (JudgeFlag2 Bit 13)
+      /// </summary>
       public bool IsLastFlag
       {
          get => ((JudgeFlag2 >> 13) & 0x01) == 1;
       }
 
+      /// <summary>
+      /// 配方編號
+      /// </summary>
+      public ushort RecipeNo { get; set; }
+
       #endregion
 
       #region Public Methods
+
+      /// <summary>
+      /// 資料是否有效 (BoardId 不全為 0)
+      /// </summary>
+      public bool IsValid()
+      {
+         return BoardId != null && (BoardId[0] != 0 || BoardId[1] != 0 || BoardId[2] != 0);
+      }
 
       /// <summary>
       /// 轉換為 short 陣列以寫入 PLC
@@ -194,7 +210,7 @@ namespace MelsecHelper.APP.Models
          if (isLast)
          {
             // 設定 Bit 13 = 1 (OR with 0x2000)
-            JudgeFlag2 |= (1 << 13);
+            JudgeFlag2 |= 1 << 13;
          }
          else
          {

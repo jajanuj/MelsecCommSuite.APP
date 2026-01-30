@@ -83,15 +83,15 @@ namespace MelsecHelper.APP.Forms
          this.tpRegularReport = new System.Windows.Forms.TabPage();
          this.paramRegularReportInterval = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
          this.tpRecipe = new System.Windows.Forms.TabPage();
-         this.paramRecipeRequestFlagAddress = new GRT.SDK.Framework.Component.ParamTextUserControl();
-         this.paramRecipeRequestDataAddress = new GRT.SDK.Framework.Component.ParamTextUserControl();
-         this.paramRecipeRequestRecipeNoAddress = new GRT.SDK.Framework.Component.ParamTextUserControl();
-         this.paramRecipeResponseOkAddress = new GRT.SDK.Framework.Component.ParamTextUserControl();
+         this.paramRecipeT1Timeout = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
          this.paramTextUserControl1 = new GRT.SDK.Framework.Component.ParamTextUserControl();
          this.paramRecipeResponseRecipeNoAddress = new GRT.SDK.Framework.Component.ParamTextUserControl();
          this.paramRecipeResponseThicknessAddress = new GRT.SDK.Framework.Component.ParamTextUserControl();
          this.paramRecipeResponseNgAddress = new GRT.SDK.Framework.Component.ParamTextUserControl();
-         this.paramRecipeT1Timeout = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
+         this.paramRecipeResponseOkAddress = new GRT.SDK.Framework.Component.ParamTextUserControl();
+         this.paramRecipeRequestRecipeNoAddress = new GRT.SDK.Framework.Component.ParamTextUserControl();
+         this.paramRecipeRequestDataAddress = new GRT.SDK.Framework.Component.ParamTextUserControl();
+         this.paramRecipeRequestFlagAddress = new GRT.SDK.Framework.Component.ParamTextUserControl();
          this.tabControl1.SuspendLayout();
          this.tabGeneral.SuspendLayout();
          this.tabApp.SuspendLayout();
@@ -878,7 +878,7 @@ namespace MelsecHelper.APP.Forms
          this.paramRegularReportInterval.Location = new System.Drawing.Point(20, 20);
          this.paramRegularReportInterval.MaxNumber = 30000D;
          this.paramRegularReportInterval.MinimumSize = new System.Drawing.Size(171, 30);
-         this.paramRegularReportInterval.MinNumber = 10000D;
+         this.paramRegularReportInterval.MinNumber = 5000D;
          this.paramRegularReportInterval.Name = "paramRegularReportInterval";
          this.paramRegularReportInterval.Size = new System.Drawing.Size(314, 30);
          this.paramRegularReportInterval.TabIndex = 16;
@@ -903,65 +903,21 @@ namespace MelsecHelper.APP.Forms
          this.tpRecipe.Text = "Recipe";
          this.tpRecipe.UseVisualStyleBackColor = true;
          // 
-         // paramRecipeRequestFlagAddress
+         // paramRecipeT1Timeout
          // 
-         this.paramRecipeRequestFlagAddress.Caption = "Recipe Request Flag Address";
-         this.paramRecipeRequestFlagAddress.CaptionWidth = 80F;
-         this.paramRecipeRequestFlagAddress.Font = new System.Drawing.Font("更紗黑體 UI TC", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.paramRecipeRequestFlagAddress.Location = new System.Drawing.Point(8, 8);
-         this.paramRecipeRequestFlagAddress.Margin = new System.Windows.Forms.Padding(5);
-         this.paramRecipeRequestFlagAddress.MinimumSize = new System.Drawing.Size(150, 28);
-         this.paramRecipeRequestFlagAddress.Name = "paramRecipeRequestFlagAddress";
-         this.paramRecipeRequestFlagAddress.ReadOnly = false;
-         this.paramRecipeRequestFlagAddress.ShowKeyboard = false;
-         this.paramRecipeRequestFlagAddress.Size = new System.Drawing.Size(339, 28);
-         this.paramRecipeRequestFlagAddress.TabIndex = 20;
-         this.paramRecipeRequestFlagAddress.TextValue = "";
-         // 
-         // paramRecipeRequestDataAddress
-         // 
-         this.paramRecipeRequestDataAddress.Caption = "Recipe Request Data Address";
-         this.paramRecipeRequestDataAddress.CaptionWidth = 80F;
-         this.paramRecipeRequestDataAddress.Font = new System.Drawing.Font("更紗黑體 UI TC", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.paramRecipeRequestDataAddress.Location = new System.Drawing.Point(8, 46);
-         this.paramRecipeRequestDataAddress.Margin = new System.Windows.Forms.Padding(5);
-         this.paramRecipeRequestDataAddress.MinimumSize = new System.Drawing.Size(150, 28);
-         this.paramRecipeRequestDataAddress.Name = "paramRecipeRequestDataAddress";
-         this.paramRecipeRequestDataAddress.ReadOnly = false;
-         this.paramRecipeRequestDataAddress.ShowKeyboard = false;
-         this.paramRecipeRequestDataAddress.Size = new System.Drawing.Size(339, 28);
-         this.paramRecipeRequestDataAddress.TabIndex = 21;
-         this.paramRecipeRequestDataAddress.TextValue = "";
-         // 
-         // paramRecipeRequestRecipeNoAddress
-         // 
-         this.paramRecipeRequestRecipeNoAddress.Caption = "Recipe Request Recipe No Address";
-         this.paramRecipeRequestRecipeNoAddress.CaptionWidth = 80F;
-         this.paramRecipeRequestRecipeNoAddress.Font = new System.Drawing.Font("更紗黑體 UI TC", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.paramRecipeRequestRecipeNoAddress.Location = new System.Drawing.Point(8, 84);
-         this.paramRecipeRequestRecipeNoAddress.Margin = new System.Windows.Forms.Padding(5);
-         this.paramRecipeRequestRecipeNoAddress.MinimumSize = new System.Drawing.Size(150, 28);
-         this.paramRecipeRequestRecipeNoAddress.Name = "paramRecipeRequestRecipeNoAddress";
-         this.paramRecipeRequestRecipeNoAddress.ReadOnly = false;
-         this.paramRecipeRequestRecipeNoAddress.ShowKeyboard = false;
-         this.paramRecipeRequestRecipeNoAddress.Size = new System.Drawing.Size(339, 28);
-         this.paramRecipeRequestRecipeNoAddress.TabIndex = 22;
-         this.paramRecipeRequestRecipeNoAddress.TextValue = "";
-         // 
-         // paramRecipeResponseOkAddress
-         // 
-         this.paramRecipeResponseOkAddress.Caption = "Recipe Response Ok Address";
-         this.paramRecipeResponseOkAddress.CaptionWidth = 80F;
-         this.paramRecipeResponseOkAddress.Font = new System.Drawing.Font("更紗黑體 UI TC", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.paramRecipeResponseOkAddress.Location = new System.Drawing.Point(8, 122);
-         this.paramRecipeResponseOkAddress.Margin = new System.Windows.Forms.Padding(5);
-         this.paramRecipeResponseOkAddress.MinimumSize = new System.Drawing.Size(150, 28);
-         this.paramRecipeResponseOkAddress.Name = "paramRecipeResponseOkAddress";
-         this.paramRecipeResponseOkAddress.ReadOnly = false;
-         this.paramRecipeResponseOkAddress.ShowKeyboard = false;
-         this.paramRecipeResponseOkAddress.Size = new System.Drawing.Size(339, 28);
-         this.paramRecipeResponseOkAddress.TabIndex = 23;
-         this.paramRecipeResponseOkAddress.TextValue = "";
+         this.paramRecipeT1Timeout.Caption = "Recipe T1 Timeout";
+         this.paramRecipeT1Timeout.CaptionWidth = 80F;
+         this.paramRecipeT1Timeout.DecimalPlaces = 0;
+         this.paramRecipeT1Timeout.Font = new System.Drawing.Font("更紗黑體 UI TC", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+         this.paramRecipeT1Timeout.Increment = 1000D;
+         this.paramRecipeT1Timeout.Location = new System.Drawing.Point(8, 310);
+         this.paramRecipeT1Timeout.MaxNumber = 99000D;
+         this.paramRecipeT1Timeout.MinimumSize = new System.Drawing.Size(150, 28);
+         this.paramRecipeT1Timeout.MinNumber = 1000D;
+         this.paramRecipeT1Timeout.Name = "paramRecipeT1Timeout";
+         this.paramRecipeT1Timeout.Size = new System.Drawing.Size(339, 28);
+         this.paramRecipeT1Timeout.TabIndex = 28;
+         this.paramRecipeT1Timeout.Value = 1000D;
          // 
          // paramTextUserControl1
          // 
@@ -1023,21 +979,65 @@ namespace MelsecHelper.APP.Forms
          this.paramRecipeResponseNgAddress.TabIndex = 24;
          this.paramRecipeResponseNgAddress.TextValue = "";
          // 
-         // paramRecipeT1TimeoutMs
+         // paramRecipeResponseOkAddress
          // 
-         this.paramRecipeT1Timeout.Caption = "Recipe T1 Timeout";
-         this.paramRecipeT1Timeout.CaptionWidth = 80F;
-         this.paramRecipeT1Timeout.DecimalPlaces = 0;
-         this.paramRecipeT1Timeout.Font = new System.Drawing.Font("更紗黑體 UI TC", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-         this.paramRecipeT1Timeout.Increment = 1000D;
-         this.paramRecipeT1Timeout.Location = new System.Drawing.Point(8, 310);
-         this.paramRecipeT1Timeout.MaxNumber = 99000D;
-         this.paramRecipeT1Timeout.MinimumSize = new System.Drawing.Size(150, 28);
-         this.paramRecipeT1Timeout.MinNumber = 1000D;
-         this.paramRecipeT1Timeout.Name = "paramRecipeT1TimeoutMs";
-         this.paramRecipeT1Timeout.Size = new System.Drawing.Size(339, 28);
-         this.paramRecipeT1Timeout.TabIndex = 28;
-         this.paramRecipeT1Timeout.Value = 1000D;
+         this.paramRecipeResponseOkAddress.Caption = "Recipe Response Ok Address";
+         this.paramRecipeResponseOkAddress.CaptionWidth = 80F;
+         this.paramRecipeResponseOkAddress.Font = new System.Drawing.Font("更紗黑體 UI TC", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+         this.paramRecipeResponseOkAddress.Location = new System.Drawing.Point(8, 122);
+         this.paramRecipeResponseOkAddress.Margin = new System.Windows.Forms.Padding(5);
+         this.paramRecipeResponseOkAddress.MinimumSize = new System.Drawing.Size(150, 28);
+         this.paramRecipeResponseOkAddress.Name = "paramRecipeResponseOkAddress";
+         this.paramRecipeResponseOkAddress.ReadOnly = false;
+         this.paramRecipeResponseOkAddress.ShowKeyboard = false;
+         this.paramRecipeResponseOkAddress.Size = new System.Drawing.Size(339, 28);
+         this.paramRecipeResponseOkAddress.TabIndex = 23;
+         this.paramRecipeResponseOkAddress.TextValue = "";
+         // 
+         // paramRecipeRequestRecipeNoAddress
+         // 
+         this.paramRecipeRequestRecipeNoAddress.Caption = "Recipe Request Recipe No Address";
+         this.paramRecipeRequestRecipeNoAddress.CaptionWidth = 80F;
+         this.paramRecipeRequestRecipeNoAddress.Font = new System.Drawing.Font("更紗黑體 UI TC", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+         this.paramRecipeRequestRecipeNoAddress.Location = new System.Drawing.Point(8, 84);
+         this.paramRecipeRequestRecipeNoAddress.Margin = new System.Windows.Forms.Padding(5);
+         this.paramRecipeRequestRecipeNoAddress.MinimumSize = new System.Drawing.Size(150, 28);
+         this.paramRecipeRequestRecipeNoAddress.Name = "paramRecipeRequestRecipeNoAddress";
+         this.paramRecipeRequestRecipeNoAddress.ReadOnly = false;
+         this.paramRecipeRequestRecipeNoAddress.ShowKeyboard = false;
+         this.paramRecipeRequestRecipeNoAddress.Size = new System.Drawing.Size(339, 28);
+         this.paramRecipeRequestRecipeNoAddress.TabIndex = 22;
+         this.paramRecipeRequestRecipeNoAddress.TextValue = "";
+         // 
+         // paramRecipeRequestDataAddress
+         // 
+         this.paramRecipeRequestDataAddress.Caption = "Recipe Request Data Address";
+         this.paramRecipeRequestDataAddress.CaptionWidth = 80F;
+         this.paramRecipeRequestDataAddress.Font = new System.Drawing.Font("更紗黑體 UI TC", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+         this.paramRecipeRequestDataAddress.Location = new System.Drawing.Point(8, 46);
+         this.paramRecipeRequestDataAddress.Margin = new System.Windows.Forms.Padding(5);
+         this.paramRecipeRequestDataAddress.MinimumSize = new System.Drawing.Size(150, 28);
+         this.paramRecipeRequestDataAddress.Name = "paramRecipeRequestDataAddress";
+         this.paramRecipeRequestDataAddress.ReadOnly = false;
+         this.paramRecipeRequestDataAddress.ShowKeyboard = false;
+         this.paramRecipeRequestDataAddress.Size = new System.Drawing.Size(339, 28);
+         this.paramRecipeRequestDataAddress.TabIndex = 21;
+         this.paramRecipeRequestDataAddress.TextValue = "";
+         // 
+         // paramRecipeRequestFlagAddress
+         // 
+         this.paramRecipeRequestFlagAddress.Caption = "Recipe Request Flag Address";
+         this.paramRecipeRequestFlagAddress.CaptionWidth = 80F;
+         this.paramRecipeRequestFlagAddress.Font = new System.Drawing.Font("更紗黑體 UI TC", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+         this.paramRecipeRequestFlagAddress.Location = new System.Drawing.Point(8, 8);
+         this.paramRecipeRequestFlagAddress.Margin = new System.Windows.Forms.Padding(5);
+         this.paramRecipeRequestFlagAddress.MinimumSize = new System.Drawing.Size(150, 28);
+         this.paramRecipeRequestFlagAddress.Name = "paramRecipeRequestFlagAddress";
+         this.paramRecipeRequestFlagAddress.ReadOnly = false;
+         this.paramRecipeRequestFlagAddress.ShowKeyboard = false;
+         this.paramRecipeRequestFlagAddress.Size = new System.Drawing.Size(339, 28);
+         this.paramRecipeRequestFlagAddress.TabIndex = 20;
+         this.paramRecipeRequestFlagAddress.TextValue = "";
          // 
          // MelsecBoardSettingForm
          // 

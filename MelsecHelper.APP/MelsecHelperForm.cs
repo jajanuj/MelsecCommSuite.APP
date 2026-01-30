@@ -9,6 +9,7 @@ using MelsecHelper.APP.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -88,6 +89,7 @@ namespace MelsecHelper.APP
 
       // MoveOut 服務
       private MoveOutService _moveOutService;
+      private List<int> _ovenRecipeList;
 
       // 烤箱資料轉拋服務 (模擬)
       private OvenDataTransferService _ovenService;
@@ -1886,6 +1888,25 @@ namespace MelsecHelper.APP
          }
       }
 
+      /// <summary>
+      /// 將類似 "123,456,7" 的字串解析為 List&lt;int&gt;。
+      /// 會去除空白、忽略無法解析的項目（安全版）。
+      /// </summary>
+      public static List<int> ParseCommaSeparatedInts(string input)
+      {
+         if (string.IsNullOrWhiteSpace(input))
+         {
+            return new List<int>();
+         }
+
+         return input
+            .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(s => s.Trim())
+            .Where(s => int.TryParse(s, out _))
+            .Select(int.Parse)
+            .ToList();
+      }
+
       private async void OnSimulationTimerTick(object sender, EventArgs e)
       {
          // 避免重入
@@ -1896,7 +1917,7 @@ namespace MelsecHelper.APP
             switch (_simState)
             {
                case SimulationState.Init:
-
+                  _ovenRecipeList = ParseCommaSeparatedInts(txtOvenRecipeList.Text);
                   _mockReader.SetOvenStatus(1, 2);
                   _mockReader.SetOvenStatus(2, 2);
                   _mockReader.SetOvenStatus(3, 2);
@@ -2251,6 +2272,16 @@ namespace MelsecHelper.APP
                            {
                               finalRecipeNo = response.RecipeNo.Value;
                               Log($"[Sim] Recipe Check 成功, 取得 Recipe No: {finalRecipeNo}");
+
+                              var hasRecipeNo = _ovenRecipeList.Contains(finalRecipeNo);
+
+                              if (!hasRecipeNo)
+                              {
+                                 Log($"[Sim] [Warning] 取得的 Recipe No: {finalRecipeNo} 不在預設清單中!");
+                                 await AlarmHelper.AddAlarmCodeAsync(_appPlcService, "C013");
+                                 Log($"[Sim] 發出警報[C013]");
+                                 StopSimulationFlow();
+                              }
                            }
                            else
                            {
