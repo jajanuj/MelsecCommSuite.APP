@@ -98,6 +98,16 @@ namespace MelsecHelper.APP.Services
       private CancellationTokenSource _timeSyncCts;
       private Task _timeSyncTask;
 
+      // Signal Debouncers
+      private SignalDebouncer _heartbeatRequestDebouncer;
+      private SignalDebouncer _heartbeatResponseDebouncer;
+      private SignalDebouncer _linkReportRequestDebouncer;
+      private SignalDebouncer _linkReportResponseDebouncer;
+      private SignalDebouncer _timeSyncTriggerDebouncer;
+      private SignalDebouncer _maintenanceRequestDebouncer;          // PLC -> Device Request Flag
+      private SignalDebouncer _maintenanceResponseOkDebouncer;       // PLC -> Device Response OK (Read-back)
+      private SignalDebouncer _maintenanceSenderResponseDebouncer;   // Device -> PLC Response Flag
+
       #endregion
 
       #region Constructors
@@ -107,6 +117,19 @@ namespace MelsecHelper.APP.Services
          _settings = settings ?? throw new ArgumentNullException(nameof(settings));
          _logger = logger;
          _syncContext = SynchronizationContext.Current;
+
+         // Initialize Debouncers
+         int debounceTime = settings.SignalDebounceTimeMs;
+         _logger?.Invoke($"[AppService] Initializing Signal Debouncers with {debounceTime}ms");
+
+         _heartbeatRequestDebouncer = new SignalDebouncer(debounceTime);
+         _heartbeatResponseDebouncer = new SignalDebouncer(debounceTime);
+         _linkReportRequestDebouncer = new SignalDebouncer(debounceTime);
+         _linkReportResponseDebouncer = new SignalDebouncer(debounceTime);
+         _timeSyncTriggerDebouncer = new SignalDebouncer(debounceTime);
+         _maintenanceRequestDebouncer = new SignalDebouncer(debounceTime);
+         _maintenanceResponseOkDebouncer = new SignalDebouncer(debounceTime);
+         _maintenanceSenderResponseDebouncer = new SignalDebouncer(debounceTime);
 
          // Factory logic for Controller
          if (settings.DriverType == MelsecDriverType.Simulator)
@@ -140,6 +163,17 @@ namespace MelsecHelper.APP.Services
          _settings = settings ?? throw new ArgumentNullException(nameof(settings));
          _logger = logger;
          _syncContext = SynchronizationContext.Current;
+
+         // Initialize Debouncers
+         int debounceTime = settings.SignalDebounceTimeMs;
+         _heartbeatRequestDebouncer = new SignalDebouncer(debounceTime);
+         _heartbeatResponseDebouncer = new SignalDebouncer(debounceTime);
+         _linkReportRequestDebouncer = new SignalDebouncer(debounceTime);
+         _linkReportResponseDebouncer = new SignalDebouncer(debounceTime);
+         _timeSyncTriggerDebouncer = new SignalDebouncer(debounceTime);
+         _maintenanceRequestDebouncer = new SignalDebouncer(debounceTime);
+         _maintenanceResponseOkDebouncer = new SignalDebouncer(debounceTime);
+         _maintenanceSenderResponseDebouncer = new SignalDebouncer(debounceTime);
 
          if (customAdapter == null)
          {
@@ -500,6 +534,10 @@ namespace MelsecHelper.APP.Services
 
             _linkReportCts.Dispose();
             _linkReportCts = null;
+
+            // Reset Debouncers
+            _linkReportRequestDebouncer.Reset();
+            _linkReportResponseDebouncer.Reset();
          }
       }
 
@@ -526,8 +564,8 @@ namespace MelsecHelper.APP.Services
 
       private async Task RunLinkReportFlow(CancellationToken ct)
       {
-         bool requestOn = _controller.GetBit(AddrLinkReportRequestFlag);
-         bool responseOn = _controller.GetBit(AddrLinkReportResponseFlag);
+         bool requestOn = _linkReportRequestDebouncer.Process(_controller.GetBit(AddrLinkReportRequestFlag));
+         bool responseOn = _linkReportResponseDebouncer.Process(_controller.GetBit(AddrLinkReportResponseFlag));
 
          switch (_linkReportStep)
          {
@@ -653,6 +691,10 @@ namespace MelsecHelper.APP.Services
 
             _heartbeatCts.Dispose();
             _heartbeatCts = null;
+
+            // Reset Debouncers
+            _heartbeatRequestDebouncer.Reset();
+            _heartbeatResponseDebouncer.Reset();
          }
 
          ConsecutiveHeartbeatFailuresCount = 0;
@@ -695,8 +737,8 @@ namespace MelsecHelper.APP.Services
          }
 
          // 讀取當前信號狀態
-         bool requestOn = _controller.GetBit(_heartbeatRequestAddr);
-         bool responseOn = _controller.GetBit(_heartbeatResponseAddr);
+         bool requestOn = _heartbeatRequestDebouncer.Process(_controller.GetBit(_heartbeatRequestAddr));
+         bool responseOn = _heartbeatResponseDebouncer.Process(_controller.GetBit(_heartbeatResponseAddr));
 
          switch (_heartbeatStep)
          {
@@ -822,6 +864,9 @@ namespace MelsecHelper.APP.Services
             _timeSyncCts.Cancel();
             _timeSyncCts.Dispose();
             _timeSyncCts = null;
+
+            // Reset Debouncers
+            _timeSyncTriggerDebouncer.Reset();
          }
       }
 
@@ -831,7 +876,7 @@ namespace MelsecHelper.APP.Services
          {
             try
             {
-               bool requestOn = _controller.GetBit(triggerAddr);
+               bool requestOn = _timeSyncTriggerDebouncer.Process(_controller.GetBit(triggerAddr));
                if (requestOn && !_lastTimeSyncTrigger)
                {
                   _logger?.Invoke("[TimeSync] Rising edge detected, syncing...");
@@ -991,6 +1036,11 @@ namespace MelsecHelper.APP.Services
 
          CompleteMaintenanceRequest(false);
 
+         // Reset Debouncers
+         _maintenanceRequestDebouncer.Reset();
+         _maintenanceResponseOkDebouncer.Reset(); // (If used)
+         _maintenanceSenderResponseDebouncer.Reset();
+
          _logger?.Invoke("[AppService] Tracking Data Maintenance stopped");
       }
 
@@ -1022,7 +1072,7 @@ namespace MelsecHelper.APP.Services
       /// <returns>True: 成功 (Response ON), False: 失敗或逾時</returns>
       private async Task RunMaintenanceFlow(CancellationToken ct)
       {
-         bool requestOn = _controller.GetBit(_settings.Maintenance.AddrPlcToDeviceRequestFlag);
+         bool requestOn = _maintenanceRequestDebouncer.Process(_controller.GetBit(_settings.Maintenance.AddrPlcToDeviceRequestFlag));
 
          switch (_maintenanceStep)
          {
@@ -1119,7 +1169,7 @@ namespace MelsecHelper.APP.Services
       /// </summary>
       private async Task RunMaintenanceRequestFlow(CancellationToken ct)
       {
-         bool responseOn = _controller.GetBit(AddrMaintenanceSenderResponseFlag);
+         bool responseOn = _maintenanceSenderResponseDebouncer.Process(_controller.GetBit(AddrMaintenanceSenderResponseFlag));
 
          switch (_maintenanceRequestStep)
          {

@@ -30,6 +30,7 @@ namespace MelsecHelper.APP.Models
             ScanRanges = loaded.ScanRanges;
             Heartbeat = loaded.Heartbeat ?? new HeartbeatSettings();
             TimeSyncIntervalMs = loaded.TimeSyncIntervalMs;
+            SignalDebounceTimeMs = loaded.SignalDebounceTimeMs;
             TimeSync = loaded.TimeSync ?? new TimeSyncSettings();
             Tracking = loaded.Tracking ?? new TrackingSettings();
             Maintenance = loaded.Maintenance ?? new MaintenanceSettings();
@@ -59,6 +60,11 @@ namespace MelsecHelper.APP.Models
 
       /// <summary>對時監控間隔毫秒。</summary>
       public int TimeSyncIntervalMs { get; set; } = 1000;
+
+      /// <summary>
+      /// 訊號防彈跳時間 (毫秒)，預設 50ms
+      /// </summary>
+      public int SignalDebounceTimeMs { get; set; } = 50;
 
       public HeartbeatSettings Heartbeat { get; set; } = new HeartbeatSettings();
 
