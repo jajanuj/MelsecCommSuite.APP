@@ -115,20 +115,31 @@
          this.paramNgTime = new GRT.SDK.Framework.Component.ParamNumericUpDownUserControl();
          this.tpPosReport = new System.Windows.Forms.TabPage();
          this.tpLotMixingPrevention = new System.Windows.Forms.TabPage();
-         this.chkEnableCheckLogMixing = new System.Windows.Forms.CheckBox();
          this.tpLinkReport = new System.Windows.Forms.TabPage();
          this.tpRegularDataCollectionReport = new System.Windows.Forms.TabPage();
          this.btnStartRegularReport = new System.Windows.Forms.Button();
          this.btnStopRegularReport = new System.Windows.Forms.Button();
          this.tpHandshake = new System.Windows.Forms.TabPage();
          this.tpSimulation = new System.Windows.Forms.TabPage();
+         this.grpSimulation = new System.Windows.Forms.GroupBox();
+         this.chkRecipeTimeout = new System.Windows.Forms.CheckBox();
+         this.nudSimAutoRecipeNo = new System.Windows.Forms.NumericUpDown();
+         this.lblAutoRecipeNo = new System.Windows.Forms.Label();
+         this.btnClearAllTrackingData = new System.Windows.Forms.Button();
+         this.btnRobotPickPanel = new System.Windows.Forms.Button();
+         this.chkEnableAutoRecipe = new System.Windows.Forms.CheckBox();
+         this.chkEnableCheckLotMixing = new System.Windows.Forms.CheckBox();
          this.chkOven3InUse = new System.Windows.Forms.CheckBox();
          this.chkOven2InUse = new System.Windows.Forms.CheckBox();
          this.chkOven1InUse = new System.Windows.Forms.CheckBox();
          this.btnSimulationFlowStop = new System.Windows.Forms.Button();
+         this.grpLotMixing = new System.Windows.Forms.GroupBox();
+         this.rdoMixPanel3 = new System.Windows.Forms.RadioButton();
+         this.rdoMixPanel2 = new System.Windows.Forms.RadioButton();
+         this.rdoLotNormal = new System.Windows.Forms.RadioButton();
          this.btnSimulationFlowStart = new System.Windows.Forms.Button();
-         this.chkEnableAutoRecipe = new System.Windows.Forms.CheckBox();
-         this.checkBox1 = new System.Windows.Forms.CheckBox();
+         this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
+         this.txtOvenRecipeList = new System.Windows.Forms.TextBox();
          this.grpConnectionMode.SuspendLayout();
          this.grpManualTime.SuspendLayout();
          this.grpConnectMode.SuspendLayout();
@@ -158,6 +169,10 @@
          this.tpRegularDataCollectionReport.SuspendLayout();
          this.tpHandshake.SuspendLayout();
          this.tpSimulation.SuspendLayout();
+         this.grpSimulation.SuspendLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.nudSimAutoRecipeNo)).BeginInit();
+         this.grpLotMixing.SuspendLayout();
+         this.tlpMain.SuspendLayout();
          this.SuspendLayout();
          // 
          // grpConnectionMode
@@ -476,22 +491,22 @@
          // 
          // lstLog
          // 
-         this.lstLog.Dock = System.Windows.Forms.DockStyle.Bottom;
+         this.lstLog.Dock = System.Windows.Forms.DockStyle.Fill;
          this.lstLog.Font = new System.Drawing.Font("Sarasa Fixed TC", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
          this.lstLog.FormattingEnabled = true;
          this.lstLog.ItemHeight = 15;
-         this.lstLog.Location = new System.Drawing.Point(0, 427);
+         this.lstLog.Location = new System.Drawing.Point(3, 403);
          this.lstLog.Name = "lstLog";
-         this.lstLog.Size = new System.Drawing.Size(786, 124);
+         this.lstLog.Size = new System.Drawing.Size(805, 162);
          this.lstLog.TabIndex = 10;
          // 
          // lblStatus
          // 
          this.lblStatus.BackColor = System.Drawing.Color.LightGreen;
-         this.lblStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
-         this.lblStatus.Location = new System.Drawing.Point(0, 551);
+         this.lblStatus.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.lblStatus.Location = new System.Drawing.Point(3, 568);
          this.lblStatus.Name = "lblStatus";
-         this.lblStatus.Size = new System.Drawing.Size(786, 24);
+         this.lblStatus.Size = new System.Drawing.Size(805, 20);
          this.lblStatus.TabIndex = 11;
          this.lblStatus.Text = "Status";
          this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -657,11 +672,12 @@
          this.tabMain.Controls.Add(this.tpRegularDataCollectionReport);
          this.tabMain.Controls.Add(this.tpHandshake);
          this.tabMain.Controls.Add(this.tpSimulation);
-         this.tabMain.Location = new System.Drawing.Point(0, 3);
+         this.tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.tabMain.Location = new System.Drawing.Point(3, 3);
          this.tabMain.Multiline = true;
          this.tabMain.Name = "tabMain";
          this.tabMain.SelectedIndex = 0;
-         this.tabMain.Size = new System.Drawing.Size(780, 418);
+         this.tabMain.Size = new System.Drawing.Size(805, 394);
          this.tabMain.TabIndex = 32;
          // 
          // tpBasic
@@ -677,7 +693,7 @@
          this.tpBasic.Location = new System.Drawing.Point(4, 44);
          this.tpBasic.Name = "tpBasic";
          this.tpBasic.Padding = new System.Windows.Forms.Padding(3);
-         this.tpBasic.Size = new System.Drawing.Size(772, 370);
+         this.tpBasic.Size = new System.Drawing.Size(797, 346);
          this.tpBasic.TabIndex = 3;
          this.tpBasic.Text = "Basic";
          this.tpBasic.UseVisualStyleBackColor = true;
@@ -686,10 +702,10 @@
          // 
          this.tpCheckClock.Controls.Add(this.btnStartHeartbeat);
          this.tpCheckClock.Controls.Add(this.btnStopHeartbeat);
-         this.tpCheckClock.Location = new System.Drawing.Point(4, 24);
+         this.tpCheckClock.Location = new System.Drawing.Point(4, 44);
          this.tpCheckClock.Name = "tpCheckClock";
          this.tpCheckClock.Padding = new System.Windows.Forms.Padding(3);
-         this.tpCheckClock.Size = new System.Drawing.Size(772, 390);
+         this.tpCheckClock.Size = new System.Drawing.Size(797, 346);
          this.tpCheckClock.TabIndex = 0;
          this.tpCheckClock.Text = "Check Clock";
          this.tpCheckClock.UseVisualStyleBackColor = true;
@@ -700,10 +716,10 @@
          this.tpClockUpdate.Controls.Add(this.btnForceTimeSync);
          this.tpClockUpdate.Controls.Add(this.btnStartTimeSync);
          this.tpClockUpdate.Controls.Add(this.btnStopTimeSync);
-         this.tpClockUpdate.Location = new System.Drawing.Point(4, 24);
+         this.tpClockUpdate.Location = new System.Drawing.Point(4, 44);
          this.tpClockUpdate.Name = "tpClockUpdate";
          this.tpClockUpdate.Padding = new System.Windows.Forms.Padding(3);
-         this.tpClockUpdate.Size = new System.Drawing.Size(772, 390);
+         this.tpClockUpdate.Size = new System.Drawing.Size(797, 346);
          this.tpClockUpdate.TabIndex = 1;
          this.tpClockUpdate.Text = "Clock Update";
          this.tpClockUpdate.UseVisualStyleBackColor = true;
@@ -715,9 +731,9 @@
          this.tpMoveOut.Controls.Add(this.tlpMoveOutData);
          this.tpMoveOut.Controls.Add(this.btnMoveOutStop);
          this.tpMoveOut.Controls.Add(this.btnMoveOutStart);
-         this.tpMoveOut.Location = new System.Drawing.Point(4, 24);
+         this.tpMoveOut.Location = new System.Drawing.Point(4, 44);
          this.tpMoveOut.Name = "tpMoveOut";
-         this.tpMoveOut.Size = new System.Drawing.Size(772, 390);
+         this.tpMoveOut.Size = new System.Drawing.Size(797, 346);
          this.tpMoveOut.TabIndex = 4;
          this.tpMoveOut.Text = "Move Out";
          this.tpMoveOut.UseVisualStyleBackColor = true;
@@ -1049,9 +1065,9 @@
          // 
          // tpRecipeCheck
          // 
-         this.tpRecipeCheck.Location = new System.Drawing.Point(4, 24);
+         this.tpRecipeCheck.Location = new System.Drawing.Point(4, 44);
          this.tpRecipeCheck.Name = "tpRecipeCheck";
-         this.tpRecipeCheck.Size = new System.Drawing.Size(772, 390);
+         this.tpRecipeCheck.Size = new System.Drawing.Size(797, 346);
          this.tpRecipeCheck.TabIndex = 5;
          this.tpRecipeCheck.Text = "Recipe Check";
          this.tpRecipeCheck.UseVisualStyleBackColor = true;
@@ -1060,10 +1076,10 @@
          // 
          this.tpAlarm.Controls.Add(this.ltbErrorCodes);
          this.tpAlarm.Controls.Add(this.grpAlarm);
-         this.tpAlarm.Location = new System.Drawing.Point(4, 24);
+         this.tpAlarm.Location = new System.Drawing.Point(4, 44);
          this.tpAlarm.Name = "tpAlarm";
          this.tpAlarm.Padding = new System.Windows.Forms.Padding(3);
-         this.tpAlarm.Size = new System.Drawing.Size(772, 390);
+         this.tpAlarm.Size = new System.Drawing.Size(797, 346);
          this.tpAlarm.TabIndex = 2;
          this.tpAlarm.Text = "Alarm";
          this.tpAlarm.UseVisualStyleBackColor = true;
@@ -1075,10 +1091,10 @@
          this.tpCommonReport.Controls.Add(this.textBox1);
          this.tpCommonReport.Controls.Add(this.btnAutoRun);
          this.tpCommonReport.Controls.Add(this.btnManualRun);
-         this.tpCommonReport.Location = new System.Drawing.Point(4, 24);
+         this.tpCommonReport.Location = new System.Drawing.Point(4, 44);
          this.tpCommonReport.Name = "tpCommonReport";
          this.tpCommonReport.Padding = new System.Windows.Forms.Padding(3);
-         this.tpCommonReport.Size = new System.Drawing.Size(772, 390);
+         this.tpCommonReport.Size = new System.Drawing.Size(797, 346);
          this.tpCommonReport.TabIndex = 6;
          this.tpCommonReport.Text = "Common Report";
          this.tpCommonReport.UseVisualStyleBackColor = true;
@@ -1087,10 +1103,10 @@
          // 
          this.tpMaintenance.Controls.Add(this.btnStartMaintMonitor);
          this.tpMaintenance.Controls.Add(this.btnStopMaintMonitor);
-         this.tpMaintenance.Location = new System.Drawing.Point(4, 24);
+         this.tpMaintenance.Location = new System.Drawing.Point(4, 44);
          this.tpMaintenance.Name = "tpMaintenance";
          this.tpMaintenance.Padding = new System.Windows.Forms.Padding(3);
-         this.tpMaintenance.Size = new System.Drawing.Size(772, 390);
+         this.tpMaintenance.Size = new System.Drawing.Size(797, 346);
          this.tpMaintenance.TabIndex = 7;
          this.tpMaintenance.Text = "Maintenance";
          this.tpMaintenance.UseVisualStyleBackColor = true;
@@ -1104,10 +1120,10 @@
          this.tpTrackingData.Controls.Add(this.paramPdTime);
          this.tpTrackingData.Controls.Add(this.paramNgTime);
          this.tpTrackingData.Controls.Add(this.btnTrackingControl);
-         this.tpTrackingData.Location = new System.Drawing.Point(4, 24);
+         this.tpTrackingData.Location = new System.Drawing.Point(4, 44);
          this.tpTrackingData.Name = "tpTrackingData";
          this.tpTrackingData.Padding = new System.Windows.Forms.Padding(3);
-         this.tpTrackingData.Size = new System.Drawing.Size(772, 390);
+         this.tpTrackingData.Size = new System.Drawing.Size(797, 346);
          this.tpTrackingData.TabIndex = 8;
          this.tpTrackingData.Text = "Tracking Data";
          this.tpTrackingData.UseVisualStyleBackColor = true;
@@ -1198,32 +1214,21 @@
          this.tpPosReport.Location = new System.Drawing.Point(4, 44);
          this.tpPosReport.Name = "tpPosReport";
          this.tpPosReport.Padding = new System.Windows.Forms.Padding(3);
-         this.tpPosReport.Size = new System.Drawing.Size(772, 370);
+         this.tpPosReport.Size = new System.Drawing.Size(797, 346);
          this.tpPosReport.TabIndex = 9;
          this.tpPosReport.Text = "Position Report";
          this.tpPosReport.UseVisualStyleBackColor = true;
          // 
          // tpLotMixingPrevention
          // 
-         this.tpLotMixingPrevention.Controls.Add(this.chkEnableCheckLogMixing);
          this.tpLotMixingPrevention.Controls.Add(this.btnLotMixingPrevention);
          this.tpLotMixingPrevention.Location = new System.Drawing.Point(4, 44);
          this.tpLotMixingPrevention.Name = "tpLotMixingPrevention";
          this.tpLotMixingPrevention.Padding = new System.Windows.Forms.Padding(3);
-         this.tpLotMixingPrevention.Size = new System.Drawing.Size(772, 370);
+         this.tpLotMixingPrevention.Size = new System.Drawing.Size(797, 346);
          this.tpLotMixingPrevention.TabIndex = 10;
          this.tpLotMixingPrevention.Text = "Lot Mixing Prevention";
          this.tpLotMixingPrevention.UseVisualStyleBackColor = true;
-         // 
-         // chkEnableCheckLogMixing
-         // 
-         this.chkEnableCheckLogMixing.AutoSize = true;
-         this.chkEnableCheckLogMixing.Location = new System.Drawing.Point(205, 23);
-         this.chkEnableCheckLogMixing.Name = "chkEnableCheckLogMixing";
-         this.chkEnableCheckLogMixing.Size = new System.Drawing.Size(169, 19);
-         this.chkEnableCheckLogMixing.TabIndex = 31;
-         this.chkEnableCheckLogMixing.Text = "Enable Check Log Mixing";
-         this.chkEnableCheckLogMixing.UseVisualStyleBackColor = true;
          // 
          // tpLinkReport
          // 
@@ -1233,7 +1238,7 @@
          this.tpLinkReport.Location = new System.Drawing.Point(4, 44);
          this.tpLinkReport.Name = "tpLinkReport";
          this.tpLinkReport.Padding = new System.Windows.Forms.Padding(3);
-         this.tpLinkReport.Size = new System.Drawing.Size(772, 370);
+         this.tpLinkReport.Size = new System.Drawing.Size(797, 346);
          this.tpLinkReport.TabIndex = 11;
          this.tpLinkReport.Text = "Link Report";
          this.tpLinkReport.UseVisualStyleBackColor = true;
@@ -1245,7 +1250,7 @@
          this.tpRegularDataCollectionReport.Location = new System.Drawing.Point(4, 44);
          this.tpRegularDataCollectionReport.Name = "tpRegularDataCollectionReport";
          this.tpRegularDataCollectionReport.Padding = new System.Windows.Forms.Padding(3);
-         this.tpRegularDataCollectionReport.Size = new System.Drawing.Size(772, 370);
+         this.tpRegularDataCollectionReport.Size = new System.Drawing.Size(797, 346);
          this.tpRegularDataCollectionReport.TabIndex = 13;
          this.tpRegularDataCollectionReport.Text = "Regular Data Collection Report";
          this.tpRegularDataCollectionReport.UseVisualStyleBackColor = true;
@@ -1280,77 +1285,102 @@
          this.tpHandshake.Location = new System.Drawing.Point(4, 44);
          this.tpHandshake.Name = "tpHandshake";
          this.tpHandshake.Padding = new System.Windows.Forms.Padding(3);
-         this.tpHandshake.Size = new System.Drawing.Size(772, 370);
+         this.tpHandshake.Size = new System.Drawing.Size(797, 346);
          this.tpHandshake.TabIndex = 12;
          this.tpHandshake.Text = "Handshake";
          this.tpHandshake.UseVisualStyleBackColor = true;
          // 
          // tpSimulation
          // 
+         this.tpSimulation.Controls.Add(this.txtOvenRecipeList);
+         this.tpSimulation.Controls.Add(this.grpSimulation);
+         this.tpSimulation.Controls.Add(this.btnClearAllTrackingData);
+         this.tpSimulation.Controls.Add(this.btnRobotPickPanel);
          this.tpSimulation.Controls.Add(this.chkEnableAutoRecipe);
-         this.tpSimulation.Controls.Add(this.checkBox1);
+         this.tpSimulation.Controls.Add(this.chkEnableCheckLotMixing);
          this.tpSimulation.Controls.Add(this.chkOven3InUse);
          this.tpSimulation.Controls.Add(this.chkOven2InUse);
          this.tpSimulation.Controls.Add(this.chkOven1InUse);
          this.tpSimulation.Controls.Add(this.btnSimulationFlowStop);
+         this.tpSimulation.Controls.Add(this.grpLotMixing);
          this.tpSimulation.Controls.Add(this.btnSimulationFlowStart);
          this.tpSimulation.Location = new System.Drawing.Point(4, 44);
          this.tpSimulation.Name = "tpSimulation";
          this.tpSimulation.Padding = new System.Windows.Forms.Padding(3);
-         this.tpSimulation.Size = new System.Drawing.Size(772, 370);
+         this.tpSimulation.Size = new System.Drawing.Size(797, 346);
          this.tpSimulation.TabIndex = 14;
          this.tpSimulation.Text = "Simulation Flow";
          this.tpSimulation.UseVisualStyleBackColor = true;
          // 
-         // chkOven3InUse
+         // grpSimulation
          // 
-         this.chkOven3InUse.AutoSize = true;
-         this.chkOven3InUse.Location = new System.Drawing.Point(239, 101);
-         this.chkOven3InUse.Name = "chkOven3InUse";
-         this.chkOven3InUse.Size = new System.Drawing.Size(102, 19);
-         this.chkOven3InUse.TabIndex = 25;
-         this.chkOven3InUse.Text = "Oven3 In Use";
-         this.chkOven3InUse.UseVisualStyleBackColor = true;
+         this.grpSimulation.Controls.Add(this.chkRecipeTimeout);
+         this.grpSimulation.Controls.Add(this.nudSimAutoRecipeNo);
+         this.grpSimulation.Controls.Add(this.lblAutoRecipeNo);
+         this.grpSimulation.Location = new System.Drawing.Point(179, 211);
+         this.grpSimulation.Name = "grpSimulation";
+         this.grpSimulation.Size = new System.Drawing.Size(208, 90);
+         this.grpSimulation.TabIndex = 43;
+         this.grpSimulation.TabStop = false;
+         this.grpSimulation.Text = "Simulation";
          // 
-         // chkOven2InUse
+         // chkRecipeTimeout
          // 
-         this.chkOven2InUse.AutoSize = true;
-         this.chkOven2InUse.Location = new System.Drawing.Point(239, 76);
-         this.chkOven2InUse.Name = "chkOven2InUse";
-         this.chkOven2InUse.Size = new System.Drawing.Size(102, 19);
-         this.chkOven2InUse.TabIndex = 24;
-         this.chkOven2InUse.Text = "Oven2 In Use";
-         this.chkOven2InUse.UseVisualStyleBackColor = true;
+         this.chkRecipeTimeout.AutoSize = true;
+         this.chkRecipeTimeout.Location = new System.Drawing.Point(16, 49);
+         this.chkRecipeTimeout.Name = "chkRecipeTimeout";
+         this.chkRecipeTimeout.Size = new System.Drawing.Size(115, 19);
+         this.chkRecipeTimeout.TabIndex = 43;
+         this.chkRecipeTimeout.Text = "Recipe Timeout";
+         this.chkRecipeTimeout.UseVisualStyleBackColor = true;
+         this.chkRecipeTimeout.CheckedChanged += new System.EventHandler(this.chkRecipeTimeout_CheckedChanged);
          // 
-         // chkOven1InUse
+         // nudSimAutoRecipeNo
          // 
-         this.chkOven1InUse.AutoSize = true;
-         this.chkOven1InUse.Location = new System.Drawing.Point(239, 51);
-         this.chkOven1InUse.Name = "chkOven1InUse";
-         this.chkOven1InUse.Size = new System.Drawing.Size(102, 19);
-         this.chkOven1InUse.TabIndex = 23;
-         this.chkOven1InUse.Text = "Oven1 In Use";
-         this.chkOven1InUse.UseVisualStyleBackColor = true;
+         this.nudSimAutoRecipeNo.Location = new System.Drawing.Point(116, 21);
+         this.nudSimAutoRecipeNo.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+         this.nudSimAutoRecipeNo.Name = "nudSimAutoRecipeNo";
+         this.nudSimAutoRecipeNo.Size = new System.Drawing.Size(64, 22);
+         this.nudSimAutoRecipeNo.TabIndex = 41;
+         this.nudSimAutoRecipeNo.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+         this.nudSimAutoRecipeNo.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
          // 
-         // btnSimulationFlowStop
+         // lblAutoRecipeNo
          // 
-         this.btnSimulationFlowStop.Location = new System.Drawing.Point(179, 7);
-         this.btnSimulationFlowStop.Margin = new System.Windows.Forms.Padding(4);
-         this.btnSimulationFlowStop.Name = "btnSimulationFlowStop";
-         this.btnSimulationFlowStop.Size = new System.Drawing.Size(162, 36);
-         this.btnSimulationFlowStop.TabIndex = 18;
-         this.btnSimulationFlowStop.Text = "Simulation Flow Stop";
-         this.btnSimulationFlowStop.UseVisualStyleBackColor = true;
+         this.lblAutoRecipeNo.AutoSize = true;
+         this.lblAutoRecipeNo.Location = new System.Drawing.Point(13, 23);
+         this.lblAutoRecipeNo.Name = "lblAutoRecipeNo";
+         this.lblAutoRecipeNo.Size = new System.Drawing.Size(94, 15);
+         this.lblAutoRecipeNo.TabIndex = 42;
+         this.lblAutoRecipeNo.Text = "Auto Recipe No";
          // 
-         // btnSimulationFlowStart
+         // btnClearAllTrackingData
          // 
-         this.btnSimulationFlowStart.Location = new System.Drawing.Point(9, 7);
-         this.btnSimulationFlowStart.Margin = new System.Windows.Forms.Padding(4);
-         this.btnSimulationFlowStart.Name = "btnSimulationFlowStart";
-         this.btnSimulationFlowStart.Size = new System.Drawing.Size(162, 36);
-         this.btnSimulationFlowStart.TabIndex = 17;
-         this.btnSimulationFlowStart.Text = "Simulation Flow Start";
-         this.btnSimulationFlowStart.UseVisualStyleBackColor = true;
+         this.btnClearAllTrackingData.Location = new System.Drawing.Point(179, 51);
+         this.btnClearAllTrackingData.Margin = new System.Windows.Forms.Padding(4);
+         this.btnClearAllTrackingData.Name = "btnClearAllTrackingData";
+         this.btnClearAllTrackingData.Size = new System.Drawing.Size(162, 36);
+         this.btnClearAllTrackingData.TabIndex = 37;
+         this.btnClearAllTrackingData.Text = "Clear All Tracking Data";
+         this.btnClearAllTrackingData.UseVisualStyleBackColor = true;
+         // 
+         // btnRobotPickPanel
+         // 
+         this.btnRobotPickPanel.Location = new System.Drawing.Point(9, 51);
+         this.btnRobotPickPanel.Margin = new System.Windows.Forms.Padding(4);
+         this.btnRobotPickPanel.Name = "btnRobotPickPanel";
+         this.btnRobotPickPanel.Size = new System.Drawing.Size(162, 36);
+         this.btnRobotPickPanel.TabIndex = 36;
+         this.btnRobotPickPanel.Text = "Robot Pick Panel";
+         this.btnRobotPickPanel.UseVisualStyleBackColor = true;
          // 
          // chkEnableAutoRecipe
          // 
@@ -1362,24 +1392,143 @@
          this.chkEnableAutoRecipe.Text = "Enable Auto Recipe";
          this.chkEnableAutoRecipe.UseVisualStyleBackColor = true;
          // 
-         // checkBox1
+         // chkEnableCheckLotMixing
          // 
-         this.checkBox1.AutoSize = true;
-         this.checkBox1.Location = new System.Drawing.Point(371, 7);
-         this.checkBox1.Name = "checkBox1";
-         this.checkBox1.Size = new System.Drawing.Size(169, 19);
-         this.checkBox1.TabIndex = 34;
-         this.checkBox1.Text = "Enable Check Log Mixing";
-         this.checkBox1.UseVisualStyleBackColor = true;
+         this.chkEnableCheckLotMixing.AutoSize = true;
+         this.chkEnableCheckLotMixing.Location = new System.Drawing.Point(371, 7);
+         this.chkEnableCheckLotMixing.Name = "chkEnableCheckLotMixing";
+         this.chkEnableCheckLotMixing.Size = new System.Drawing.Size(166, 19);
+         this.chkEnableCheckLotMixing.TabIndex = 34;
+         this.chkEnableCheckLotMixing.Text = "Enable Check Lot Mixing";
+         this.chkEnableCheckLotMixing.UseVisualStyleBackColor = true;
+         // 
+         // chkOven3InUse
+         // 
+         this.chkOven3InUse.AutoSize = true;
+         this.chkOven3InUse.Location = new System.Drawing.Point(239, 144);
+         this.chkOven3InUse.Name = "chkOven3InUse";
+         this.chkOven3InUse.Size = new System.Drawing.Size(102, 19);
+         this.chkOven3InUse.TabIndex = 25;
+         this.chkOven3InUse.Text = "Oven3 In Use";
+         this.chkOven3InUse.UseVisualStyleBackColor = true;
+         this.chkOven3InUse.CheckedChanged += new System.EventHandler(this.chkOven3InUse_CheckedChanged);
+         // 
+         // chkOven2InUse
+         // 
+         this.chkOven2InUse.AutoSize = true;
+         this.chkOven2InUse.Location = new System.Drawing.Point(239, 119);
+         this.chkOven2InUse.Name = "chkOven2InUse";
+         this.chkOven2InUse.Size = new System.Drawing.Size(102, 19);
+         this.chkOven2InUse.TabIndex = 24;
+         this.chkOven2InUse.Text = "Oven2 In Use";
+         this.chkOven2InUse.UseVisualStyleBackColor = true;
+         this.chkOven2InUse.CheckedChanged += new System.EventHandler(this.chkOven2InUse_CheckedChanged);
+         // 
+         // chkOven1InUse
+         // 
+         this.chkOven1InUse.AutoSize = true;
+         this.chkOven1InUse.Location = new System.Drawing.Point(239, 94);
+         this.chkOven1InUse.Name = "chkOven1InUse";
+         this.chkOven1InUse.Size = new System.Drawing.Size(102, 19);
+         this.chkOven1InUse.TabIndex = 23;
+         this.chkOven1InUse.Text = "Oven1 In Use";
+         this.chkOven1InUse.UseVisualStyleBackColor = true;
+         this.chkOven1InUse.CheckedChanged += new System.EventHandler(this.chkOven1InUse_CheckedChanged);
+         // 
+         // btnSimulationFlowStop
+         // 
+         this.btnSimulationFlowStop.Location = new System.Drawing.Point(179, 7);
+         this.btnSimulationFlowStop.Margin = new System.Windows.Forms.Padding(4);
+         this.btnSimulationFlowStop.Name = "btnSimulationFlowStop";
+         this.btnSimulationFlowStop.Size = new System.Drawing.Size(162, 36);
+         this.btnSimulationFlowStop.TabIndex = 18;
+         this.btnSimulationFlowStop.Text = "Simulation Flow Stop";
+         this.btnSimulationFlowStop.UseVisualStyleBackColor = true;
+         // 
+         // grpLotMixing
+         // 
+         this.grpLotMixing.Controls.Add(this.rdoMixPanel3);
+         this.grpLotMixing.Controls.Add(this.rdoMixPanel2);
+         this.grpLotMixing.Controls.Add(this.rdoLotNormal);
+         this.grpLotMixing.Location = new System.Drawing.Point(371, 60);
+         this.grpLotMixing.Name = "grpLotMixing";
+         this.grpLotMixing.Size = new System.Drawing.Size(200, 100);
+         this.grpLotMixing.TabIndex = 40;
+         this.grpLotMixing.TabStop = false;
+         this.grpLotMixing.Text = "Lot Mixing Test";
+         // 
+         // rdoMixPanel3
+         // 
+         this.rdoMixPanel3.AutoSize = true;
+         this.rdoMixPanel3.Location = new System.Drawing.Point(16, 72);
+         this.rdoMixPanel3.Name = "rdoMixPanel3";
+         this.rdoMixPanel3.Size = new System.Drawing.Size(106, 19);
+         this.rdoMixPanel3.TabIndex = 2;
+         this.rdoMixPanel3.Text = "Panel 3 Mixed";
+         this.rdoMixPanel3.UseVisualStyleBackColor = true;
+         // 
+         // rdoMixPanel2
+         // 
+         this.rdoMixPanel2.AutoSize = true;
+         this.rdoMixPanel2.Location = new System.Drawing.Point(16, 47);
+         this.rdoMixPanel2.Name = "rdoMixPanel2";
+         this.rdoMixPanel2.Size = new System.Drawing.Size(106, 19);
+         this.rdoMixPanel2.TabIndex = 1;
+         this.rdoMixPanel2.Text = "Panel 2 Mixed";
+         this.rdoMixPanel2.UseVisualStyleBackColor = true;
+         // 
+         // rdoLotNormal
+         // 
+         this.rdoLotNormal.AutoSize = true;
+         this.rdoLotNormal.Checked = true;
+         this.rdoLotNormal.Location = new System.Drawing.Point(16, 22);
+         this.rdoLotNormal.Name = "rdoLotNormal";
+         this.rdoLotNormal.Size = new System.Drawing.Size(67, 19);
+         this.rdoLotNormal.TabIndex = 0;
+         this.rdoLotNormal.TabStop = true;
+         this.rdoLotNormal.Text = "Normal";
+         this.rdoLotNormal.UseVisualStyleBackColor = true;
+         // 
+         // btnSimulationFlowStart
+         // 
+         this.btnSimulationFlowStart.Location = new System.Drawing.Point(9, 7);
+         this.btnSimulationFlowStart.Margin = new System.Windows.Forms.Padding(4);
+         this.btnSimulationFlowStart.Name = "btnSimulationFlowStart";
+         this.btnSimulationFlowStart.Size = new System.Drawing.Size(162, 36);
+         this.btnSimulationFlowStart.TabIndex = 17;
+         this.btnSimulationFlowStart.Text = "Simulation Flow Start";
+         this.btnSimulationFlowStart.UseVisualStyleBackColor = true;
+         // 
+         // tlpMain
+         // 
+         this.tlpMain.ColumnCount = 1;
+         this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+         this.tlpMain.Controls.Add(this.tabMain, 0, 0);
+         this.tlpMain.Controls.Add(this.lblStatus, 0, 2);
+         this.tlpMain.Controls.Add(this.lstLog, 0, 1);
+         this.tlpMain.Dock = System.Windows.Forms.DockStyle.Fill;
+         this.tlpMain.Location = new System.Drawing.Point(0, 0);
+         this.tlpMain.Name = "tlpMain";
+         this.tlpMain.RowCount = 3;
+         this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 400F));
+         this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+         this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+         this.tlpMain.Size = new System.Drawing.Size(811, 588);
+         this.tlpMain.TabIndex = 33;
+         // 
+         // txtOvenRecipeList
+         // 
+         this.txtOvenRecipeList.Location = new System.Drawing.Point(371, 183);
+         this.txtOvenRecipeList.Name = "txtOvenRecipeList";
+         this.txtOvenRecipeList.Size = new System.Drawing.Size(100, 22);
+         this.txtOvenRecipeList.TabIndex = 44;
          // 
          // Form1
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-         this.ClientSize = new System.Drawing.Size(786, 575);
-         this.Controls.Add(this.tabMain);
-         this.Controls.Add(this.lstLog);
-         this.Controls.Add(this.lblStatus);
+         this.ClientSize = new System.Drawing.Size(811, 588);
+         this.Controls.Add(this.tlpMain);
          this.Font = new System.Drawing.Font("更紗黑體 UI TC", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
          this.Name = "Form1";
          this.Text = "CC-Link Helper";
@@ -1416,12 +1565,17 @@
          this.tpTrackingData.ResumeLayout(false);
          this.tpPosReport.ResumeLayout(false);
          this.tpLotMixingPrevention.ResumeLayout(false);
-         this.tpLotMixingPrevention.PerformLayout();
          this.tpLinkReport.ResumeLayout(false);
          this.tpRegularDataCollectionReport.ResumeLayout(false);
          this.tpHandshake.ResumeLayout(false);
          this.tpSimulation.ResumeLayout(false);
          this.tpSimulation.PerformLayout();
+         this.grpSimulation.ResumeLayout(false);
+         this.grpSimulation.PerformLayout();
+         ((System.ComponentModel.ISupportInitialize)(this.nudSimAutoRecipeNo)).EndInit();
+         this.grpLotMixing.ResumeLayout(false);
+         this.grpLotMixing.PerformLayout();
+         this.tlpMain.ResumeLayout(false);
          this.ResumeLayout(false);
 
       }
@@ -1529,7 +1683,6 @@
       private System.Windows.Forms.Button btnSetRgvTrackingData;
       private GRT.SDK.Framework.Component.ParamNumericUpDownUserControl paramOvenWorkTime;
       private System.Windows.Forms.Label lblOvenWorkTime;
-      private System.Windows.Forms.CheckBox chkEnableCheckLogMixing;
       private System.Windows.Forms.TabPage tpSimulation;
       private System.Windows.Forms.CheckBox chkOven3InUse;
       private System.Windows.Forms.CheckBox chkOven2InUse;
@@ -1537,7 +1690,19 @@
       private System.Windows.Forms.Button btnSimulationFlowStop;
       private System.Windows.Forms.Button btnSimulationFlowStart;
       private System.Windows.Forms.CheckBox chkEnableAutoRecipe;
-      private System.Windows.Forms.CheckBox checkBox1;
+      private System.Windows.Forms.CheckBox chkEnableCheckLotMixing;
+      private System.Windows.Forms.Button btnRobotPickPanel;
+      private System.Windows.Forms.Button btnClearAllTrackingData;
+      private System.Windows.Forms.GroupBox grpLotMixing;
+      private System.Windows.Forms.RadioButton rdoMixPanel3;
+      private System.Windows.Forms.RadioButton rdoMixPanel2;
+      private System.Windows.Forms.RadioButton rdoLotNormal;
+      private System.Windows.Forms.Label lblAutoRecipeNo;
+      private System.Windows.Forms.NumericUpDown nudSimAutoRecipeNo;
+      private System.Windows.Forms.GroupBox grpSimulation;
+      private System.Windows.Forms.CheckBox chkRecipeTimeout;
+      private System.Windows.Forms.TableLayoutPanel tlpMain;
+      private System.Windows.Forms.TextBox txtOvenRecipeList;
    }
 }
 

@@ -80,6 +80,7 @@ namespace MelsecHelper.APP.Services
       #region Properties
 
       public TestMode MoveOutTestMode { get; set; } = TestMode.Normal;
+      public TestMode RecipeTestMode { get; set; } = TestMode.Normal;
 
       public int MonitorIntervalMs
       {
@@ -411,6 +412,12 @@ namespace MelsecHelper.APP.Services
                   {
                      try
                      {
+                        if (RecipeTestMode != TestMode.Normal)
+                        {
+                           await Task.Delay(100, ct).ConfigureAwait(false);
+                           continue;
+                        }
+
                         // 1. 監聽 Request Flag
                         bool requestFlag = GetBit(reqFlagAddr);
 

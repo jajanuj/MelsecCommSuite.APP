@@ -5,6 +5,7 @@ using Melsec.Helper.Services;
 using MelsecHelper.APP.Forms;
 using MelsecHelper.APP.Models;
 using MelsecHelper.APP.Services;
+using MelsecHelper.APP.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,41 @@ namespace MelsecHelper.APP
 {
    public partial class Form1 : Form
    {
+      #region Enums
+
+      /// <summary>
+      /// 模擬流程狀態
+      /// </summary>
+      public enum SimulationState
+      {
+         Idle,
+         Init,
+         WaitRobotPick,
+         RobotPickProcessing,
+         CheckLotMixing,
+         RobotPlaceInCassette,
+         CheckLastFlag,
+         RGVTransfer,
+         WaitRGVDelay,
+         FindEmptyOven,
+         RecipeSetting,
+         TransferCassette
+      }
+
+      #endregion
+
+      #region Constant
+
+      private const int SIM_OVEN_ID_1 = 6;
+      private const int SIM_OVEN_ID_2 = 7;
+      private const int SIM_OVEN_ID_3 = 8;
+      private const int SIM_STATION_ROBOT = 2;           // 插框機手臂
+      private const int SIM_STATION_CASSETTE_BUFFER = 3; // 插框站
+      private const int SIM_STATION_CASSETTE = 4;        // 插框機出料
+      private const int SIM_STATION_RGV = 5;             // RGV 站
+
+      #endregion
+
       #region Fields
 
       private readonly CancellationTokenSource _cts = new CancellationTokenSource();
@@ -29,7 +65,9 @@ namespace MelsecHelper.APP
       private ushort _controlStatus = 1; // 預設：自動運轉
       private string _currentRecipeName = "DEFAULT_RECIPE";
       private ushort _currentRecipeNo = 1;
+      private TrackingData _currentSimData;
       private ushort _dischargeRate = 85; // 預設：85%
+      private bool _disposed;
       private ushort _downstreamWaitingStatus = 1;
 
       // 定期上報 Alarm 設定值（12個錯誤代碼）
@@ -44,6 +82,7 @@ namespace MelsecHelper.APP
 
       // 連接狀態標記
       private bool _isOpened;
+      private LotMixingService _lotMixingService;
       private ushort _machineStatus = 4; // 預設：生產中
       private MockMxComponentReader _mockReader;
 
@@ -55,6 +94,7 @@ namespace MelsecHelper.APP
       private int _path = -1;
 
       private uint _processingCounter;
+      private RecipeCheckClient _recipeCheckClient;
 
       // RecipeCheck 嵌入表單
       private RecipeCheckForm _recipeCheckForm;
@@ -62,15 +102,21 @@ namespace MelsecHelper.APP
       // 定期上報 Status2 設定值
       private ushort _redLightStatus;
       private ushort _retainedBoardCount;
+      private bool _robotPickTriggered = false;
 
       // 掃描監控視窗 (單例)
       private ScanMonitorForm _scanMonitorForm;
       private AppControllerSettings _settings;
       private MockMelsecApiAdapter _sharedMockAdapter; // 共享的 Mock Adapter（用於 Simulator 模式）
+      private Queue<TrackingData> _simDataBuffer = new Queue<TrackingData>();
+      private SimulationState _simState = SimulationState.Idle;
+      private System.Windows.Forms.Timer _simTimer;
+      private TrackingDataService _simulationTrackingService; // 用於模擬流程的 Service
 
       // PLC 模擬器
       private PlcSimulator _simulator;
       private ushort _stopTime;
+      private int _targetOvenStationId; // 暫存目標烤箱 ID
       private Timer _updateTimer;
       private ushort _upstreamWaitingStatus = 1;
       private ushort _waitingStatus = 1; // 預設：無等待
@@ -564,6 +610,15 @@ namespace MelsecHelper.APP
 
                // 初始化並嵌入 RecipeCheckForm
                InitializeRecipeCheckTab();
+
+               // 初始化 Simulation Flow
+               InitializeSimulationFlow();
+
+               //模擬設定烤箱狀態為不可使用
+               for (int i = 1; i < 9; i++)
+               {
+                  _mockReader.SetOvenStatus(i, 1);
+               }
             }));
          }
          catch (Exception ex)
@@ -1628,6 +1683,753 @@ namespace MelsecHelper.APP
          finally
          {
             btnMoveToOven1.Enabled = true;
+         }
+      }
+
+      private void chkOven1InUse_CheckedChanged(object sender, EventArgs e)
+      {
+         var status = chkOven1InUse.Checked ? 4 : 2;
+         _mockReader.SetOvenStatus(1, (short)status);
+      }
+
+      private void chkOven2InUse_CheckedChanged(object sender, EventArgs e)
+      {
+         var status = chkOven2InUse.Checked ? 4 : 2;
+         _mockReader.SetOvenStatus(2, (short)status);
+      }
+
+      private void chkOven3InUse_CheckedChanged(object sender, EventArgs e)
+      {
+         var status = chkOven3InUse.Checked ? 4 : 2;
+         _mockReader.SetOvenStatus(3, (short)status);
+      }
+
+      private void chkRecipeTimeout_CheckedChanged(object sender, EventArgs e)
+      {
+         _simulator.RecipeTestMode = chkRecipeTimeout.Checked ? TestMode.T1Timeout : TestMode.Normal;
+      }
+
+      #endregion
+
+      #region Simulation Flow
+
+      private void InitializeSimulationFlow()
+      {
+         _simTimer = new System.Windows.Forms.Timer();
+         _simTimer.Interval = 200; // 200ms
+         _simTimer.Tick += OnSimulationTimerTick;
+
+         _lotMixingService = new LotMixingService();
+
+         // 初始化模擬用的 Tracking Service (需確保 Config 有對應站點)
+         if (_appPlcService?.Controller != null)
+         {
+            _simulationTrackingService = new TrackingDataService(_appPlcService.Controller, "Config/StationTracking.json");
+         }
+
+         btnSimulationFlowStart.Click += btnSimulationFlowStart_Click;
+         btnSimulationFlowStop.Click += btnSimulationFlowStop_Click;
+         btnRobotPickPanel.Click += btnRobotPickPanel_Click;
+         btnClearAllTrackingData.Click += btnClearAllTrackingData_Click;
+
+         // Hook Validation Events
+         chkEnableAutoRecipe.CheckedChanged += (s, e) => ValidateSimulationMode();
+         chkEnableCheckLotMixing.CheckedChanged += (s, e) => ValidateSimulationMode();
+         // 假設 Online/Offline 切換也會影響 (若按鈕名稱正確)
+         if (rbtnOnline != null)
+         {
+            rbtnOnline.CheckedChanged += (s, e) => ValidateSimulationMode();
+         }
+
+         // Initial Validation
+         ValidateSimulationMode();
+      }
+
+      private void ValidateSimulationMode()
+      {
+         bool isAutoRecipe = chkEnableAutoRecipe.Checked;
+         bool isLotMix = chkEnableCheckLotMixing.Checked;
+         // Online 狀態判定: 根據 rbtnOnline.Checked
+         bool isOnline = rbtnOnline != null && rbtnOnline.Checked;
+
+         // 檢查分配禁止 (Forbidden)
+         // 自動配方設定 (C=ON) 必須搭配 Online (A=ON) 與 Lot混載 (B=ON)
+         bool isForbidden = isAutoRecipe && (!isOnline || !isLotMix);
+
+         if (isForbidden)
+         {
+            btnSimulationFlowStart.Enabled = false;
+            // 若需要顯示原因，可以使用 ToolTip 或暫時改變按鈕文字
+            if (btnSimulationFlowStart.Text != "分配禁止")
+            {
+               btnSimulationFlowStart.Text = "分配禁止";
+               // btnSimulationFlowStart.BackColor = Color.Red; // Option
+            }
+         }
+         else
+         {
+            // 只有在非運行中才 Enable (避免覆蓋 Stop 邏輯)
+            if (_simState == SimulationState.Idle)
+            {
+               btnSimulationFlowStart.Enabled = true;
+            }
+
+            if (btnSimulationFlowStart.Text == "分配禁止")
+            {
+               btnSimulationFlowStart.Text = "Simulation Flow Start";
+            }
+         }
+      }
+
+      private async void btnClearAllTrackingData_Click(object sender, EventArgs e)
+      {
+         if (_appPlcService?.Controller == null)
+         {
+            return;
+         }
+
+         if (MessageBox.Show("確定要清除所有追蹤資料嗎 (0x184A - 0x2B4F)?", "Clear All", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+         {
+            return;
+         }
+
+         try
+         {
+            Log("[Sim] 開始清除所有追蹤資料...");
+            int startAddr = 0x184A;
+            int endAddr = 0x2B4F;
+            int totalWords = endAddr - startAddr + 1;
+            int batchSize = 900; // MC Protocol Limit usually 960
+
+            short[] zeroBuffer = new short[batchSize]; // Max buffer
+
+            for (int addr = startAddr; addr <= endAddr; addr += batchSize)
+            {
+               int taskSize = Math.Min(batchSize, endAddr - addr + 1);
+               string addrStr = $"LW{addr:X4}";
+
+               short[] dataToWrite;
+               if (taskSize == batchSize)
+               {
+                  dataToWrite = zeroBuffer;
+               }
+               else
+               {
+                  dataToWrite = new short[taskSize];
+               }
+
+               await _appPlcService.Controller.WriteWordsAsync(addrStr, dataToWrite, _cts.Token);
+               Log($"[Sim] Cleared {addrStr} size {taskSize}");
+            }
+
+            Log("[Sim] 清除完成!");
+            MessageBox.Show("所有追蹤資料已清除!", "Success");
+         }
+         catch (Exception ex)
+         {
+            Log($"[Sim Error] 清除失敗: {ex.Message}");
+            MessageBox.Show($"清除失敗: {ex.Message}", "Error");
+         }
+      }
+
+      private void btnSimulationFlowStart_Click(object sender, EventArgs e)
+      {
+         if (_simState != SimulationState.Idle)
+         {
+            Log("[Sim] 流程已在運行中");
+            return;
+         }
+
+         if (_appPlcService?.Controller == null)
+         {
+            MessageBox.Show("請先連接 PLC", "錯誤");
+            return;
+         }
+
+         // Re-init service just in case connection changed
+         _simulationTrackingService = new TrackingDataService(_appPlcService.Controller, "Config/StationTracking.json");
+
+         _simState = SimulationState.Init;
+         _simTimer.Start();
+         Log("[Sim] 模擬流程啟動...");
+         btnSimulationFlowStart.Enabled = false;
+         btnSimulationFlowStop.Enabled = true;
+      }
+
+      private void btnSimulationFlowStop_Click(object sender, EventArgs e)
+      {
+         StopSimulationFlow();
+      }
+
+      private void StopSimulationFlow()
+      {
+         _simTimer.Stop();
+         _simState = SimulationState.Idle;
+         _simDataBuffer.Clear();
+         _currentSimData = null;
+         _robotPickTriggered = false;
+         Log("[Sim] 模擬流程停止");
+         btnSimulationFlowStart.Enabled = true;
+         btnSimulationFlowStop.Enabled = false;
+      }
+
+      private void btnRobotPickPanel_Click(object sender, EventArgs e)
+      {
+         if (_simState == SimulationState.WaitRobotPick)
+         {
+            _robotPickTriggered = true;
+            Log("[Sim] Robot Pick Panel 觸發!");
+         }
+         else
+         {
+            Log("[Sim] 目前非等待 Robot Pick 狀態，忽略觸發");
+         }
+      }
+
+      private async void OnSimulationTimerTick(object sender, EventArgs e)
+      {
+         // 避免重入
+         _simTimer.Stop();
+
+         try
+         {
+            switch (_simState)
+            {
+               case SimulationState.Init:
+
+                  _mockReader.SetOvenStatus(1, 2);
+                  _mockReader.SetOvenStatus(2, 2);
+                  _mockReader.SetOvenStatus(3, 2);
+
+                  // 流程一開始產生3組TrackingData，Board ID為001-003，其中Board ID 003的Last Flag=true
+                  _simDataBuffer.Clear();
+                  uint normalLotNum = 1234;
+                  uint mixedLotNum = 9999;
+
+                  for (int i = 1; i <= 3; i++)
+                  {
+                     uint currentLotNum = normalLotNum;
+                     if (rdoMixPanel2.Checked && i == 2)
+                     {
+                        currentLotNum = mixedLotNum;
+                     }
+
+                     if (rdoMixPanel3.Checked && i == 3)
+                     {
+                        currentLotNum = mixedLotNum;
+                     }
+
+                     var data = new TrackingData
+                     {
+                        BoardId = new ushort[] { 1, 1, (ushort)i }, // 001-003
+                        LayerCount = 10,
+                        LotNoChar = (ushort)'T',
+                        LotNoNum = currentLotNum,
+                        JudgeFlag1 = 0,
+                     };
+
+                     //設定Last Flag
+                     if (i == 3)
+                     {
+                        data.SetLastFlag(true);
+                     }
+
+                     _simDataBuffer.Enqueue(data);
+                  }
+
+                  Log($"[Sim] 資料生成完畢: {_simDataBuffer.Count} 筆");
+                  _simState = SimulationState.WaitRobotPick;
+                  break;
+
+               case SimulationState.WaitRobotPick:
+                  if (_robotPickTriggered)
+                  {
+                     if (_simDataBuffer.Count > 0)
+                     {
+                        _currentSimData = _simDataBuffer.Dequeue();
+                        _robotPickTriggered = false; // Reset trigger
+                        Log($"[Sim] 開始處理基板 ID: {_currentSimData.FormatBoardId()}");
+                        _simState = SimulationState.RobotPickProcessing;
+                     }
+                     else
+                     {
+                        _robotPickTriggered = false;
+                        Log("[Sim] Buffer 空了，等待新資料或結束");
+                        _simState = SimulationState.Idle;
+                        StopSimulationFlow();
+                     }
+                  }
+
+                  break;
+
+               case SimulationState.RobotPickProcessing:
+                  Log("[Sim] Robot Pick Panel -> 更新手臂站資料...");
+                  // 更新手臂站資料 (SIM_STATION_ROBOT)
+                  // 假設手臂站只有一個 Slot
+                  if (_simulationTrackingService != null)
+                  {
+                     await _simulationTrackingService.UpdateSingleSlotAsync(SIM_STATION_ROBOT, 1, _currentSimData, _cts.Token);
+                  }
+
+                  _simState = SimulationState.CheckLotMixing;
+                  break;
+
+               case SimulationState.CheckLotMixing:
+                  Log("[Sim] Check Lot Mixing...");
+                  // 模擬從插框站讀取最後一筆資料的比對
+                  // 這裡需讀取 SIM_STATION_CASSETTE
+                  var currentCassetteList = new List<TrackingData>();
+                  if (_simulationTrackingService != null)
+                  {
+                     var cassetteData = await _simulationTrackingService.ReadStationDataAsync(SIM_STATION_CASSETTE, _cts.Token);
+                     // 過濾空資料
+                     foreach (var cd in cassetteData)
+                     {
+                        if (cd.IsValid())
+                        {
+                           currentCassetteList.Add(cd);
+                        }
+                     }
+                  }
+
+                  _lotMixingService.IsEnabled = chkEnableCheckLotMixing.Checked;
+                  var lotResult = _lotMixingService.CheckLotMixing(_currentSimData, currentCassetteList);
+
+                  if (lotResult == LotMixingResult.DifferentLot)
+                  {
+                     Log("[Sim] [NG] 混載檢查失敗 (Different Lot)! 進入手動選擇");
+                     var result = MessageBox.Show("混載檢查 NG!\nYes: 變更框\nNo: 基板排出\n", "手動選擇", MessageBoxButtons.YesNo);
+                     var manualSelected = result == DialogResult.Yes ? "變更框" : "基板排出";
+                     Log($"[Sim] 混批失敗結束流程，手動選擇[{manualSelected}]");
+                     await AlarmHelper.AddAlarmCodeAsync(_appPlcService, "C012");
+                     Log($"[Sim] 發出混批失敗警報C0012");
+                     StopSimulationFlow();
+                     return;
+                  }
+                  else
+                  {
+                     Log("[Sim] [OK] 混載檢查通過");
+                     // 轉移資料從手臂站(2)到插框站(3)
+                     if (_simulationTrackingService != null)
+                     {
+                        await _simulationTrackingService.TransferStationDataAsync(SIM_STATION_ROBOT, SIM_STATION_CASSETTE_BUFFER, _cts.Token);
+                     }
+
+                     _simState = SimulationState.RobotPlaceInCassette;
+                  }
+
+                  break;
+
+               case SimulationState.RobotPlaceInCassette:
+                  Log("[Sim] Robot Place In Cassete -> 轉移至插框機出料(4)");
+                  // 轉移資料從插框站(3)到插框機出料(4) - 需尋找空 Slot (1-30)
+                  if (_simulationTrackingService != null)
+                  {
+                     // 1. 讀取插框站 (Source)
+                     var bufDataList = await _simulationTrackingService.ReadStationDataAsync(SIM_STATION_CASSETTE_BUFFER, _cts.Token);
+                     var bufData = bufDataList != null && bufDataList.Count > 0 ? bufDataList[0] : null;
+
+                     if (bufData != null && bufData.IsValid())
+                     {
+                        // 2. 讀取插框機出料 (Target)
+                        var cassetteData = await _simulationTrackingService.ReadStationDataAsync(SIM_STATION_CASSETTE, _cts.Token);
+
+                        // 3. 尋找空位 (從 Slot 1 開始)
+                        int emptySlotIndex = -1;
+                        for (int i = 0; i < cassetteData.Count; i++)
+                        {
+                           if (!cassetteData[i].IsValid()) // 假設 Invalid 就是空
+                           {
+                              emptySlotIndex = i + 1; // 1-based index
+                              break;
+                           }
+                        }
+
+                        if (emptySlotIndex != -1)
+                        {
+                           Log($"[Sim] 轉移資料: 插框站 -> 插框機出料 Slot {emptySlotIndex}");
+                           // 4. 寫入 Target Slot
+                           await _simulationTrackingService.UpdateSingleSlotAsync(SIM_STATION_CASSETTE, emptySlotIndex, bufData, _cts.Token);
+
+                           // 5. 清除 Source
+                           await _simulationTrackingService.UpdateSingleCapacityStationAsync(SIM_STATION_CASSETTE_BUFFER, new TrackingData(), _cts.Token);
+                        }
+                        else
+                        {
+                           Log("[Sim] [Error] 插框機出料已滿 (No Empty Slot)!");
+                           StopSimulationFlow();
+                           MessageBox.Show("插框機出料已滿!", "Simulation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                           return;
+                        }
+                     }
+                     else
+                     {
+                        Log("[Sim] [Warning] 插框站無資料");
+                     }
+                  }
+
+                  _simState = SimulationState.CheckLastFlag;
+                  break;
+
+               case SimulationState.CheckLastFlag:
+                  bool isLast = _currentSimData.IsLastFlag;
+                  Log($"[Sim] Check Last Flag: {isLast}");
+
+                  if (isLast)
+                  {
+                     _simState = SimulationState.RGVTransfer;
+                  }
+                  else
+                  {
+                     Log("[Sim] 非最後一片，回到 WaitRobotPick");
+                     _simState = SimulationState.WaitRobotPick;
+                  }
+
+                  break;
+
+               case SimulationState.RGVTransfer:
+                  Log("[Sim] RGV Transfer (插框站 -> RGV)...");
+                  if (_simulationTrackingService != null)
+                  {
+                     await _simulationTrackingService.TransferStationDataAsync(SIM_STATION_CASSETTE, SIM_STATION_RGV, _cts.Token);
+                  }
+
+                  _simState = SimulationState.FindEmptyOven;
+                  break;
+
+               case SimulationState.WaitRGVDelay:
+                  _simState = SimulationState.FindEmptyOven;
+                  break;
+
+               case SimulationState.FindEmptyOven:
+                  Log("[Sim] Find Empty Oven...");
+                  int targetOvenId = -1;
+                  bool isAuto = chkEnableAutoRecipe.Checked;
+
+                  if (isAuto)
+                  {
+                     if (!chkOven1InUse.Checked)
+                     {
+                        targetOvenId = SIM_OVEN_ID_1;
+                     }
+                     else if (!chkOven2InUse.Checked)
+                     {
+                        targetOvenId = SIM_OVEN_ID_2;
+                     }
+                     else if (!chkOven3InUse.Checked)
+                     {
+                        targetOvenId = SIM_OVEN_ID_3;
+                     }
+
+                     if (targetOvenId == -1)
+                     {
+                        Log("[Sim] 無空閒烤箱");
+                        var result = MessageBox.Show("無空閒烤箱\nOK: 重新確認\n", "手動選擇", MessageBoxButtons.OK);
+                        Log($"[Sim] 無空閒烤箱，手動選擇重新確認");
+                     }
+                     else
+                     {
+                        _mockReader.SetOvenStatus(targetOvenId, 3);
+                        Log($"[Sim] 自動選擇烤箱 ID: {targetOvenId - 5}");
+                        _targetOvenStationId = targetOvenId;
+                        _simState = SimulationState.RecipeSetting;
+                     }
+                  }
+                  else
+                  {
+                     // 取得所有可用烤箱
+                     var availableOvens = new List<int>();
+                     if (!chkOven1InUse.Checked)
+                     {
+                        availableOvens.Add(SIM_OVEN_ID_1);
+                     }
+
+                     if (!chkOven2InUse.Checked)
+                     {
+                        availableOvens.Add(SIM_OVEN_ID_2);
+                     }
+
+                     if (!chkOven3InUse.Checked)
+                     {
+                        availableOvens.Add(SIM_OVEN_ID_3);
+                     }
+
+                     if (availableOvens.Count == 0)
+                     {
+                        var result1 = MessageBox.Show("無空閒烤箱\nYes: 手動選擇配方烤箱\nNo: ULD排出\n", "手動選擇", MessageBoxButtons.YesNo);
+                        var manualSelected = result1 == DialogResult.Yes ? "手動選擇配方烤箱" : "ULD排出";
+                        Log($"[Sim] 無空閒烤箱，手動選擇[{manualSelected}]");
+                        StopSimulationFlow();
+                        break;
+                     }
+
+                     // 構建提示訊息
+                     string msg = "請選擇目標烤箱:\n";
+                     int ovenA = availableOvens[0];
+                     int ovenB = availableOvens.Count > 1 ? availableOvens[1] : -1;
+
+                     msg += $"Yes: Oven {ovenA - 5}\n";
+                     if (ovenB != -1)
+                     {
+                        msg += $"No: Oven {ovenB - 5}\n";
+                     }
+                     else
+                     {
+                        msg += "No: (無可用)\n";
+                     }
+
+                     msg += "Cancel: ULD排出";
+
+                     var result = MessageBox.Show(msg, "手動選擇", MessageBoxButtons.YesNoCancel);
+
+                     if (result == DialogResult.Yes)
+                     {
+                        targetOvenId = ovenA;
+                        _mockReader.SetOvenStatus(targetOvenId, 3);
+                        Log($"[Sim] 手動選擇[烤箱 {targetOvenId - 5}]");
+                     }
+                     else if (result == DialogResult.No)
+                     {
+                        if (ovenB != -1)
+                        {
+                           targetOvenId = ovenB;
+                           _mockReader.SetOvenStatus(targetOvenId, 3);
+                           Log($"[Sim] 手動選擇[烤箱 {targetOvenId - 5}]");
+                        }
+                        else
+                        {
+                           Log("[Sim] 無效選擇 (無 Oven B)，視為 ULD 排出");
+                           StopSimulationFlow();
+                           return;
+                        }
+                     }
+                     else
+                     {
+                        Log("[Sim] 手動選擇[ULD排出]");
+                        StopSimulationFlow();
+                        return;
+                     }
+
+                     _targetOvenStationId = targetOvenId;
+                     _simState = SimulationState.RecipeSetting; // Go to RecipeSetting instead of TransferCassette directly
+                  }
+
+                  break;
+
+               case SimulationState.RecipeSetting:
+                  Log("[Sim] Recipe Setting...");
+                  ushort finalRecipeNo = 0;
+
+                  // 1. 若為模擬器模式 -> 使用 UI 設定
+                  //if (_settings.DriverType == MelsecDriverType.Simulator)
+                  //{
+                  //   finalRecipeNo = (ushort)nudSimAutoRecipeNo.Value;
+                  //   Log($"[Sim] [Simulator] 使用 UI Recipe No: {finalRecipeNo}");
+                  //}
+                  //else if (IsOnlineMode && chkEnableAutoRecipe.Checked)
+                  if (IsOnlineMode && chkEnableAutoRecipe.Checked)
+                  {
+                     // 2. 正常 Online + Auto -> 執行 Recipe Check
+                     try
+                     {
+                        if (_recipeCheckClient == null)
+                        {
+                           // 使用預設設定初始化 Client
+                           _recipeCheckClient = new RecipeCheckClient(_appPlcService, _settings.RecipeCheck, msg => Log($"[RecipeCheck] {msg}"));
+                        }
+
+                        Log($"[Sim] 發送 Recipe Check Req (Target Oven: {_targetOvenStationId})...");
+                        // 發送前將 TrackingData 轉為 Short Array
+                        var rawData = _currentSimData.ToRawData();
+                        // 假設 RecipeCheck 需要 TargetOvenId 作為參考 RecipeNo 輸入?
+                        // 或根據需求，這裡通常填入希望檢查的 Recipe No
+                        var response = await _recipeCheckClient.SendRequestAsync(rawData, (ushort)_targetOvenStationId, null);
+
+                        if (response.IsOK)
+                        {
+                           if (response.RecipeNo.HasValue)
+                           {
+                              finalRecipeNo = response.RecipeNo.Value;
+                              Log($"[Sim] Recipe Check 成功, 取得 Recipe No: {finalRecipeNo}");
+                           }
+                           else
+                           {
+                              Log("[Sim] Recipe Check 成功但無 Recipe No 回傳? 使用預設");
+                              finalRecipeNo = (ushort)_targetOvenStationId;
+                           }
+                        }
+                        else
+                        {
+                           Log("[Sim] [Error] Recipe Check Timeout");
+
+                           var result1 = MessageBox.Show("Recipe Check Timeout\nIgnore: 手動選擇配方烤箱\nAbort: ULD排出\nRetry: Retry", "手動選擇",
+                              MessageBoxButtons.AbortRetryIgnore);
+                           string manualSelected;
+                           if (result1 == DialogResult.Ignore)
+                           {
+                              manualSelected = "手動選擇配方烤箱";
+
+                              Log($"[Sim] Recipe Check Timeout，手動選擇[{manualSelected}]");
+                              // 取得所有可用烤箱
+                              var availableOvens = new List<int>();
+                              if (!chkOven1InUse.Checked)
+                              {
+                                 availableOvens.Add(SIM_OVEN_ID_1);
+                              }
+
+                              if (!chkOven2InUse.Checked)
+                              {
+                                 availableOvens.Add(SIM_OVEN_ID_2);
+                              }
+
+                              if (!chkOven3InUse.Checked)
+                              {
+                                 availableOvens.Add(SIM_OVEN_ID_3);
+                              }
+
+                              if (availableOvens.Count == 0)
+                              {
+                                 var result11 = MessageBox.Show("無空閒烤箱\nYes: 手動選擇配方烤箱\nNo: ULD排出\n", "手動選擇", MessageBoxButtons.YesNo);
+                                 var manualSelected1 = result11 == DialogResult.Yes ? "手動選擇配方烤箱" : "ULD排出";
+                                 Log($"[Sim] 無空閒烤箱，手動選擇[{manualSelected1}]");
+                                 StopSimulationFlow();
+                                 break;
+                              }
+
+                              string msg = "請選擇目標烤箱:\n";
+                              int ovenA = availableOvens[0];
+                              int ovenB = availableOvens.Count > 1 ? availableOvens[1] : -1;
+
+                              msg += $"Yes: Oven {ovenA - 5}\n";
+                              if (ovenB != -1)
+                              {
+                                 msg += $"No: Oven {ovenB - 5}\n";
+                              }
+                              else
+                              {
+                                 msg += "No: (無可用)\n";
+                              }
+
+                              msg += "Cancel: ULD排出";
+
+                              var result = MessageBox.Show(msg, "手動選擇", MessageBoxButtons.YesNoCancel);
+
+                              if (result == DialogResult.Yes)
+                              {
+                                 targetOvenId = ovenA;
+                                 finalRecipeNo = (ushort)nudSimAutoRecipeNo.Value;
+                                 Log($"[Sim] 手動選擇[烤箱 {targetOvenId - 5}]");
+                              }
+                              else if (result == DialogResult.No)
+                              {
+                                 if (ovenB != -1)
+                                 {
+                                    targetOvenId = ovenB;
+                                    Log($"[Sim] 手動選擇[烤箱 {targetOvenId - 5}]");
+                                 }
+                                 else
+                                 {
+                                    Log("[Sim] 無效選擇 (無 Oven B)，視為 ULD 排出");
+                                    StopSimulationFlow();
+                                    return;
+                                 }
+                              }
+                           }
+                           else if (result1 == DialogResult.Abort)
+                           {
+                              manualSelected = "ULD排出";
+                              StopSimulationFlow();
+                              Log($"[Sim] Recipe Check Timeout，手動選擇[{manualSelected}]");
+                              return;
+                           }
+                           else
+                           {
+                              manualSelected = "Retry";
+                              _simState = SimulationState.RecipeSetting;
+                              Log($"[Sim] Recipe Check Timeout，手動選擇[{manualSelected}]");
+                              break;
+                           }
+                        }
+                     }
+                     catch (Exception ex)
+                     {
+                        if (ex is OperationCanceledException) // Timeout usually throws usage-defined response or exception?
+                        {
+                           // Handled in client returns TimeoutResponse?
+                           // Client returns response object even for timeout? No, WaitForResponse catches OpCanceled and returns TimeoutResponse.
+                           // But SendRequest might throw if settings invalid.
+                        }
+
+                        Log($"[Sim] [Error] Recipe Check 發生例外: {ex.Message}");
+                        StopSimulationFlow();
+                        MessageBox.Show($"Recipe Check Error: {ex.Message}", "Simulation Error");
+                        return;
+                     }
+                  }
+                  else
+                  {
+                     // Fallback (Should not happen if logic correct, or Manual mode which is skipped)
+                     finalRecipeNo = (ushort)_targetOvenStationId;
+                  }
+
+                  // 更新當前 SimData
+                  _currentSimData.RecipeNo = finalRecipeNo;
+
+                  // 更新 RGV 站 (ID 5) 所有有效 Slot 的 RecipeNo
+                  if (_simulationTrackingService != null)
+                  {
+                     Log($"[Sim] 更新 RGV (Station {SIM_STATION_RGV}) 所有有效 Slot 的 RecipeNo: {finalRecipeNo}");
+                     var rgvDataList = await _simulationTrackingService.ReadStationDataAsync(SIM_STATION_RGV, _cts.Token);
+                     if (rgvDataList != null)
+                     {
+                        for (int i = 0; i < rgvDataList.Count; i++)
+                        {
+                           var slotData = rgvDataList[i];
+                           if (slotData.IsValid())
+                           {
+                              slotData.RecipeNo = finalRecipeNo;
+                              // Update back to PLC (Slot index i + 1)
+                              await _simulationTrackingService.UpdateSingleSlotAsync(SIM_STATION_RGV, i + 1, slotData, _cts.Token);
+                           }
+                        }
+                     }
+                  }
+
+                  _simState = SimulationState.TransferCassette;
+                  break;
+
+               case SimulationState.TransferCassette:
+                  int destStation = _targetOvenStationId;
+                  Log($"[Sim] Transfer Cassete (RGV -> Oven {destStation})...");
+                  if (_simulationTrackingService != null)
+                  {
+                     await _simulationTrackingService.TransferStationDataAsync(SIM_STATION_RGV, destStation, _cts.Token);
+                  }
+
+                  Log("[Sim] 流程完成 (Batch End).");
+                  // 這裡可以選擇循環
+                  _simState = SimulationState.WaitRobotPick;
+                  // Reset Buffer if strictly 3 per batch or loop
+                  if (_simDataBuffer.Count == 0)
+                  {
+                     Log("BATCH DONE. Stop.");
+                     StopSimulationFlow();
+                  }
+
+                  break;
+            }
+         }
+         catch (Exception ex)
+         {
+            Log($"[Sim Error] {ex.Message}");
+            StopSimulationFlow();
+         }
+         finally
+         {
+            if (_simState != SimulationState.Idle)
+            {
+               _simTimer.Start();
+            }
          }
       }
 
